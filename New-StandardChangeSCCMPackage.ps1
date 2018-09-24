@@ -49,7 +49,7 @@ function New-StandardChangeSCCMPackage
 
     # Map network drive to SCCM
     # Test an arbitrary folder on the share
-    $Networkpath = "$($SCCM_Share_Letter):\CoreApps_ALL" 
+    $Networkpath = "$($SCCM_Share_Letter):\$SCCM_Share_Test_Folder" 
 
     If (Test-Path -Path $Networkpath) {
         Write-Host "$($SCCM_Share_Letter) Drive to SCCM Exists already"
@@ -241,7 +241,7 @@ function Update-AppHelper {
         # Each app folder is named like 'AppName Version (R#). So this line just selects Version R#
         $AppVersion = $AppPath.Name -split ' ' | select -Last 2
         # Transform the app path back to a full unc path withouth a drive letter
-        $AppPath = "\\spivsccm01\packages"+($AppPath.FullName).Substring(2)
+        $AppPath = "$SCCM_Share"+($AppPath.FullName).Substring(2)
         $AppNameFull = "$AppName $appVersion"
 
         $alreadyExists = Get-CMPackage -Name $AppNameFull

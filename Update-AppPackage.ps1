@@ -18,7 +18,7 @@ function Update-AppPackage {
 
     # Map network drive to SCCM
     # Test an arbitrary folder on the share
-    $Networkpath = "$($SCCM_Share_Letter):\CoreApps_ALL" 
+    $Networkpath = "$($SCCM_Share_Letter):\$SCCM_Share_Test_Folder" 
 
     If (Test-Path -Path $Networkpath) {
         Write-Host "$($SCCM_Share_Letter) Drive to SCCM Exists already"
@@ -161,6 +161,7 @@ function Copy-PSADTFolders {
 
 function Get-LatestAppVersion {
     # http://vergrabber.kingu.pl/vergrabber.json
+    # Could use that if I didn't want to scrape websites
     param
     (
         [Parameter(Mandatory = $true,

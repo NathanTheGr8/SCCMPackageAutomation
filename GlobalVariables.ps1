@@ -7,6 +7,7 @@
 
 $SCCM_Site = "HMN"
 $SCCM_Share = "\\spivsccm01\Packages"
+$SCCM_Share_Test_Folder = "CoreApps_ALL"
 $SCCM_Share_Letter = "P"
 
 function Get-RootApplicationPath {
