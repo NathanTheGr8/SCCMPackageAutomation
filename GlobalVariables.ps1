@@ -21,9 +21,9 @@ function Get-RootApplicationPath {
         .PARAMETER App
         Defaults to Deploy-Applicaiton.ps1
 
-        .Examples
+        .EXAMPLE
 
-        .Remarks
+        .REMARKS
 
     #>
     param
@@ -117,9 +117,9 @@ function Get-PSADTAppVersion {
         .PARAMETER InstallScript
         Defaults to Deploy-Applicaiton.ps1
 
-        .Examples
+        .EXAMPLE
 
-        .Remarks
+        .REMARKS
 
     #>
     param

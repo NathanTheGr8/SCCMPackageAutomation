@@ -24,10 +24,10 @@ function New-StandardChangeSCCMPackage
       WinSCP
       Reciever
 
-      .EXAMPLE 1
+      .EXAMPLE
       New-StandardChangeSCCMPackage -APP Firefox
 
-      .Remarks
+      .REMARKs
       http://www.dexterposh.com/2015/08/powershell-sccm-2012-create-packages.html
       
 
