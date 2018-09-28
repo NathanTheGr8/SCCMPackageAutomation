@@ -13,8 +13,8 @@ function Update-AppPackage {
 
     )
 
-    [version]$CurrentAppVersion = Get-CurrentAppVersion -App $App
-    [version]$LatestAppVersion = Get-LatestAppVersion -App $App
+    $CurrentAppVersion = Get-CurrentAppVersion -App $App
+    $LatestAppVersion = Get-LatestAppVersion -App $App
 
     # Map network drive to SCCM
     # Test an arbitrary folder on the share
@@ -38,7 +38,7 @@ function Update-AppPackage {
     }
     # End Map Network Drive
 
-    if (($CurrentAppVersion -lt $LatestAppVersion) -or ($ForceUpdate)) {#this is creating a file with the version number for some reason
+    if (($CurrentAppVersion -lt [version]$LatestAppVersion) -or ($ForceUpdate)) {
         if ($ForceUpdate) {
             Write-Host "Forcing update of $App from $CurrentAppVersion to $LatestAppVersion"
         }
@@ -150,8 +150,18 @@ function Copy-PSADTFolders {
     )
     Write-Output "Copying old package files to $NewPackageRootFolder"
     Copy-Item -Path "$OldPackageRootFolder" -Destination "$NewPackageRootFolder" -Recurse
-    Write-Output "Removing old install files"
-    Remove-Item -Path "$NewPackageRootFolder\Files\*"
+    if ($OldPackageRootFolder -match "Reader"){
+        Write-Output "Removing old msp install files"
+        Remove-Item -Path "$NewPackageRootFolder\Files\*.msp"
+    }
+    elseif ($OldPackageRootFolder -match "BigFix"){
+        Write-Output "Removing old msp install files"
+        Remove-Item -Path "$NewPackageRootFolder\Files\*.exe"
+    }
+    else {
+        Write-Output "Removing old install files"
+        Remove-Item -Path "$NewPackageRootFolder\Files\*"
+    }
     Write-Output "Copying new install files"
     Copy-Item -Path $NewPSADTFiles -Destination "$NewPackageRootFolder\Files" -Verbose
 
@@ -160,8 +170,6 @@ function Copy-PSADTFolders {
 
 
 function Get-LatestAppVersion {
-    # http://vergrabber.kingu.pl/vergrabber.json
-    # Could use that if I didn't want to scrape websites
     param
     (
         [Parameter(Mandatory = $true,
@@ -186,7 +194,13 @@ function Get-LatestAppVersion {
 
         }
         'bigfix' {
-            #todo
+            $url = "http://support.bigfix.com/bes/release/"
+            $html = Invoke-WebRequest -Uri "$url"
+            $versionLinks = $html.Links | where href -Match "\d+\.\d+\/patch\d+" | Sort-Object -Descending
+            $latestURL = $url + $versionLinks[0].href
+            $html = Invoke-WebRequest -Uri "$latestURL"
+            $ClientDownload = $html.Links | where href -Match "Client.+\.exe"
+            $LatestAppVersion = [regex]::match($ClientDownload.href,'\d+(\.\d+)+').Value
         }
         'chrome' {
             # https://stackoverflow.com/questions/35114642/get-latest-release-version-number-for-chrome-browser
@@ -205,7 +219,7 @@ function Get-LatestAppVersion {
             $xml_versions.Load($url)
 
             # The different flash types can have different version numbers. I need to loop through
-            # all of them to get be sure
+            # all of them to be sure
             [version]$xml_activex_win10_current = ($xml_versions.version.release.ActiveX_win10.version).replace(",",".")
             [version]$xml_activex_edge_current = ($xml_versions.version.release.ActiveX_Edge.version).replace(",",".")
             [version]$xml_activex_win_current = ($xml_versions.version.release.ActiveX_win.version).replace(",",".")
@@ -280,7 +294,9 @@ function Get-LatestAppVersion {
             $LatestAppVersion = $DC_Versions[0].innerHTML.Replace("(","").replace(")","")
         }
         'receiver' {
-            #todo
+            $url = "https://www.citrix.com/downloads/citrix-receiver/"
+            $html = Invoke-WebRequest -Uri "$url"
+            $versionLinks = $html.Links | where innerHTML -Match "Receiver \d+(\.\d+)+ for Windows$" | Sort-Object -Property innerHTML -Descending
         }
         'vlc' {
             $url = "http://download.videolan.org/pub/videolan/vlc/"
@@ -290,11 +306,20 @@ function Get-LatestAppVersion {
             $LatestAppVersion = $versionlinks[0].href -replace "/",""
         
         }
-        'wincp' {
-            #todo
+        'winscp' {
+            $url = "https://winscp.net/eng/downloads.php"
+            $html = Invoke-WebRequest -Uri "$url" -UseBasicParsing
+            $versionlinks = $html.Links -match ".+Download/WINSCP.+Setup.exe" | Sort-Object -Descending
+            $LatestAppVersion = [regex]::match($versionlinks[0].href,'\d+(\.\d+)+').Value
         }
     }
-    return [version]$LatestAppVersion
+
+    if ($app -eq "reader"){
+        return $LatestAppVersion
+    }
+    else {
+        return [version]$LatestAppVersion
+    }
 }
 
 function Download-LatestAppVersion {
@@ -355,7 +380,14 @@ function Download-LatestAppVersion {
             Invoke-WebRequest -Uri $64bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName)-x64.msi"
         }
         'bigfix' {
-            #todo
+            $url = "http://support.bigfix.com/bes/release/"
+            $html = Invoke-WebRequest -Uri "$url"
+            $versionLinks = $html.Links | where href -Match "\d+\.\d+\/patch\d+" | Sort-Object -Descending
+            $latestURL = $url + $versionLinks[0].href
+            $html = Invoke-WebRequest -Uri "$latestURL"
+            $ClientDownload = ($html.Links | where href -Match "Client.+\.exe").href
+            $InstallFileName = $ClientDownload -split "/" | select -Last 1
+            Invoke-WebRequest -Uri $ClientDownload -PassThru -OutFile "$DownloadDir\$InstallFileName"
         }
         'chrome' {
             $64bitdownload = 'http://dl.google.com/edgedl/chrome/install/GoogleChromeStandaloneEnterprise64.msi'
@@ -531,10 +563,15 @@ function Download-LatestAppVersion {
             
             #64bit
             Invoke-WebRequest -Uri "$64bitdownload" -OutFile "$DownloadDir\$($InstallFileName)-win64.msi"
-        
         }
-        'wincp' {
-            #todo
+        'winscp' {
+            $domain = "https://winscp.net"
+            $url = "https://winscp.net/eng/downloads.php"
+            $html = Invoke-WebRequest -Uri "$url" -UseBasicParsing
+            $versionlinks = $html.Links -match ".+Download/WINSCP.+Setup.exe"
+            $downloadURL = $Domain + $versionLinks[0].href
+            $InstallFileName = $versionLinks[0].href -split "/" | select -Last 1
+            Invoke-WebRequest -Uri "$downloadURL" -OutFile "$DownloadDir\$InstallFileName"
         }
     }
 
