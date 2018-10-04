@@ -39,7 +39,7 @@ Edit the GlobalVariables.ps1 file to work with your enviroment.
  - $SCCM_Share : A UNC path to the newtork share where your SCCM packages are.
  - $SCCM_Share_Test_Folder : A Folder Name (Not full path) that should exist on your SCCM share
  - $SCCM_Share_Letter : What drive letter do you want your SCCM share mounted under?
- - All the $$rootApplicationPath in Get-RootApplicationPath
+ - All the $rootApplicationPaths
 
 You will also have to change the
  - New-StandardChangeSCCMPackage Update-AppHelper $SCCMFolder Parms.

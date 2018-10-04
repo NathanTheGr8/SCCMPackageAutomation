@@ -47,7 +47,7 @@ function Update-AppPackage {
         }
 
         $InstallFiles = Download-LatestAppVersion -App $App
-        $rootApplicationPath = Get-RootApplicationPath -App $App
+        $rootApplicationPath = $RootApplicationPath[$app]
         $count = (Measure-Object -InputObject $SCCM_Share -Character).Characters + 1
         # Gets the most recent folder for a given app
         $CurrentAppPath =  "$($SCCM_Share_Letter):\" + $rootApplicationPath.Substring($count) | Get-ChildItem | sort CreationTime -desc | select -f 1 
@@ -155,7 +155,7 @@ function Copy-PSADTFolders {
         Remove-Item -Path "$NewPackageRootFolder\Files\*.msp"
     }
     elseif ($OldPackageRootFolder -match "BigFix"){
-        Write-Output "Removing old msp install files"
+        Write-Output "Removing old exe install files"
         Remove-Item -Path "$NewPackageRootFolder\Files\*.exe"
     }
     else {
@@ -170,6 +170,8 @@ function Copy-PSADTFolders {
 
 
 function Get-LatestAppVersion {
+    # http://vergrabber.kingu.pl/vergrabber.json
+    # Could use that if I didn't want to scrape websites
     param
     (
         [Parameter(Mandatory = $true,
@@ -219,7 +221,7 @@ function Get-LatestAppVersion {
             $xml_versions.Load($url)
 
             # The different flash types can have different version numbers. I need to loop through
-            # all of them to be sure
+            # all of them to get be sure
             [version]$xml_activex_win10_current = ($xml_versions.version.release.ActiveX_win10.version).replace(",",".")
             [version]$xml_activex_edge_current = ($xml_versions.version.release.ActiveX_Edge.version).replace(",",".")
             [version]$xml_activex_win_current = ($xml_versions.version.release.ActiveX_win.version).replace(",",".")
@@ -296,7 +298,16 @@ function Get-LatestAppVersion {
         'receiver' {
             $url = "https://www.citrix.com/downloads/citrix-receiver/"
             $html = Invoke-WebRequest -Uri "$url"
-            $versionLinks = $html.Links | where innerHTML -Match "Receiver \d+(\.\d+)+ for Windows$" | Sort-Object -Property innerHTML -Descending
+            $versionLinks = $html.Links | where innerHTML -Match "Receiver \d+(\.\d+)+.* for Windows$"
+
+            $versionArray = @()
+            foreach ($version in $versionLinks){
+                [version]$VersionNumber = $version.innerHTML -split " " | Select -First 2 | select -Last 1
+                $versionArray += $VersionNumber
+            }
+
+            $versionArray = $versionArray | Sort-Object -Descending
+            $LatestAppVersion = $versionArray[0]
         }
         'vlc' {
             $url = "http://download.videolan.org/pub/videolan/vlc/"
@@ -387,7 +398,7 @@ function Download-LatestAppVersion {
             $html = Invoke-WebRequest -Uri "$latestURL"
             $ClientDownload = ($html.Links | where href -Match "Client.+\.exe").href
             $InstallFileName = $ClientDownload -split "/" | select -Last 1
-            Invoke-WebRequest -Uri $ClientDownload -PassThru -OutFile "$DownloadDir\$InstallFileName"
+            $WebRequestOutput = Invoke-WebRequest -Uri $ClientDownload -PassThru -OutFile "$DownloadDir\$InstallFileName"
         }
         'chrome' {
             $64bitdownload = 'http://dl.google.com/edgedl/chrome/install/GoogleChromeStandaloneEnterprise64.msi'
@@ -395,10 +406,10 @@ function Download-LatestAppVersion {
             $InstallFileName = "googlechromestandaloneenterprise"
 
             #32bit
-            Invoke-WebRequest -Uri $32bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName).msi"
+            $WebRequestOutput = Invoke-WebRequest -Uri $32bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName).msi"
 
             #64bit
-            Invoke-WebRequest -Uri $64bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName)64.msi"
+            $WebRequestOutput = Invoke-WebRequest -Uri $64bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName)64.msi"
 
         }
         'firefox' {
@@ -465,7 +476,7 @@ function Download-LatestAppVersion {
             }
 
             $DownloadURL = $Gimp_MinorVersionsUrl + $InstallFileName
-            Invoke-WebRequest -Uri $DownloadURL -OutFile "$DownloadDir\$InstallFileName"
+            $WebRequestOutput = Invoke-WebRequest -Uri $DownloadURL -OutFile "$DownloadDir\$InstallFileName"
 
         }
         'java' {
@@ -494,10 +505,10 @@ function Download-LatestAppVersion {
             $InstallFileName = "npp.$($newAppVersion).Installer"
 
             #32bit
-            Invoke-WebRequest -Uri $32bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName).exe"
+            $WebRequestOutput = Invoke-WebRequest -Uri $32bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName).exe"
             
             #64bit
-            Invoke-WebRequest -Uri $64bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName).x64.exe"
+            $WebRequestOutput = Invoke-WebRequest -Uri $64bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName).x64.exe"
 
         }
         'putty' {
@@ -513,10 +524,10 @@ function Download-LatestAppVersion {
             $InstallFileName = "putty-$($newAppVersion)"
 
             #32bit
-            Invoke-WebRequest -Uri "$32bitDownload" -OutFile "$DownloadDir\$($InstallFileName)-installer.msi"
+            $WebRequestOutput = Invoke-WebRequest -Uri "$32bitDownload" -OutFile "$DownloadDir\$($InstallFileName)-installer.msi"
             
             #64bit
-            Invoke-WebRequest -Uri "$64bitdownload" -OutFile "$DownloadDir\$($InstallFileName)-64bit-installer.msi"
+            $WebRequestOutput = Invoke-WebRequest -Uri "$64bitdownload" -OutFile "$DownloadDir\$($InstallFileName)-64bit-installer.msi"
         }
         'reader' {
             # https://stackoverflow.com/questions/48867426/script-to-download-latest-adobe-reader-dc-update
@@ -545,11 +556,20 @@ function Download-LatestAppVersion {
 
         }
         'receiver' {
-            #todo
+            $url = "https://www.citrix.com/downloads/citrix-receiver/"
+            $html = Invoke-WebRequest -Uri "$url"
+            $LatestAppVersion = Get-LatestAppVersion -App $App
+            $versionLink = $html.Links | where innerHTML -Match "Receiver $LatestAppVersion.* for Windows$"
+
+            $domain = "https://www.citrix.com/"
+            $html2 = Invoke-WebRequest -Uri "$domain$($versionLink.href)"
+            $downloadLink = $html2.Links | where innerHTML -Match "Download Receiver for Windows" | select -First 1
+
+            $InstallFileName = "CitrixReceiver.exe"
+            $WebRequestOutput = Invoke-WebRequest -Uri "https:$($downloadLink.rel)" -OutFile "$DownloadDir\$InstallFileName"
         }
         'vlc' {
             $url = "http://download.videolan.org/pub/videolan/vlc/"
-
             $LatestAppVersion =  Get-LatestAppVersion -App $app
 
             $32bitDownload = $url + "$($LatestAppVersion)/win32/vlc-$($LatestAppVersion)-win32.msi"
@@ -559,10 +579,10 @@ function Download-LatestAppVersion {
             $InstallFileName = "vlc-$($LatestAppVersion)"
 
             #32bit
-            Invoke-WebRequest -Uri "$32bitDownload" -OutFile "$DownloadDir\$($InstallFileName)-win32.msi"
+            $WebRequestOutput = Invoke-WebRequest -Uri "$32bitDownload" -OutFile "$DownloadDir\$($InstallFileName)-win32.msi"
             
             #64bit
-            Invoke-WebRequest -Uri "$64bitdownload" -OutFile "$DownloadDir\$($InstallFileName)-win64.msi"
+            $WebRequestOutput = Invoke-WebRequest -Uri "$64bitdownload" -OutFile "$DownloadDir\$($InstallFileName)-win64.msi"
         }
         'winscp' {
             $domain = "https://winscp.net"
@@ -571,7 +591,7 @@ function Download-LatestAppVersion {
             $versionlinks = $html.Links -match ".+Download/WINSCP.+Setup.exe"
             $downloadURL = $Domain + $versionLinks[0].href
             $InstallFileName = $versionLinks[0].href -split "/" | select -Last 1
-            Invoke-WebRequest -Uri "$downloadURL" -OutFile "$DownloadDir\$InstallFileName"
+            $WebRequestOutput = Invoke-WebRequest -Uri "$downloadURL" -OutFile "$DownloadDir\$InstallFileName"
         }
     }
 
@@ -579,4 +599,32 @@ function Download-LatestAppVersion {
     $InstallFiles = Get-ChildItem -Path "$DownloadDir\$InstallFileName*"
     return $InstallFiles
 
+}
+
+function Get-OutDatedApps {
+    <#
+        .SYNOPSIS
+        Loop through all apps to see which ones are out of date.
+	
+        .DESCRIPTION
+
+        .EXAMPLE
+
+        .REMARKS
+
+    #>
+    
+    $MaintainedApps = @('7zip','BigFix','Chrome','Firefox','Flash','GIMP','Notepad++','Putty','Reader','Receiver','VLC','WinSCP')
+    Foreach ($App in $MaintainedApps){
+        [version]$currVer = Get-CurrentAppVersion -App $app
+        [version]$LatestVer = Get-LatestAppVersion -App $App
+
+        if ($LatestVer -gt $currVer){
+            Write-Host "$App needs updated to $LatestVer. We are currently on $currVer" -ForegroundColor Red
+        }
+        else {
+            Write-Host "$app is on latest version $LatestVer" -ForegroundColor Green
+        }
+
+    }
 }

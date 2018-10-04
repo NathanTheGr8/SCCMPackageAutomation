@@ -71,102 +71,73 @@ function New-StandardChangeSCCMPackage
 
     # Package 7zip
     if ($App.ToLower() -eq '7zip') {
-        $rootApplicationPath = Get-RootApplicationPath -App $App
-
-        Update-AppHelper -AppName "7zip" -rootApplicationPath $rootApplicationPath -SCCMFolder HomeOffice -Manufacturer "Igor Pavlov"
+        Update-AppHelper -AppName "7zip" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Igor Pavlov"
     }
    
     # Package Bigfix
     if ($App.ToLower() -eq 'bigfix') {
-        $rootApplicationPath = Get-RootApplicationPath -App $App
-
-        Update-AppHelper -AppName "BigFix Client" -rootApplicationPath $rootApplicationPath -SCCMFolder CoreApps -Manufacturer "IBM"
+        Update-AppHelper -AppName "BigFix Client" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "IBM"
     }
 
 
     # Package Google Chrome 
     if ($App.ToLower() -eq 'chrome') {
-        $rootApplicationPath = Get-RootApplicationPath -App $App
-
-        Update-AppHelper -AppName "Chrome" -rootApplicationPath $rootApplicationPath -SCCMFolder CoreApps -Manufacturer "Google"
+        Update-AppHelper -AppName "Chrome" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Google"
     }
     
     #Package Firefox
     if ($App.ToLower() -eq 'firefox') {
-        $rootApplicationPath = Get-RootApplicationPath -App $App
-
-        Update-AppHelper -AppName "Firefox" -rootApplicationPath $rootApplicationPath -SCCMFolder HomeOffice -Manufacturer "Mozilla"
+        Update-AppHelper -AppName "Firefox" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Mozilla"
     }
 
     # Package Adobe Flash
     if ($App.ToLower() -eq 'flash') {
-        $rootApplicationPath = Get-RootApplicationPath -App $App
-
-        Update-AppHelper -AppName "Flash" -rootApplicationPath $rootApplicationPath -SCCMFolder CoreApps -Manufacturer "Adobe"
+        Update-AppHelper -AppName "Flash" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Adobe"
     }
 
     # Package GIMP
     if ($App.ToLower() -eq 'gimp') {
-        $rootApplicationPath = Get-RootApplicationPath -App $App
-
-        Update-AppHelper -AppName "GIMP" -rootApplicationPath $rootApplicationPath -SCCMFolder HomeOffice -Manufacturer "GIMP Development Team"
+        Update-AppHelper -AppName "GIMP" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "GIMP Development Team"
     }
 
     # Package Druva InSync
     if ($App.ToLower() -eq 'insync') {
-        $rootApplicationPath = Get-RootApplicationPath -App $App
-
-        Update-AppHelper -AppName "InSync" -rootApplicationPath $rootApplicationPath -SCCMFolder CoreApps -Manufacturer "Druva"
+        Update-AppHelper -AppName "InSync" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Druva"
     }
 
     # Package Java
     if ($App.ToLower() -eq 'java') {
-        $rootApplicationPath = Get-RootApplicationPath -App $App
-        
-        Update-AppHelper -AppName "Java" -rootApplicationPath $rootApplicationPath -SCCMFolder CoreApps -Manufacturer "Oracle"
+        Update-AppHelper -AppName "Java" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Oracle"
     }
 
     # Package Notepad++
     if ($App.ToLower() -eq 'notepad++') {
-        $rootApplicationPath = Get-RootApplicationPath -App $App
-
-        Update-AppHelper -AppName "Notepad++" -rootApplicationPath $rootApplicationPath -SCCMFolder HomeOffice -Manufacturer "Notepad++ Team"
+        Update-AppHelper -AppName "Notepad++" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Notepad++ Team"
     }
 
     # Package putty
     if ($App.ToLower() -eq 'putty') {
-        $rootApplicationPath = Get-RootApplicationPath -App $App
-
-        Update-AppHelper -AppName "Putty" -rootApplicationPath $rootApplicationPath -SCCMFolder HomeOffice -Manufacturer "Simon Tatham"
+        Update-AppHelper -AppName "Putty" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Simon Tatham"
     }
 
     # Package Adobe Reader
     if ($App.ToLower() -eq 'reader') {
-        $rootApplicationPath = Get-RootApplicationPath -App $App
-
-        Update-AppHelper -AppName "Reader" -rootApplicationPath $rootApplicationPath -SCCMFolder CoreApps -Manufacturer "Adobe"
+        Update-AppHelper -AppName "Reader" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Adobe"
     }
 
     # Package Citrix Receiver
     if ($App.ToLower() -eq 'receiver') {
-        $rootApplicationPath = Get-RootApplicationPath -App $App
-        
-        Update-AppHelper -AppName "Receiver" -rootApplicationPath $rootApplicationPath -SCCMFolder HomeOffice -Manufacturer "Citrix"
-    
+        Update-AppHelper -AppName "Receiver" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Citrix"
     }
 
     # Package vlc
     if ($App.ToLower() -eq 'vlc') {
-        $rootApplicationPath = Get-RootApplicationPath -App $App
-
-        Update-AppHelper -AppName "VLC" -rootApplicationPath $rootApplicationPath -SCCMFolder HomeOffice -Manufacturer "VideoLAN"
+        Update-AppHelper -AppName "VLC" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "VideoLAN"
     }
 
     # Package winscp
     if ($App.ToLower() -eq 'winscp') {
-        $rootApplicationPath = Get-RootApplicationPath -App $App
-
-        Update-AppHelper -AppName "WinSCP" -rootApplicationPath $rootApplicationPath -SCCMFolder HomeOffice -Manufacturer "Martin Přikryl"
+        Update-AppHelper -AppName "WinSCP" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Martin Přikryl"
     }
 
     Set-Location "c:" #change location back to c drive. Otherwise other functions break
@@ -259,6 +230,7 @@ function Update-AppHelper {
         }
         catch [exception]{
             Write-Output "$_"
+            break
         }
 
         try {
@@ -267,6 +239,7 @@ function Update-AppHelper {
         }
         catch [exception]{
             Write-Output "$_"
+            break
         }
         
         try {
@@ -275,6 +248,7 @@ function Update-AppHelper {
         }
         catch [exception]{
             Write-Output "$_"
+            break
         }
 
         try {
@@ -283,6 +257,7 @@ function Update-AppHelper {
         }
         catch [exception]{
             Write-Output "$_"
+            break
         }
         
         Write-Output "Updating 'Not Current Version $app' Collection to new version"
@@ -304,7 +279,14 @@ function Update-AppHelper {
 
 
         #>
-        $WMIQuerries = Get-CMDeviceCollectionQueryMembershipRule -CollectionName "Not Current Version $app"
+        try {
+            $WMIQuerries = Get-CMDeviceCollectionQueryMembershipRule -CollectionName "Not Current Version $app"
+        }
+        catch {
+            Write-Output "Error, try importing the SCCM Module manuelly."
+            Write-Output "$_"
+            break
+        }
         If ($WMIQuerries){ #If there are any
             foreach ($Query in $WMIQuerries){
                 #includes everything from the old query up to the < char. Adds two to include the char and a space

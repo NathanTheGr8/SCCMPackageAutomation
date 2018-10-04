@@ -1,4 +1,4 @@
-﻿<# GlobalVarilbes
+﻿<# Global Variables and functions
 
 
 
@@ -6,76 +6,25 @@
 #>
 
 $SCCM_Site = "HMN"
-$SCCM_Share = "\\serversccm01\Packages"
+$SCCM_Share = "\\spivsccm01\Packages"
 $SCCM_Share_Test_Folder = "CoreApps_ALL"
 $SCCM_Share_Letter = "P"
 
-function Get-RootApplicationPath {
-    <#
-        .SYNOPSIS
-        Gets the $rootApplicationPath for a give app
-	
-        .DESCRIPTION
-        Gets the $rootApplicationPath for a give app
-
-        .PARAMETER App
-        Defaults to Deploy-Applicaiton.ps1
-
-        .EXAMPLE
-
-        .REMARKS
-
-    #>
-    param
-    (
-        [Parameter(Mandatory = $true,
-        HelpMessage = 'What standard app are you trying to get the root folder of?')]
-        [string]
-        [ValidateSet('7zip','BigFix','Chrome','Firefox','Flash','GIMP','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','WinSCP', IgnoreCase = $true)]
-        $App
-    )
-    switch ($App) {
-        '7zip' {
-            $rootApplicationPath = "$SCCM_Share\HOME OFFICE\7Zip"
-        }
-        'bigfix' {
-            $rootApplicationPath = "$SCCM_Share\CoreApps_ALL\BixFixClient"
-        }
-        'chrome' {
-            $rootApplicationPath = "$SCCM_Share\CoreApps_ALL\GoogleChrome"
-        }
-        'firefox' {
-            $rootApplicationPath = "$SCCM_Share\HOME OFFICE\Mozilla FireFox"
-        }
-        'flash' {
-            $rootApplicationPath = "$SCCM_Share\CoreApps_ALL\Adobe\AdobeFlash"
-        }
-        'gimp'{
-            $rootApplicationPath = "$SCCM_Share\HOME OFFICE\GIMP"
-        }
-        'java' {
-            $rootApplicationPath = "$SCCM_Share\CoreApps_ALL\java"
-        }
-        'notepad++' {
-            $rootApplicationPath = "$SCCM_Share\HOME OFFICE\Notepad++"
-        }
-        'putty' {
-            $rootApplicationPath = "$SCCM_Share\HOME OFFICE\Putty"
-        }
-        'reader' {
-            $rootApplicationPath = "$SCCM_Share\CoreApps_ALL\Adobe\AdobeReader"
-        }
-        'receiver' {
-            $rootApplicationPath = "$SCCM_Share\HOME OFFICE\Citrix Receiver"
-        }
-        'vlc' {
-            $rootApplicationPath = "$SCCM_Share\HOME OFFICE\VLC"
-        }
-        'wincp' {
-            $rootApplicationPath = "$SCCM_Share\HOME OFFICE\WinSCP"
-        }
-    }
-    return $rootApplicationPath
+$RootApplicationPath = @{
+    '7zip' = "$SCCM_Share\HOME OFFICE\7Zip"
+    'bigfix' = "$SCCM_Share\CoreApps_ALL\BixFixClient"
+    'chrome' = "$SCCM_Share\CoreApps_ALL\GoogleChrome"
+    'firefox' = "$SCCM_Share\HOME OFFICE\Mozilla FireFox"
+    'flash'  = "$SCCM_Share\CoreApps_ALL\Adobe\AdobeFlash"
+    'gimp'= "$SCCM_Share\HOME OFFICE\GIMP"
+    'insync' = "$SCCM_Share\CoreApps_ALL\DruvaCloud"
+    'java' = "$SCCM_Share\CoreApps_ALL\java"
+    'notepad++'  = "$SCCM_Share\HOME OFFICE\Notepad++"
+    'putty' = "$SCCM_Share\HOME OFFICE\Putty"
+    'reader' = "$SCCM_Share\CoreApps_ALL\Adobe\AdobeReader"
+    'receiver' = "$SCCM_Share\HOME OFFICE\Citrix Receiver"
+    'vlc' = "$SCCM_Share\HOME OFFICE\VLC"
+    'winscp'  = "$SCCM_Share\HOME OFFICE\WinSCP"
 }
 
 function Get-CurrentAppVersion {
@@ -88,7 +37,7 @@ function Get-CurrentAppVersion {
         $App
     )
 
-    $rootApplicationPath = Get-RootApplicationPath -App $App
+    $rootApplicationPath = $RootApplicationPath[$app]
     # Get-ChildItem has trouble working with UNC paths from the $SCCM_Site: drive. That is why I map a $SCCM_Share_Letter drive
     $count = (Measure-Object -InputObject $SCCM_Share -Character).Characters + 1
     # Gets the most recent folder for a given app
