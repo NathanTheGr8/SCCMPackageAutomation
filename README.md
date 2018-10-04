@@ -70,6 +70,7 @@ Credit to the following
 * [jasonadsit](https://gist.github.com/jasonadsit/c77340fe385fe953f9c54436b926cf83) - Was a big help writing the Download-LatestAppVersion -App Flash function
 * [James C.](https://stackoverflow.com/questions/48867426/script-to-download-latest-adobe-reader-dc-update) - Used his stackoverflow example to write the Adobe Reader function
 * [DexterPOSH](http://www.dexterposh.com/2015/08/powershell-sccm-2012-create-packages.html) - His blog post was the inspiration for the New-StandardChangeSCCMPackage function
+* [Lee_Dailey](https://www.reddit.com/user/Lee_Dailey) - Provided a lot code style and formatting comments. 
 
 ### Todos
 
