@@ -170,166 +170,186 @@ function Copy-PSADTFolders {
 
 
 function Get-LatestAppVersion {
-    # http://vergrabber.kingu.pl/vergrabber.json
-    # Could use that if I didn't want to scrape websites
     param
     (
+        
         [Parameter(Mandatory = $true,
         HelpMessage = 'What standard app are you trying to get the version of?')]
         [string]
-        [ValidateSet('7zip','BigFix','Chrome','Firefox','Flash','GIMP','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','WinSCP', IgnoreCase = $true)]
+        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Firefox','Flash','GIMP','Git','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','WinSCP', IgnoreCase = $true)]
         $App
-    )
-    switch ($App) {
-        '7zip' {
-            # https://www.reddit.com/r/PowerShell/comments/9gwbed/scrape_7zip_website_for_the_latest_version/
-            $Domain = "https://www.7-zip.org/download.html"
-            $temp   = (Invoke-WebRequest -uri $Domain)
-            $regex  = $temp.Content -match 'Download 7-Zip (.*)\s(.*) for Windows'
-
-            if ($regex) {
-                $LatestAppVersion  = $Matches[1]
-            }
-            else {
-                throw "Error could not scrape 7-zip.org for version"
-            }
-
-        }
-        'bigfix' {
-            $url = "http://support.bigfix.com/bes/release/"
-            $html = Invoke-WebRequest -Uri "$url"
-            $versionLinks = $html.Links | where href -Match "\d+\.\d+\/patch\d+" | Sort-Object -Descending
-            $latestURL = $url + $versionLinks[0].href
-            $html = Invoke-WebRequest -Uri "$latestURL"
-            $ClientDownload = $html.Links | where href -Match "Client.+\.exe"
-            $LatestAppVersion = [regex]::match($ClientDownload.href,'\d+(\.\d+)+').Value
-        }
-        'chrome' {
-            # https://stackoverflow.com/questions/35114642/get-latest-release-version-number-for-chrome-browser
-            # https://omahaproxy.appspot.com/
-
-            $LatestAppVersion = (Invoke-WebRequest -Uri "https://omahaproxy.appspot.com/all.json" | ConvertFrom-Json)[0].versions[-1].version
-        }
-        'firefox' {
-            $LatestAppVersion = (Invoke-WebRequest -Uri "https://product-details.mozilla.org/1.0/firefox_versions.json" | ConvertFrom-Json).LATEST_FIREFOX_VERSION
-        }
-        'flash' {
-            # https://github.com/auberginehill/update-adobe-flash-player/blob/master/Update-AdobeFlashPlayer.ps1
-            
-            $url = "https://fpdownload.macromedia.com/pub/flashplayer/masterversion/masterversion.xml"
-            $xml_versions = New-Object XML
-            $xml_versions.Load($url)
-
-            # The different flash types can have different version numbers. I need to loop through
-            # all of them to get be sure
-            [version]$xml_activex_win10_current = ($xml_versions.version.release.ActiveX_win10.version).replace(",",".")
-            [version]$xml_activex_edge_current = ($xml_versions.version.release.ActiveX_Edge.version).replace(",",".")
-            [version]$xml_activex_win_current = ($xml_versions.version.release.ActiveX_win.version).replace(",",".")
-            [version]$xml_plugin_win_current = ($xml_versions.version.release.NPAPI_win.version).replace(",",".")
-            [version]$xml_ppapi_win_current = ($xml_versions.version.release.PPAPI_win.version).replace(",",".")
-
-            $FlashVersions = $xml_activex_win10_current,$xml_activex_edge_current,$xml_activex_win_current,$xml_plugin_win_current,$xml_ppapi_win_current
-            $FlashVersions = Sort-Object -InputObject $FlashVersions -Descending 
-            $LatestAppVersion = $FlashVersions[0]
-        }
-        'gimp'{
-            $url = "https://download.gimp.org/mirror/pub/gimp/"
-            $html = Invoke-WebRequest -Uri "$url"
-
-            $GIMP_Versions = $html.Links | where innerHTML -Match "v\d+\.\d+\.*\d*/"
-            $GIMP_Versions = Sort-Object -InputObject $GIMP_Versions -Property innerHTML
-
-            $Gimp_MinorVersionsUrl = $url + "$($GIMP_Versions[-1].href)" + "windows/"
-            $html2 = Invoke-WebRequest -Uri $Gimp_MinorVersionsUrl
-            $Gimp_MinorVersions = $html2.Links | where innerHTML -Match "gimp-\d+\.\d+\.*\d*-setup.+exe"
-            $Gimp_MinorVersions = Sort-Object -InputObject $Gimp_MinorVersions -Property innerHTML
-            #gimp-(\d+\.*){3}-setup(-\d+)*\.exe[^.]
-
-            if(($Gimp_MinorVersions[-1].innerHTML -split "." | select -Last 1) -eq "torrent"){
-                $LatestAppVersion = $Gimp_MinorVersions[-2].innerHTML -split "-" | Select-Nth -N 2
-            }
-            else {
-                $LatestAppVersion = $Gimp_MinorVersions[-1].innerHTML -split "-" | Select-Nth -N 2
-            }
-        }
-        'java' {
-            Write-Output "Java can't be automatically downloaded."
-            #todo?
-        }
-        'notepad++' {
-            <#
-            I am scrapping the domain for links like *Notepad++ Installer 64-bit.
-            This solution will break if they change their link naming format. However there is on offical notepad++
-            api to query.
-            #>
-            # URL to scan
-            $SiteToScan = "https://notepad-plus-plus.org/download"
- 
-            # Scan URL to download file
-            $url64 = ((Invoke-WebRequest -uri $SiteToScan).links | Where innerHTML -like “*Notepad++ Installer 64-bit*”).href
-            $LatestAppVersion = $url64 -split "/" | select -Last 2 | Select -first 1
-            
-        }
-        'putty' {
-            $SiteToScan = "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html"
-            $foundVersion = (Invoke-WebRequest -Uri $SiteToScan).Parsedhtml.title -match "\d+.\d+"
-            
-            if ($foundVersion){
-                $LatestAppVersion = $Matches[0]
-            }
-            else {
-                throw "Error $app version not found"
-            }
-        }
-        'reader' {
-            $url = "https://helpx.adobe.com/acrobat/release-note/release-notes-acrobat-reader.html"
-            $html = Invoke-WebRequest -Uri "$url"
-
-            $DC_Versions = $html.Links | where innerHTML -Match "\(\d+\.\d+\.\d+\)"
-
-            foreach ($version in $DC_Versions){
-                $index = $version.innerHTML.indexOf("(")
-                $version.innerHTML = $version.innerHTML.substring($index)
-            }
-
-            $DC_Versions = Sort-Object -InputObject $DC_Versions -Property innerHTML
-            $LatestAppVersion = $DC_Versions[0].innerHTML.Replace("(","").replace(")","")
-        }
-        'receiver' {
-            $url = "https://www.citrix.com/downloads/citrix-receiver/"
-            $html = Invoke-WebRequest -Uri "$url"
-            $versionLinks = $html.Links | where innerHTML -Match "Receiver \d+(\.\d+)+.* for Windows$"
-
-            $versionArray = @()
-            foreach ($version in $versionLinks){
-                [version]$VersionNumber = $version.innerHTML -split " " | Select -First 2 | select -Last 1
-                $versionArray += $VersionNumber
-            }
-
-            $versionArray = $versionArray | Sort-Object -Descending
-            $LatestAppVersion = $versionArray[0]
-        }
-        'vlc' {
-            $url = "http://download.videolan.org/pub/videolan/vlc/"
-            $html = Invoke-WebRequest -Uri "$url"
-
-            $versionlinks = $html.Links | where href -match "^(\d+\.)?(\d+\.)?(\*|\d+)\/$" | Sort-Object -Property href -Descending
-            $LatestAppVersion = $versionlinks[0].href -replace "/",""
         
-        }
-        'winscp' {
-            $url = "https://winscp.net/eng/downloads.php"
-            $html = Invoke-WebRequest -Uri "$url" -UseBasicParsing
-            $versionlinks = $html.Links -match ".+Download/WINSCP.+Setup.exe" | Sort-Object -Descending
-            $LatestAppVersion = [regex]::match($versionlinks[0].href,'\d+(\.\d+)+').Value
-        }
+    )
+    begin{
+        #have to manually populate
+        #$App = $PSBoundParameters
     }
+    process {
+        switch ($App) {
+            '7zip' {
+                # https://www.reddit.com/r/PowerShell/comments/9gwbed/scrape_7zip_website_for_the_latest_version/
+                $Domain = "https://www.7-zip.org/download.html"
+                $temp   = (Invoke-WebRequest -uri $Domain)
+                $regex  = $temp.Content -match 'Download 7-Zip (.*)\s(.*) for Windows'
 
-    if ($app -eq "reader"){
-        return $LatestAppVersion
-    }
-    else {
-        return [version]$LatestAppVersion
+                if ($regex) {
+                    $LatestAppVersion  = $Matches[1]
+                }
+                else {
+                    throw "Error could not scrape 7-zip.org for version"
+                }
+
+            }
+            'bigfix' {
+                $url = "http://support.bigfix.com/bes/release/"
+                $html = Invoke-WebRequest -Uri "$url"
+                $versionLinks = $html.Links | where href -Match "\d+\.\d+\/patch\d+" | Sort-Object -Descending
+                $latestURL = $url + $versionLinks[0].href
+                $html = Invoke-WebRequest -Uri "$latestURL"
+                $ClientDownload = $html.Links | where href -Match "Client.+\.exe"
+                $LatestAppVersion = [regex]::match($ClientDownload.href,'\d+(\.\d+)+').Value
+            }
+            'chrome' {
+                # https://stackoverflow.com/questions/35114642/get-latest-release-version-number-for-chrome-browser
+                # https://omahaproxy.appspot.com/
+
+                $LatestAppVersion = (Invoke-WebRequest -Uri "https://omahaproxy.appspot.com/all.json" | ConvertFrom-Json)[0].versions[-1].version
+            }
+            'cutepdf' {
+                #Scrubbing the page for version is difficult. It also gives an incomplete version.
+                # http://www.cutepdf.com/products/cutepdf/writer.asp
+
+                $download = Download-LatestAppVersion -App $App
+                $LatestAppVersion = $download.VersionInfo.ProductVersion
+            }
+            'firefox' {
+                $LatestAppVersion = (Invoke-WebRequest -Uri "https://product-details.mozilla.org/1.0/firefox_versions.json" | ConvertFrom-Json).LATEST_FIREFOX_VERSION
+            }
+            'flash' {
+                # https://github.com/auberginehill/update-adobe-flash-player/blob/master/Update-AdobeFlashPlayer.ps1
+            
+                $url = "https://fpdownload.macromedia.com/pub/flashplayer/masterversion/masterversion.xml"
+                $xml_versions = New-Object XML
+                $xml_versions.Load($url)
+
+                # The different flash types can have different version numbers. I need to loop through
+                # all of them to get be sure
+                [version]$xml_activex_win10_current = ($xml_versions.version.release.ActiveX_win10.version).replace(",",".")
+                [version]$xml_activex_edge_current = ($xml_versions.version.release.ActiveX_Edge.version).replace(",",".")
+                [version]$xml_activex_win_current = ($xml_versions.version.release.ActiveX_win.version).replace(",",".")
+                [version]$xml_plugin_win_current = ($xml_versions.version.release.NPAPI_win.version).replace(",",".")
+                [version]$xml_ppapi_win_current = ($xml_versions.version.release.PPAPI_win.version).replace(",",".")
+
+                $FlashVersions = $xml_activex_win10_current,$xml_activex_edge_current,$xml_activex_win_current,$xml_plugin_win_current,$xml_ppapi_win_current
+                $FlashVersions = Sort-Object -InputObject $FlashVersions -Descending 
+                $LatestAppVersion = $FlashVersions[0]
+            }
+            'gimp'{
+                $url = "https://download.gimp.org/mirror/pub/gimp/"
+                $html = Invoke-WebRequest -Uri "$url"
+
+                $GIMP_Versions = $html.Links | where innerHTML -Match "v\d+\.\d+\.*\d*/"
+                $GIMP_Versions = Sort-Object -InputObject $GIMP_Versions -Property innerHTML
+
+                $Gimp_MinorVersionsUrl = $url + "$($GIMP_Versions[-1].href)" + "windows/"
+                $html2 = Invoke-WebRequest -Uri $Gimp_MinorVersionsUrl
+                $Gimp_MinorVersions = $html2.Links | where innerHTML -Match "gimp-\d+\.\d+\.*\d*-setup.+exe"
+                $Gimp_MinorVersions = Sort-Object -InputObject $Gimp_MinorVersions -Property innerHTML
+                #gimp-(\d+\.*){3}-setup(-\d+)*\.exe[^.]
+
+                if(($Gimp_MinorVersions[-1].innerHTML -split "." | select -Last 1) -eq "torrent"){
+                    $LatestAppVersion = $Gimp_MinorVersions[-2].innerHTML -split "-" | Select-Nth -N 2
+                }
+                else {
+                    $LatestAppVersion = $Gimp_MinorVersions[-1].innerHTML -split "-" | Select-Nth -N 2
+                }
+            }
+            'git'{
+                $url = "https://git-scm.com/download/win"
+                $html = Invoke-WebRequest -Uri $url
+
+                $32bitDownload = ($html.links | where innerHTML -Match "32-bit Git for Windows Setup" | select -First 1).href
+                $LatestAppVersion = [regex]::match($32bitDownload,'\d+(\.\d+)+').Value
+            }
+            'java' {
+                Write-Output "Java can't be automatically downloaded."
+                #todo?
+            }
+            'notepad++' {
+                <#
+                I am scrapping the domain for links like *Notepad++ Installer 64-bit.
+                This solution will break if they change their link naming format. However there is on offical notepad++
+                api to query.
+                #>
+                # URL to scan
+                $SiteToScan = "https://notepad-plus-plus.org/download"
+ 
+                # Scan URL to download file
+                $url64 = ((Invoke-WebRequest -uri $SiteToScan).links | Where innerHTML -like “*Notepad++ Installer 64-bit*”).href
+                $LatestAppVersion = $url64 -split "/" | select -Last 2 | Select -first 1
+            
+            }
+            'putty' {
+                $SiteToScan = "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html"
+                $foundVersion = (Invoke-WebRequest -Uri $SiteToScan).Parsedhtml.title -match "\d+.\d+"
+            
+                if ($foundVersion){
+                    $LatestAppVersion = $Matches[0]
+                }
+                else {
+                    throw "Error $app version not found"
+                }
+            }
+            'reader' {
+                $url = "https://helpx.adobe.com/acrobat/release-note/release-notes-acrobat-reader.html"
+                $html = Invoke-WebRequest -Uri "$url"
+
+                $DC_Versions = $html.Links | where innerHTML -Match "\(\d+\.\d+\.\d+\)"
+
+                foreach ($version in $DC_Versions){
+                    $index = $version.innerHTML.indexOf("(")
+                    $version.innerHTML = $version.innerHTML.substring($index)
+                }
+
+                $DC_Versions = Sort-Object -InputObject $DC_Versions -Property innerHTML
+                $LatestAppVersion = $DC_Versions[0].innerHTML.Replace("(","").replace(")","")
+            }
+            'receiver' {
+                $url = "https://www.citrix.com/downloads/citrix-receiver/"
+                $html = Invoke-WebRequest -Uri "$url"
+                $versionLinks = $html.Links | where innerHTML -Match "Receiver \d+(\.\d+)+.* for Windows$"
+
+                $versionArray = @()
+                foreach ($version in $versionLinks){
+                    [version]$VersionNumber = $version.innerHTML -split " " | Select -First 2 | select -Last 1
+                    $versionArray += $VersionNumber
+                }
+
+                $versionArray = $versionArray | Sort-Object -Descending
+                $LatestAppVersion = $versionArray[0]
+            }
+            'vlc' {
+                $url = "http://download.videolan.org/pub/videolan/vlc/"
+                $html = Invoke-WebRequest -Uri "$url"
+
+                $versionlinks = $html.Links | where href -match "^(\d+\.)?(\d+\.)?(\*|\d+)\/$" | Sort-Object -Property href -Descending
+                $LatestAppVersion = $versionlinks[0].href -replace "/",""
+        
+            }
+            'winscp' {
+                $url = "https://winscp.net/eng/downloads.php"
+                $html = Invoke-WebRequest -Uri "$url" -UseBasicParsing
+                $versionlinks = $html.Links -match ".+Download/WINSCP.+Setup.exe" | Sort-Object -Descending
+                $LatestAppVersion = [regex]::match($versionlinks[0].href,'\d+(\.\d+)+').Value
+            }
+        }
+
+        if($app -eq "reader"){
+            return $LatestAppVersion
+        }
+        else {
+            return [version]$LatestAppVersion
+        }
     }
 }
 
@@ -339,9 +359,11 @@ function Download-LatestAppVersion {
         [Parameter(Mandatory = $true,
         HelpMessage = 'What standard app are you trying to get the version of?')]
         [string]
-        [ValidateSet('7zip','BigFix','Chrome','Firefox','Flash','GIMP','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','WinSCP', IgnoreCase = $true)]
+        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Firefox','Flash','GIMP','Git','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','WinSCP', IgnoreCase = $true)]
         $App
     )
+    # If you don't set this you get SSL/TLS securl channel errors
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     #Make Temp Download dir if it doesn't exist
     $DownloadDir = "$home\Downloads"
@@ -412,6 +434,11 @@ function Download-LatestAppVersion {
             $WebRequestOutput = Invoke-WebRequest -Uri $64bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName)64.msi"
 
         }
+        'cutepdf' {
+            $downloadURL = "http://www.cutepdf.com/download/CuteWriter.exe"
+            $InstallFileName = "CuteWriter.exe"
+            $WebRequestOutput = Invoke-WebRequest -Uri $downloadURL -PassThru -OutFile "$DownloadDir\$($InstallFileName)"
+        }
         'firefox' {
             $64bitdownload = "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US"
             $32bitDownload = "https://download.mozilla.org/?product=firefox-latest-ssl&os=win&lang=en-US"
@@ -477,6 +504,18 @@ function Download-LatestAppVersion {
 
             $DownloadURL = $Gimp_MinorVersionsUrl + $InstallFileName
             $WebRequestOutput = Invoke-WebRequest -Uri $DownloadURL -OutFile "$DownloadDir\$InstallFileName"
+
+        }
+        'git'{
+            $url = "https://git-scm.com/download/win"
+            $html = Invoke-WebRequest -Uri $url
+
+            $32bitDownload = ($html.links | where innerHTML -Match "32-bit Git for Windows Setup" | select -First 1).href
+            $64bitDownload = ($html.links | where innerHTML -Match "64-bit Git for Windows Setup" | select -First 1).href
+            $InstallFileName = "Git-$(Get-LatestAppVersion -App $App)"
+
+            $WebRequestOutput = Invoke-WebRequest -Uri $32bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName)-32-bit.exe"
+            $WebRequestOutput = Invoke-WebRequest -Uri $64bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName)-64-bit.exe"
 
         }
         'java' {
