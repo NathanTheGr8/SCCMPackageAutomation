@@ -1,7 +1,5 @@
-#Ignored by Git
-
-$global:SCCM_Site = "HMN"
-$global:SCCM_Share = "\\spivsccm01\Packages"
+$global:SCCM_Site = ""
+$global:SCCM_Share = "\\server\Packages"
 $global:SCCM_Share_Test_Folder = "CoreApps_ALL"
 $global:SCCM_Share_Letter = "P"
 

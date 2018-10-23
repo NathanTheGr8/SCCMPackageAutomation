@@ -11,7 +11,7 @@
     Exposed Functions go in Public Folder
 #>
 
-# Dot Source Global Varibles
+# Global varibles
 . .\Public\GlobalVariables.ps1
 
 #Get public and private function definition files.
@@ -36,8 +36,6 @@
 # Read in or create an initial config file and variable
 # Export Public functions ($Public.BaseName) for WIP modules
 # Set variables visible to the module and its functions only
-
-#Global varibles
 
 
 
