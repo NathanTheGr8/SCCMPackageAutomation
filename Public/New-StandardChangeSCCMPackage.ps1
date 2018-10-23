@@ -1,35 +1,34 @@
+<#
+.SYNOPSIS
+
+Creates a new SCCM package for one of the standard change apps.
+.DESCRIPTION
+
+requires \\SCCMServer\pacakgesShare mounted as p Drive
+.PARAMETER App
+
+Valid options are
+Firefox
+Chrome
+Flash
+Java
+Reader
+Bigfix
+Druva
+Notepad++
+7zip
+putty
+WinSCP
+Reciever
+.EXAMPLE
+
+New-StandardChangeSCCMPackage -APP Firefox
+.REMARKS
+http://www.dexterposh.com/2015/08/powershell-sccm-2012-create-packages.html
+#>
+
 function New-StandardChangeSCCMPackage
 {
-  <#
-      .SYNOPSIS
-      Creates a new SCCM package for one of the standard change apps.
-
-      .DESCRIPTION
-      requires \\SCCMServer\pacakgesShare mounted as p Drive
-
-      .PARAMETER App
-      Valid options are
-      Firefox
-      Chrome
-      Flash
-      Java
-      Reader
-      Bigfix
-      Druva
-      Notepad++
-      7zip
-      putty
-      WinSCP
-      Reciever
-
-      .EXAMPLE
-      New-StandardChangeSCCMPackage -APP Firefox
-
-      .REMARKS
-      http://www.dexterposh.com/2015/08/powershell-sccm-2012-create-packages.html
-
-
-  #>
   [CmdletBinding(ConfirmImpact = 'None')]
   param
   (

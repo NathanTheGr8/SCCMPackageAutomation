@@ -1,3 +1,5 @@
+#Edit this file to suite your enviorment. Change the name to GlobalVaribles.ps1
+
 $global:SCCM_Site = ""
 $global:SCCM_Share = "\\server\Packages"
 $global:SCCM_Share_Test_Folder = "CoreApps_ALL"
