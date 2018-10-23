@@ -1,6 +1,4 @@
 function Get-LatestAppVersion {
-    # http://vergrabber.kingu.pl/vergrabber.json
-    # Could use that if I didn't want to scrape websites
     param
     (
         [Parameter(Mandatory = $true,

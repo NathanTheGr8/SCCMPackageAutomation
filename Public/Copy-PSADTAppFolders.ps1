@@ -1,4 +1,4 @@
-function Copy-PSADTFolders {
+function Copy-PSADTAppFolders {
     param
     (
         [Parameter(Mandatory = $true)]

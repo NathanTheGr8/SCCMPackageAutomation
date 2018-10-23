@@ -1,4 +1,4 @@
-function Update-AppPackage {
+function Update-AppPackageSource {
     param
     (
         [Parameter(Mandatory = $true,
@@ -37,7 +37,7 @@ function Update-AppPackage {
     }
     # End Map Network Drive
 
-    if (($CurrentAppVersion -lt [version]$LatestAppVersion) -or ($ForceUpdate)) {
+    if (([version]$CurrentAppVersion -lt [version]$LatestAppVersion) -or ($ForceUpdate)) {
         if ($ForceUpdate) {
             Write-Host "Forcing update of $App from $CurrentAppVersion to $LatestAppVersion"
         }
@@ -66,73 +66,13 @@ function Update-AppPackage {
 
         #Copies the Current Package to the new. Replaces install files and increments version.
         Write-Output "Creating folder '$App $LatestAppVersion (R$RevNumber)'"
-        Copy-PSADTFolders -OldPackageRootFolder "$($CurrentAppPath.FullName)" -NewPackageRootFolder "$newAppPath" -NewPSADTFiles $InstallFiles
+        Copy-PSADTAppFolders -OldPackageRootFolder "$($CurrentAppPath.FullName)" -NewPackageRootFolder "$newAppPath" -NewPSADTFiles $InstallFiles
         Write-Output "Updating version numbers from $CurrentAppVersion to $LatestAppVersion"
-        UpdatePSADTAppVersion -PackageRootFolder "$newAppPath" -CurrentVersion "$CurrentAppVersion" -NewVersion "$LatestAppVersion"
+        Update-PSADTAppVersion -PackageRootFolder "$newAppPath" -CurrentVersion "$CurrentAppVersion" -NewVersion "$LatestAppVersion"
 
     }
     else {
         Write-Host "$App $CurrentAppVersion package is already up to date"
     }
 
-}
-
-
-
-function Get-PSADTAppVersion {
-    <#
-        .SYNOPSIS
-        Gets the $appversion varible for a given PSADT package
-
-        .DESCRIPTION
-        Gets the $appversion varible for a given PSADT package
-        Queries the Deploy-Application.ps1 file for "appversion"
-        Takes the first string returned. I don't care about other occerences in the file
-        Converts it to a string
-        Splits it at the "=" taking the second half
-        Removes white space
-        Removes the "'" characters
-
-        .PARAMETER PackageRootFolder
-        The root folder for the PSADT package
-
-        .PARAMETER InstallScript
-        Defaults to Deploy-Applicaiton.ps1
-
-        .EXAMPLE
-
-        .REMARKS
-
-    #>
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [string]
-        [ValidateScript({
-            if(-Not (Test-Path -Path "$_") ){
-                throw "Folder does not exist"
-            }
-            if(-Not (Test-Path -Path "$_" -PathType Container) ){
-                throw "The PackageRootFolder argument must be a folder. Files are not allowed."
-            }
-            return $true
-        })]
-        $PackageRootFolder,
-        [string]
-        [ValidateScript({
-            if(-Not (Test-Path -Path "$PackageRootFolder\$InstallScript") ){
-                throw "The PackageRootFolder argument path does not exist"
-            }
-            if(-Not (Test-Path -Path "$PackageRootFolder\$InstallScript" -PathType Leaf) ){
-                throw "The InstallScript argument must be a file."
-            }
-            return $true
-        })]
-        $InstallScript = "Deploy-Application.ps1" #defaults to this
-
-    )
-
-    $Version = (Select-String -Path "$PackageRootFolder\$InstallScript" -SimpleMatch "appVersion")[0].ToString().Split("=")[1].Trim().Replace("'","")
-
-    return $Version
 }

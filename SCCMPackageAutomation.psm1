@@ -3,13 +3,16 @@
 	 Created on:   	10/218/2018 12:44 PM
 	 Created by:   	Nathan Davis
 	 Organization:
-	 Filename:     	SCCM-PackageAutomation.psm1
+	 Filename:     	SCCMPackageAutomation.psm1
 	-------------------------------------------------------------------------
-	 Module Name: SCCM-PackageAutomation
+	 Module Name: SCCMPackageAutomation
 	===========================================================================
 
     Exposed Functions go in Public Folder
 #>
+
+# Dot Source Global Varibles
+. .\Public\GlobalVariables.ps1
 
 #Get public and private function definition files.
     $Public  = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -ErrorAction SilentlyContinue )

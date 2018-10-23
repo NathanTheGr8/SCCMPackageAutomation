@@ -1,4 +1,28 @@
-function UpdatePSADTAppVersion {
+function Get-PSADTAppVersion {
+    <#
+        .SYNOPSIS
+        Gets the $appversion varible for a given PSADT package
+
+        .DESCRIPTION
+        Gets the $appversion varible for a given PSADT package
+        Queries the Deploy-Application.ps1 file for "appversion"
+        Takes the first string returned. I don't care about other occerences in the file
+        Converts it to a string
+        Splits it at the "=" taking the second half
+        Removes white space
+        Removes the "'" characters
+
+        .PARAMETER PackageRootFolder
+        The root folder for the PSADT package
+
+        .PARAMETER InstallScript
+        Defaults to Deploy-Applicaiton.ps1
+
+        .EXAMPLE
+
+        .REMARKS
+
+    #>
     param
     (
         [Parameter(Mandatory = $true)]
@@ -13,16 +37,6 @@ function UpdatePSADTAppVersion {
             return $true
         })]
         $PackageRootFolder,
-        [Parameter(Mandatory = $true)]
-        [string]
-        [ValidatePattern("^(\d+\.)?(\d+\.)?(\d+\.)?(\d+\.)?(\*|\d+)?$")]
-        #basically can be up #.#.#.#.# or just one #
-        $CurrentVersion,
-        [Parameter(Mandatory = $true)]
-        [string]
-        [ValidatePattern("^(\d+\.)?(\d+\.)?(\d+\.)?(\d+\.)?(\*|\d+)?$")]
-        #basically can be up #.#.#.#.# or just one #
-        $NewVersion,
         [string]
         [ValidateScript({
             if(-Not (Test-Path -Path "$PackageRootFolder\$InstallScript") ){
@@ -37,5 +51,7 @@ function UpdatePSADTAppVersion {
 
     )
 
-    (Get-Content "$PackageRootFolder\$InstallScript").Replace("`$appVersion = '$CurrentVersion'","`$appVersion = '$NewVersion'") | Set-Content  -Path "$PackageRootFolder\$InstallScript"
+    $Version = (Select-String -Path "$PackageRootFolder\$InstallScript" -SimpleMatch "appVersion")[0].ToString().Split("=")[1].Trim().Replace("'","")
+
+    return $Version
 }
