@@ -1,55 +1,41 @@
-﻿. .\GlobalVariables.ps1
+function New-StandardChangeSCCMPackage {
+<#
+.SYNOPSIS
 
-function New-StandardChangeSCCMPackage
-{
-  <#
-      .SYNOPSIS
-      Creates a new SCCM package for one of the standard change apps.
-	
-      .DESCRIPTION
-      requires \\SCCMServer\pacakgesShare mounted as p Drive
-	
-      .PARAMETER App
-      Valid options are
-      Firefox
-      Chrome
-      Flash
-      Java
-      Reader
-      Bigfix
-      Druva
-      Notepad++
-      7zip
-      putty
-      WinSCP
-      Reciever
+Creates a new SCCM package for one of the standard change apps.
+.DESCRIPTION
 
-      .EXAMPLE
-      New-StandardChangeSCCMPackage -APP Firefox
+Packages a given locaiton's install files in SCCM. It
+Creates the new package
+Makes an install program
+Distrubutes the package to DPs
+Moves the package to a given folder
+Updates "not current version" collections to the new version
+.PARAMETER App
 
-      .REMARKs
-      http://www.dexterposh.com/2015/08/powershell-sccm-2012-create-packages.html
-      
+The app you are trying to package in SCCM. Valid options have tab completion.
+.EXAMPLE
 
-  #>
-  [CmdletBinding(ConfirmImpact = 'None')]
-  param
-  (
-    [Parameter(Mandatory = $true,
-           HelpMessage = 'What standard app are you packaging?')]
-    [string]
-        [ValidateSet('7zip','BigFix','Chrome','Firefox','Flash','GIMP','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','WinSCP', IgnoreCase = $true)]
-    $App
-  )
+New-StandardChangeSCCMPackage -App Firefox
+#>
+    [CmdletBinding(ConfirmImpact = 'None')]
+    param
+    (
+        [Parameter(Mandatory = $true,
+                HelpMessage = 'What standard app are you packaging?')]
+        [string]
+        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Firefox','Flash','GIMP','Git','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        $App
+    )
 
-    Import-Module "$($ENV:SMS_ADMIN_UI_PATH)\..\ConfigurationManager.psd1" # Import the ConfigurationManager.psd1 module 
+    Import-Module "$($ENV:SMS_ADMIN_UI_PATH)\..\ConfigurationManager.psd1" # Import the ConfigurationManager.psd1 module
     Set-Location "$($SCCM_Site):" # Set the current location to be the site code.
 
 
 
     # Map network drive to SCCM
     # Test an arbitrary folder on the share
-    $Networkpath = "$($SCCM_Share_Letter):\$SCCM_Share_Test_Folder" 
+    $Networkpath = "$($SCCM_Share_Letter):\$SCCM_Share_Test_Folder"
 
     If (Test-Path -Path $Networkpath) {
         Write-Host "$($SCCM_Share_Letter) Drive to SCCM Exists already"
@@ -71,103 +57,92 @@ function New-StandardChangeSCCMPackage
 
     # Package 7zip
     if ($App.ToLower() -eq '7zip') {
-        Update-AppHelper -AppName "7zip" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Igor Pavlov"
+        Update-AppHelper -AppName "7zip" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Igor Pavlov"
     }
-   
+
     # Package Bigfix
     if ($App.ToLower() -eq 'bigfix') {
-        Update-AppHelper -AppName "BigFix Client" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "IBM"
+        Update-AppHelper -AppName "BigFix Client" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "IBM"
     }
 
 
-    # Package Google Chrome 
+    # Package Google Chrome
     if ($App.ToLower() -eq 'chrome') {
-        Update-AppHelper -AppName "Chrome" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Google"
+        Update-AppHelper -AppName "Chrome" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Google"
     }
-    
+
     #Package Firefox
     if ($App.ToLower() -eq 'firefox') {
-        Update-AppHelper -AppName "Firefox" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Mozilla"
+        Update-AppHelper -AppName "Firefox" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Mozilla"
     }
 
     # Package Adobe Flash
     if ($App.ToLower() -eq 'flash') {
-        Update-AppHelper -AppName "Flash" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Adobe"
+        Update-AppHelper -AppName "Flash" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Adobe"
     }
 
     # Package GIMP
     if ($App.ToLower() -eq 'gimp') {
-        Update-AppHelper -AppName "GIMP" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "GIMP Development Team"
+        Update-AppHelper -AppName "GIMP" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "GIMP Development Team"
+    }
+
+    # Package GIMP
+    if ($App.ToLower() -eq 'git') {
+        Update-AppHelper -AppName "Git" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Software Freedom Conservancy"
     }
 
     # Package Druva InSync
     if ($App.ToLower() -eq 'insync') {
-        Update-AppHelper -AppName "InSync" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Druva"
+        Update-AppHelper -AppName "InSync" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Druva"
     }
 
     # Package Java
     if ($App.ToLower() -eq 'java') {
-        Update-AppHelper -AppName "Java" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Oracle"
+        Update-AppHelper -AppName "Java" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Oracle"
     }
 
     # Package Notepad++
     if ($App.ToLower() -eq 'notepad++') {
-        Update-AppHelper -AppName "Notepad++" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Notepad++ Team"
+        Update-AppHelper -AppName "Notepad++" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Notepad++ Team"
     }
 
     # Package putty
     if ($App.ToLower() -eq 'putty') {
-        Update-AppHelper -AppName "Putty" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Simon Tatham"
+        Update-AppHelper -AppName "Putty" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Simon Tatham"
     }
 
     # Package Adobe Reader
     if ($App.ToLower() -eq 'reader') {
-        Update-AppHelper -AppName "Reader" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Adobe"
+        Update-AppHelper -AppName "Reader" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Adobe"
     }
 
     # Package Citrix Receiver
     if ($App.ToLower() -eq 'receiver') {
-        Update-AppHelper -AppName "Receiver" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Citrix"
+        Update-AppHelper -AppName "Receiver" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Citrix"
     }
 
     # Package vlc
     if ($App.ToLower() -eq 'vlc') {
-        Update-AppHelper -AppName "VLC" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "VideoLAN"
+        Update-AppHelper -AppName "VLC" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "VideoLAN"
+    }
+
+    # Package vlc
+    if ($App.ToLower() -eq 'vscode') {
+        Update-AppHelper -AppName "VSCode" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Microsoft"
     }
 
     # Package winscp
     if ($App.ToLower() -eq 'winscp') {
-        Update-AppHelper -AppName "WinSCP" -rootApplicationPath $RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Martin Přikryl"
+        Update-AppHelper -AppName "WinSCP" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Martin Prikryl"
+    }
+
+    # Package wireshark
+    if ($App.ToLower() -eq 'wireshark') {
+        Update-AppHelper -AppName "WireShark" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "The WireShark Team"
     }
 
     Set-Location "c:" #change location back to c drive. Otherwise other functions break
 
-}
-
-#doesn't work. cmdlet broken on our sccm version
-function Deploy-ToSCCMCollection {
-        param
-        (
-            [Parameter(Mandatory = $false)]
-            [string]
-            $Collection = "DELL Desktop",
-            [Parameter(Mandatory = $true)]
-            [string]
-            $PackageName
-        )
-        Write-Output "Deploying $PackageName to $Collection"
-        $CMDeplColl = Get-CMCollection -Name $Collection -CollectionType Device
-        try{
-            #'Start-CMApplicationDeployment' has been deprecated in 1702 and may be removed in a future release.
-            #The cmdlet 'New-CMApplicationDeployment' may be used as a replacement.
-            Start-CMApplicationDeployment -Collection $CMDeplColl.Name -Name $PackageName -DeployAction Install -DeployPurpose Required 
-            Write-Host "Deployment Succeded" -ForegroundColor Green | Out-Null
-        }
-        catch
-        {
-            Write-Host "Failed" -ForegroundColor Red
-            Write-Host "$_"
-        }
 }
 
 function Update-AppHelper {
@@ -208,9 +183,9 @@ function Update-AppHelper {
         # Get-ChildItem has trouble working with UNC paths from the $SCCM_Site: drive. That is why I map a $SCCM_Share_Letter drive
         $count = (Measure-Object -InputObject $SCCM_Share -Character).Characters + 1
         # Gets the most recent folder for a given app
-        $AppPath =  "$($SCCM_Share_Letter):\" + $rootApplicationPath.Substring($count) | Get-ChildItem | sort CreationTime -desc | select -f 1 
+        $AppPath =  "$($SCCM_Share_Letter):\" + $rootApplicationPath.Substring($count) | Get-ChildItem | Sort-Object -Property CreationTime -Descending | Select-Object -First 1
         # Each app folder is named like 'AppName Version (R#). So this line just selects Version R#
-        $AppVersion = $AppPath.Name -split ' ' | select -Last 2
+        $AppVersion = $AppPath.Name -split ' ' | Select-Object -Last 2
         # Transform the app path back to a full unc path withouth a drive letter
         $AppPath = "$SCCM_Share"+($AppPath.FullName).Substring(2)
         $AppNameFull = "$AppName $appVersion"
@@ -225,7 +200,7 @@ function Update-AppHelper {
         }
 
         try {
-            $Application = New-CMPackage –Name “$AppNameFull" –Path "$appPath" -Manufacturer "$Manufacturer" -Language "$Language"
+            $Application = New-CMPackage -Name "$AppNameFull" -Path "$appPath" -Manufacturer "$Manufacturer" -Language "$Language"
             Write-Output "$AppNameFull created in SCCM"
         }
         catch [exception]{
@@ -241,9 +216,9 @@ function Update-AppHelper {
             Write-Output "$_"
             break
         }
-        
+
         try {
-            Start-CMContentDistribution -PackageName “$AppNameFull” -DistributionPointGroupName "All Distribution Points"
+            Start-CMContentDistribution -PackageName "$AppNameFull" -DistributionPointGroupName "All Distribution Points"
             Write-Output "Package Distribution to all DP started"
         }
         catch [exception]{
@@ -259,7 +234,7 @@ function Update-AppHelper {
             Write-Output "$_"
             break
         }
-        
+
         Write-Output "Updating 'Not Current Version $app' Collection to new version"
 
 
@@ -269,16 +244,19 @@ function Update-AppHelper {
 
         QueryExpression       : select SMS_R_SYSTEM.ResourceID,SMS_R_SYSTEM.ResourceType,SMS_R_SYSTEM.Nam
                                 e,SMS_R_SYSTEM.SMSUniqueIdentifier,SMS_R_SYSTEM.ResourceDomainORWorkgroup
-                                ,SMS_R_SYSTEM.Client from SMS_R_System inner join 
-                                SMS_G_System_ADD_REMOVE_PROGRAMS on 
-                                SMS_G_System_ADD_REMOVE_PROGRAMS.ResourceID = SMS_R_System.ResourceId 
-                                where SMS_G_System_ADD_REMOVE_PROGRAMS.DisplayName like "Adobe Flash 
+                                ,SMS_R_SYSTEM.Client from SMS_R_System inner join
+                                SMS_G_System_ADD_REMOVE_PROGRAMS on
+                                SMS_G_System_ADD_REMOVE_PROGRAMS.ResourceID = SMS_R_System.ResourceId
+                                where SMS_G_System_ADD_REMOVE_PROGRAMS.DisplayName like "Adobe Flash
                                 Player%" and SMS_G_System_ADD_REMOVE_PROGRAMS.Version < "31.0.0.108"
         QueryID               : 1
         RuleName              : old flash
 
 
         #>
+        # If I don't import the module again it errors out with he term 'Get-CMCollectionMembershipRule' is not recognized as the name of a cmdlet
+        Import-Module "$($ENV:SMS_ADMIN_UI_PATH)\..\ConfigurationManager.psd1" # Import the ConfigurationManager.psd1 module
+        Set-Location "$($SCCM_Site):" # Set the current location to be the site code.
         try {
             $WMIQuerries = Get-CMDeviceCollectionQueryMembershipRule -CollectionName "Not Current Version $app"
         }
@@ -290,15 +268,15 @@ function Update-AppHelper {
         If ($WMIQuerries){ #If there are any
             foreach ($Query in $WMIQuerries){
                 #includes everything from the old query up to the < char. Adds two to include the char and a space
-                $newQuery = $Query.QueryExpression.Substring(0,$Query.QueryExpression.LastIndexOf("<")+2) 
-                [string]$CurrentAppVersion = Get-CurrentAppVersion -App $App
+                $newQuery = $Query.QueryExpression.Substring(0,$Query.QueryExpression.LastIndexOf("<")+2)
+                $CurrentAppVersion = Get-CurrentAppVersion -App $app
                 #The back tic escapes the quote character
-                $newQuery = $newQuery + "`"$($CurrentAppVersion)`"" 
-             
+                $newQuery = $newQuery + "`"$($CurrentAppVersion)`""
+
                 #Delete the Old Rule
                 Write-Host "Removing old query $($Query.RuleName)"
                 Remove-CMDeviceCollectionQueryMembershipRule -CollectionName "Not Current Version $app" -RuleName "$($Query.RuleName)"
-            
+
                 #Add New Query
                 Write-Host "Adding new query"
                 Add-CMDeviceCollectionQueryMembershipRule -CollectionName "Not Current Version $app" -QueryExpression "$newQuery" -RuleName "$($Query.RuleName)"
@@ -308,6 +286,4 @@ function Update-AppHelper {
         else {
             Write-Output "'Not Current Version $app' Collection didn't exist"
         }
-
-    
 }
