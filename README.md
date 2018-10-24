@@ -1,18 +1,18 @@
-# SCCM-PackageAutomation
+# SCCMPackageAutomation
 
-This is currently a rough but functional example. I hope you find it useful.
+A Powershell Module for SCCM Package Automation
 
-The goal of this repo is to fully automate the maintaining of SCCM packages. I mostly scrape the download websites directly and don't rely on 3rd Party services. All of the install binaries are downloaded directly from the vendor site. 
+The goal of this repo is to fully automate the maintaining of SCCM packages. I mostly scrape the download websites directly and don't rely on 3rd Party services. All of the install binaries are downloaded directly from the vendor site.
 
-There are two main functions Update-AppPackage and New-StandardChangeSCCMPackages. The cmdlet names probally need to change to show they are related.
+There are two main functions Update-AppPackageSource and New-StandardChangeSCCMPackages. The cmdlet names probally need to change to show they are related.
 
-Update-AppPackage accepts a app name from a predfined list of about a dozen apps. It then goes out and downloads the latest version of that app from the vendor's website. It then copies the latest source files for application x and makes a new folder called "X Version# (R#)". It then deletes all the install files in the "X Version# (R#)\Files" directory and copies the new install files to that directory. It then updates the deploy-application.ps1's $appversion barible to the latest version. There are a lot of checks and error handling thrown in. The function is also pretty verbose and writes out what it is doing.
+Update-AppPackageSoruce accepts a app name from a predfined list of about a dozen apps. It then goes out and downloads the latest version of that app from the vendor's website. It then copies the latest source files for application x and makes a new folder called "X Version# (R#)". It then deletes all the install files in the "X Version# (R#)\Files" directory and copies the new install files to that directory. It then updates the deploy-application.ps1's $appversion barible to the latest version. There are a lot of checks and error handling thrown in. The function is also pretty verbose and writes out what it is doing.
 ```powershell
-PS C:\Users\davisn1\Documents\Projects\HM-Functions> Update-AppPackage -App Firefox
+PS C:\Users\davisn1\Documents\Projects\HM-Functions> Update-AppPackageSource -App Firefox
 P Drive to SCCM Exists already
 Firefox 62.0.2 package is already up to date
 
-PS C:\Users\davisn1\Documents\Projects\HM-Functions> Update-AppPackage -App Firefox -ForceUpdate
+PS C:\Users\davisn1\Documents\Projects\HM-Functions> Update-AppPackageSoruce -App Firefox -ForceUpdate
 P Drive to SCCM Exists already
 Forcing update of Firefox from 62.0.2 to 62.0.2
 'Firefox 62.0.2 (R1)' already exists, auto incrementing the R#
@@ -34,7 +34,7 @@ The next function is New-StandarChangeSCCMPackage. This function creates an SCCM
 
 ### Installation
 
-Edit the GlobalVariables.ps1 file to work with your enviroment.
+Edit the GlobalVariablesExample.ps1 file in .\Public to work with your enviroment. Rename it to GlobalVariables.ps1
  - $SCCM_Site : Your SCCM Site Code
  - $SCCM_Share : A UNC path to the newtork share where your SCCM packages are.
  - $SCCM_Share_Test_Folder : A Folder Name (Not full path) that should exist on your SCCM share
@@ -49,12 +49,12 @@ You will also have to change the
 
 
 SCCM-PackageAutomation requires the following Powershell Modules
-   
+
  - For SCCM functions you also need
     - The SCCM Management console installed
     - The SCCM cmdlet library
-    
-These imports should be handled automatically, but it seems to be buggy right now. The Add-CMDeviceCollectionQueryMembershipRule seems to not work without a manuel import.
+
+These imports should be handled automatically when running the New-StandardChangeSCCMPackage function.
 
 Powershell App Deployment Toolkit (PSADT)
   - I assume all packages are PSADT packages and install files are in the files directory.
@@ -70,16 +70,15 @@ Credit to the following
 * [jasonadsit](https://gist.github.com/jasonadsit/c77340fe385fe953f9c54436b926cf83) - Was a big help writing the Download-LatestAppVersion -App Flash function
 * [James C.](https://stackoverflow.com/questions/48867426/script-to-download-latest-adobe-reader-dc-update) - Used his stackoverflow example to write the Adobe Reader function
 * [DexterPOSH](http://www.dexterposh.com/2015/08/powershell-sccm-2012-create-packages.html) - His blog post was the inspiration for the New-StandardChangeSCCMPackage function
-* [Lee_Dailey](https://www.reddit.com/user/Lee_Dailey) - Provided a lot code style and formatting comments. 
+* [Lee_Dailey](https://www.reddit.com/user/Lee_Dailey) - Provided a lot code style and formatting comments.
 
 ### Todos
 
  - Write [Pester](https://github.com/pester/Pester) Tests for functions
- - Handle downloads of Java, Citrix Reciever
- 
+ - Handle downloads of Java
+
 License
 ----
 
 MIT
 
-   
