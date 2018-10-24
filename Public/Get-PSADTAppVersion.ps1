@@ -1,7 +1,8 @@
+function Get-PSADTAppVersion {
 <#
 .SYNOPSIS
 
-Gets the $appversion varible for a given PSADT package
+Gets the $appversion varible for a given Powershell App Deployment Toolkit package
 .DESCRIPTION
 
 Gets the $appversion varible for a given PSADT package
@@ -19,12 +20,8 @@ The root folder for the PSADT package
 Defaults to Deploy-Applicaiton.ps1
 .EXAMPLE
 
-There's no need to number your examples.
-.EXAMPLE
-PowerShell will number them for you when it displays your help text to a user.
+Get-PSADTAppVersion -PackageRootFolder \\servername\path\to\firefox\package
 #>
-
-function Get-PSADTAppVersion {
     param
     (
         [Parameter(Mandatory = $true)]

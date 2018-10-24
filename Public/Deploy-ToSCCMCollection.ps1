@@ -1,21 +1,19 @@
 <#
 .SYNOPSIS
 
-The synopsis goes here. This can be one line, or many.
+This function doesn't currently work
 .DESCRIPTION
 
-The description is usually a longer, more detailed explanation of what the script or function does. Take as many lines as you need.
-.PARAMETER computername
+Deploys a given App to a given SCCM collection. Defaults to deploying to a specified test collection.
+.PARAMETER Colleciton
 
-Here, the dotted keyword is followed by a single parameter name. Don't precede that with a hyphen. The following lines describe the purpose of the parameter:
-.PARAMETER filePath
+The Collection to Deploy to.
+.PARAMETER PackageName
 
-Provide a PARAMETER section for each parameter that your script or function accepts.
+The package name to push.
 .EXAMPLE
 
-There's no need to number your examples.
-.EXAMPLE
-PowerShell will number them for you when it displays your help text to a user.
+Deploy-ToSCCMCollection -PackageName "Firefox 63.0 (R1)"
 #>
 
 function Deploy-ToSCCMCollection {

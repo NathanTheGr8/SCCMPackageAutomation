@@ -1,21 +1,22 @@
 <#
 .SYNOPSIS
 
-The synopsis goes here. This can be one line, or many.
+Copies Powrshell App Deployment Toolkit files from one package source location to another.
 .DESCRIPTION
 
-The description is usually a longer, more detailed explanation of what the script or function does. Take as many lines as you need.
-.PARAMETER computername
+Copies Powrshell App Deployment Toolkit files from one package source location to another. Deletes the old installes files in the "Files" directory.
+.PARAMETER OldPackageRootFolder
 
-Here, the dotted keyword is followed by a single parameter name. Don't precede that with a hyphen. The following lines describe the purpose of the parameter:
-.PARAMETER filePath
+UNC or drive path to old package root folder
+.PARAMETER NewPackageRootFolder
 
-Provide a PARAMETER section for each parameter that your script or function accepts.
+UNC or drive path to new package root folder
+.PARAMETER NewPSADTFiles
+
+New PSADT install files
 .EXAMPLE
 
-There's no need to number your examples.
-.EXAMPLE
-PowerShell will number them for you when it displays your help text to a user.
+Copy-PSADTAppFolders -OldPackageRootFolder "\\server\old\path" -NewPackageRootFolder "\\server\new\path" -NewPSADTFiles $InstallFilesArray
 #>
 
 function Copy-PSADTAppFolders {
@@ -43,7 +44,7 @@ function Copy-PSADTAppFolders {
         })]
         $NewPackageRootFolder,
         [Parameter(Mandatory = $true)]
-        $NewPSADTFiles
+        $NewPSADTFiles #todo type validation
 
     )
     Write-Output "Copying old package files to $NewPackageRootFolder"

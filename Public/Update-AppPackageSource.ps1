@@ -1,23 +1,19 @@
+function Update-AppPackageSource {
 <#
 .SYNOPSIS
 
-The synopsis goes here. This can be one line, or many.
+Updates a given apps package source to the latest version
 .DESCRIPTION
 
-The description is usually a longer, more detailed explanation of what the script or function does. Take as many lines as you need.
-.PARAMETER computername
+Updates a given app's source files to the latest version. Copies the old files to a new location, deletes the old psadt files directory,
+copyies new install files to psadt files directory, updates the psadt version number
+.PARAMETER App
 
-Here, the dotted keyword is followed by a single parameter name. Don't precede that with a hyphen. The following lines describe the purpose of the parameter:
-.PARAMETER filePath
-
-Provide a PARAMETER section for each parameter that your script or function accepts.
+What app's source files are you trying to update?
 .EXAMPLE
 
-There's no need to number your examples.
-.EXAMPLE
-PowerShell will number them for you when it displays your help text to a user.
+Update-AppPackageSource -App Firefox
 #>
-function Update-AppPackageSource {
     param
     (
         [Parameter(Mandatory = $true,

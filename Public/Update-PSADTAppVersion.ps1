@@ -1,23 +1,28 @@
+function Update-PSADTAppVersion {
 <#
 .SYNOPSIS
 
-The synopsis goes here. This can be one line, or many.
+This function updates the version number of a Powershell App Deployment Toolkit install file
 .DESCRIPTION
 
-The description is usually a longer, more detailed explanation of what the script or function does. Take as many lines as you need.
-.PARAMETER computername
+Updates the version number in a powershell app deployment toolkit. Specifically it updates the version number on line 68 "[string]$appversion = ''".
+It updates it by searching a given file for "$appVersion = " and then replacing a given version with a new version.
+.PARAMETER PackageRootFolder
 
-Here, the dotted keyword is followed by a single parameter name. Don't precede that with a hyphen. The following lines describe the purpose of the parameter:
-.PARAMETER filePath
+The root folder fo the PSADT package.
+.PARAMETER CurrentVersion
 
-Provide a PARAMETER section for each parameter that your script or function accepts.
+The old version number to replace
+.PARAMETER NewVersion
+
+The new version number to add.
+.PARAMETER InstallScript
+
+The name of the main PSADT install file. Defaults to Deploy-Application.ps1
 .EXAMPLE
 
-There's no need to number your examples.
-.EXAMPLE
-PowerShell will number them for you when it displays your help text to a user.
+Update-PSADTAppVersion -PackageRootFolder \\servername\path\to\firefox\package -CurrentVersion 60.0.3 -NewVersion 63.0
 #>
-function Update-PSADTAppVersion {
     param
     (
         [Parameter(Mandatory = $true)]

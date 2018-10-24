@@ -1,43 +1,32 @@
+function New-StandardChangeSCCMPackage {
 <#
 .SYNOPSIS
 
 Creates a new SCCM package for one of the standard change apps.
 .DESCRIPTION
 
-requires \\SCCMServer\pacakgesShare mounted as p Drive
+Packages a given locaiton's install files in SCCM. It
+Creates the new package
+Makes an install program
+Distrubutes the package to DPs
+Moves the package to a given folder
+Updates "not current version" collections to the new version
 .PARAMETER App
 
-Valid options are
-Firefox
-Chrome
-Flash
-Java
-Reader
-Bigfix
-Druva
-Notepad++
-7zip
-putty
-WinSCP
-Reciever
+The app you are trying to package in SCCM. Valid options have tab completion.
 .EXAMPLE
 
-New-StandardChangeSCCMPackage -APP Firefox
-.REMARKS
-http://www.dexterposh.com/2015/08/powershell-sccm-2012-create-packages.html
+New-StandardChangeSCCMPackage -App Firefox
 #>
-
-function New-StandardChangeSCCMPackage
-{
-  [CmdletBinding(ConfirmImpact = 'None')]
-  param
-  (
-    [Parameter(Mandatory = $true,
-           HelpMessage = 'What standard app are you packaging?')]
-    [string]
-    [ValidateSet('7zip','BigFix','Chrome','CutePDF','Firefox','Flash','GIMP','Git','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
-    $App
-  )
+    [CmdletBinding(ConfirmImpact = 'None')]
+    param
+    (
+        [Parameter(Mandatory = $true,
+                HelpMessage = 'What standard app are you packaging?')]
+        [string]
+        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Firefox','Flash','GIMP','Git','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        $App
+    )
 
     Import-Module "$($ENV:SMS_ADMIN_UI_PATH)\..\ConfigurationManager.psd1" # Import the ConfigurationManager.psd1 module
     Set-Location "$($SCCM_Site):" # Set the current location to be the site code.

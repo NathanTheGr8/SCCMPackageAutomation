@@ -1,24 +1,20 @@
+function Get-LatestAppVersion {
 <#
 .SYNOPSIS
 
-The synopsis goes here. This can be one line, or many.
+Gets the latest version of a given app.
 .DESCRIPTION
 
-The description is usually a longer, more detailed explanation of what the script or function does. Take as many lines as you need.
-.PARAMETER computername
+Gets the latest version of an app by scraping a website. It gets the latest version by ether
+checking a web api for latest version (chrome and firefox have this)
+gets the latest version from a give ftp directory (vlc and others)
+scrapes a web page with download links for the latest version (most apps require this)
+.PARAMETER App
 
-Here, the dotted keyword is followed by a single parameter name. Don't precede that with a hyphen. The following lines describe the purpose of the parameter:
-.PARAMETER filePath
-
-Provide a PARAMETER section for each parameter that your script or function accepts.
+The app you want the latest version of.
 .EXAMPLE
-
-There's no need to number your examples.
-.EXAMPLE
-PowerShell will number them for you when it displays your help text to a user.
+Get-LatestAppVersion -App Firefox
 #>
-
-function Get-LatestAppVersion {
     param
     (
         [Parameter(Mandatory = $true,

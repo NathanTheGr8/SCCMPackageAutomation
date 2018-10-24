@@ -1,4 +1,18 @@
 function Download-LatestAppVersion {
+<#
+.SYNOPSIS
+
+Downloads the latest app version of a current app and returns the install files path.
+.DESCRIPTION
+
+Downloads the latest version for a given app. Returns an array of any install file paths.
+.PARAMETER App
+
+The App you want the latest version of.
+.EXAMPLE
+
+Download-LatestAppVersion -App Chrome
+#>
     param
     (
         [Parameter(Mandatory = $true,

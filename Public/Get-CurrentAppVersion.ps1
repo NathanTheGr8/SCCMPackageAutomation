@@ -1,23 +1,18 @@
+function Get-CurrentAppVersion {
 <#
 .SYNOPSIS
 
-The synopsis goes here. This can be one line, or many.
+Gets the current app version for a given app
 .DESCRIPTION
 
-The description is usually a longer, more detailed explanation of what the script or function does. Take as many lines as you need.
-.PARAMETER computername
+Gets the current app package version for a given app. Uses the Get-PSADTAppVersion function to get the version
+.PARAMETER App
 
-Here, the dotted keyword is followed by a single parameter name. Don't precede that with a hyphen. The following lines describe the purpose of the parameter:
-.PARAMETER filePath
-
-Provide a PARAMETER section for each parameter that your script or function accepts.
+The App you want the version of.
 .EXAMPLE
 
-There's no need to number your examples.
-.EXAMPLE
-PowerShell will number them for you when it displays your help text to a user.
+Get-CurrentAppVersion -App Firefox
 #>
-function Get-CurrentAppVersion {
     param
     (
         [Parameter(Mandatory = $true,
