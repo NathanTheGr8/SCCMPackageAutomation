@@ -25,3 +25,10 @@ $global:RootApplicationPath = @{
     'winscp'  = "$SCCM_Share\HOME OFFICE\WinSCP"
     'wireshark' = "$SCCM_Share\HOME OFFICE\WireShark"
 }
+
+$global:Computers = @{
+    'Nathan' = "ITMXL3452SNBD"
+    'Chris' = "ITMXL3010WVYD"
+    'Bryan' = "IT5CB2150TKDL"
+    'Tim' = "ITMXL3050JYGD"
+}

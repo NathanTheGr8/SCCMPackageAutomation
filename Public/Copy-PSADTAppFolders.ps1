@@ -20,6 +20,7 @@ Copy-PSADTAppFolders -OldPackageRootFolder "\\server\old\path" -NewPackageRootFo
 #>
 
 function Copy-PSADTAppFolders {
+    [CmdletBinding()]
     param
     (
         [Parameter(Mandatory = $true)]

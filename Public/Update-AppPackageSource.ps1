@@ -14,6 +14,7 @@ What app's source files are you trying to update?
 
 Update-AppPackageSource -App Firefox
 #>
+    [CmdletBinding()]
     param
     (
         [Parameter(Mandatory = $true,

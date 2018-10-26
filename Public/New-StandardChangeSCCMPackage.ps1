@@ -18,7 +18,7 @@ The app you are trying to package in SCCM. Valid options have tab completion.
 
 New-StandardChangeSCCMPackage -App Firefox
 #>
-    [CmdletBinding(ConfirmImpact = 'None')]
+    [CmdletBinding()]
     param
     (
         [Parameter(Mandatory = $true,

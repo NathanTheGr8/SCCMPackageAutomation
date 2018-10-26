@@ -13,6 +13,7 @@ If the app is out of date it prints out in red. If it is up to date it prints ou
 
 Get-OutDatedApps
 #>
+    [CmdletBinding()]
 
     $MaintainedApps = @()
     $BlackList = @("java","insync","cutepdf")

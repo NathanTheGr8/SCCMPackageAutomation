@@ -15,6 +15,7 @@ The app you want the latest version of.
 .EXAMPLE
 Get-LatestAppVersion -App Firefox
 #>
+    [CmdletBinding()]
     param
     (
         [Parameter(Mandatory = $true,
@@ -45,7 +46,8 @@ Get-LatestAppVersion -App Firefox
         'bigfix' {
             $url = "http://support.bigfix.com/bes/release/"
             $html = Invoke-WebRequest -Uri "$url"
-            $versionLinks = $html.Links | Where-Object href -Match "\d+\.\d+\/patch\d+" | Sort-Object -Descending
+            $versionLinks = $html.Links | Where-Object href -Match "\d+\.\d+\/patch\d+"
+            #todo get "| Sort-Object -Descending" to work
             $latestURL = $url + $versionLinks[0].href
             $html = Invoke-WebRequest -Uri "$latestURL"
             $ClientDownload = $html.Links | Where-Object href -Match "Client.+\.exe"
@@ -222,3 +224,5 @@ Get-LatestAppVersion -App Firefox
         return [version]$LatestAppVersion
     }
 }
+
+Get-LatestAppVersion -App BigFix

@@ -22,6 +22,7 @@ Defaults to Deploy-Applicaiton.ps1
 
 Get-PSADTAppVersion -PackageRootFolder \\servername\path\to\firefox\package
 #>
+    [CmdletBinding()]
     param
     (
         [Parameter(Mandatory = $true)]

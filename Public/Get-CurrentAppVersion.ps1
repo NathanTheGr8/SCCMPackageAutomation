@@ -13,6 +13,7 @@ The App you want the version of.
 
 Get-CurrentAppVersion -App Firefox
 #>
+    [CmdletBinding()]
     param
     (
         [Parameter(Mandatory = $true,

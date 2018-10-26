@@ -23,6 +23,7 @@ The name of the main PSADT install file. Defaults to Deploy-Application.ps1
 
 Update-PSADTAppVersion -PackageRootFolder \\servername\path\to\firefox\package -CurrentVersion 60.0.3 -NewVersion 63.0
 #>
+    [CmdletBinding()]
     param
     (
         [Parameter(Mandatory = $true)]

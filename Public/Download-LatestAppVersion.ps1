@@ -13,6 +13,7 @@ The App you want the latest version of.
 
 Download-LatestAppVersion -App Chrome
 #>
+    [CmdletBinding()]
     param
     (
         [Parameter(Mandatory = $true,
