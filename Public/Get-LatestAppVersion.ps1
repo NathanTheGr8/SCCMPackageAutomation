@@ -21,8 +21,11 @@ Get-LatestAppVersion -App Firefox
     )
     DynamicParam {
         #Example from https://mcpmag.com/articles/2016/10/06/implement-dynamic-parameters.aspx
-        $ParamAttrib = New-Object System.Management.Automation.ParameterAttribute
-        $ParamAttrib.Mandatory  = $true
+        $ParamAttrib = New-Object System.Management.Automation.ParameterAttribute -Property @{
+            Mandatory = $true
+            Position = 0
+            HelpMessage = "What App are you trying to get the version of"
+        }
         $ParamAttrib.ParameterSetName  = '__AllParameterSets'
 
         $AttribColl = New-Object  System.Collections.ObjectModel.Collection[System.Attribute]
@@ -35,6 +38,11 @@ Get-LatestAppVersion -App Firefox
         $RuntimeParamDic.Add('App',  $RuntimeParam)
 
         return  $RuntimeParamDic
+    }
+
+    begin {
+        $App = $PSBoundParameters['App']
+        $App = $App.toLower()
     }
 
     process {

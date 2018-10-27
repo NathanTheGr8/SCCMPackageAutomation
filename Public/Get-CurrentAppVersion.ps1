@@ -14,25 +14,17 @@ The App you want the version of.
 Get-CurrentAppVersion -App Firefox
 #>
     [CmdletBinding()]
-    param 
+    param
     (
+        [Parameter(Mandatory = $true,
+        HelpMessage = 'What standard app are you trying to get the version of?')]
+        [string]
+        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Firefox','Flash','GIMP','Git','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        $App
     )
-    DynamicParam {
-        #Example from https://mcpmag.com/articles/2016/10/06/implement-dynamic-parameters.aspx
-        $ParamAttrib = New-Object System.Management.Automation.ParameterAttribute
-        $ParamAttrib.Mandatory  = $true
-        $ParamAttrib.ParameterSetName  = '__AllParameterSets'
 
-        $AttribColl = New-Object  System.Collections.ObjectModel.Collection[System.Attribute]
-        $AttribColl.Add($ParamAttrib)
-        $AttribColl.Add((New-Object  System.Management.Automation.ValidateSetAttribute($global:Apps)))
-
-        $RuntimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter('App',  [string], $AttribColl)
-
-        $RuntimeParamDic = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
-        $RuntimeParamDic.Add('App',  $RuntimeParam)
-
-        return  $RuntimeParamDic
+    begin {
+        $App = $App.ToLower()
     }
 
     process {
