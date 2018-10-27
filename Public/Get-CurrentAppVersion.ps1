@@ -14,24 +14,39 @@ The App you want the version of.
 Get-CurrentAppVersion -App Firefox
 #>
     [CmdletBinding()]
-    param
+    param 
     (
-        [Parameter(Mandatory = $true,
-        HelpMessage = 'What standard app are you trying to get the version of?')]
-        [string]
-        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Firefox','Flash','GIMP','Git','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
-        $App
     )
-    $App = $App.ToLower()
-    # Get-ChildItem has trouble working with UNC paths from the $SCCM_Site: drive. That is why I map a $SCCM_Share_Letter drive
-    $count = (Measure-Object -InputObject $SCCM_Share -Character).Characters + 1
-    # Gets the most recent folder for a given app
-    $LatestApplicationPath =  "$($SCCM_Share_Letter):\" + $global:RootApplicationPath[$app].Substring($count) | Get-ChildItem | Sort-Object -Property CreationTime -Descending | Select-Object -f 1
-    $CurrentAppVersion = Get-PSADTAppVersion -PackageRootFolder "$($LatestApplicationPath.Fullname)"
-    if ($app -eq "reader"){
-        return $CurrentAppVersion #readers versions often have leading 0s
+    DynamicParam {
+        #Example from https://mcpmag.com/articles/2016/10/06/implement-dynamic-parameters.aspx
+        $ParamAttrib = New-Object System.Management.Automation.ParameterAttribute
+        $ParamAttrib.Mandatory  = $true
+        $ParamAttrib.ParameterSetName  = '__AllParameterSets'
+
+        $AttribColl = New-Object  System.Collections.ObjectModel.Collection[System.Attribute]
+        $AttribColl.Add($ParamAttrib)
+        $AttribColl.Add((New-Object  System.Management.Automation.ValidateSetAttribute($global:Apps)))
+
+        $RuntimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter('App',  [string], $AttribColl)
+
+        $RuntimeParamDic = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
+        $RuntimeParamDic.Add('App',  $RuntimeParam)
+
+        return  $RuntimeParamDic
     }
-    else {
-        return [version]$CurrentAppVersion
+
+    process {
+        $App = $App.ToLower()
+        # Get-ChildItem has trouble working with UNC paths from the $SCCM_Site: drive. That is why I map a $SCCM_Share_Letter drive
+        $count = (Measure-Object -InputObject $SCCM_Share -Character).Characters + 1
+        # Gets the most recent folder for a given app
+        $LatestApplicationPath =  "$($SCCM_Share_Letter):\" + $global:RootApplicationPath[$app].Substring($count) | Get-ChildItem | Sort-Object -Property CreationTime -Descending | Select-Object -f 1
+        $CurrentAppVersion = Get-PSADTAppVersion -PackageRootFolder "$($LatestApplicationPath.Fullname)"
+        if ($app -eq "reader"){
+            return $CurrentAppVersion #readers versions often have leading 0s
+        }
+        else {
+            return [version]$CurrentAppVersion
+        }
     }
 }

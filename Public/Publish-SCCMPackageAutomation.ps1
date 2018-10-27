@@ -8,9 +8,11 @@ function Publish-SCCMPackageAutomation {
     The path of SCCMPackageAutomation soruce files, defaults to $Home\Documents\Projects\SCCMPackageAutomation
 .PARAMETER  Increment
     Tells wheter to icnrement the major, minor, or build number. # =Major.minor.build
-    Defaults to incremnt build
+    Defaults to incremnt none
 .EXAMPLE
-    Publish-HMFunctions -Path $PWD
+    Publish-SCCMPackageAutomation -Path $PWD
+.Example
+    Publish-SCCMPackageAutomation -Increment None
 #>
     [CmdletBinding()]
     param
