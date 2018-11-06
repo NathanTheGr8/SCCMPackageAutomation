@@ -22,126 +22,130 @@ New-StandardChangeSCCMPackage -App Firefox
     param
     (
         [Parameter(Mandatory = $true,
-                HelpMessage = 'What standard app are you packaging?')]
+        HelpMessage = 'What standard app are you trying to get the version of?')]
         [string]
         [ValidateSet('7zip','BigFix','Chrome','CutePDF','Firefox','Flash','GIMP','Git','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
         $App
     )
 
-    Import-Module "$($ENV:SMS_ADMIN_UI_PATH)\..\ConfigurationManager.psd1" # Import the ConfigurationManager.psd1 module
-    Set-Location "$($SCCM_Site):" # Set the current location to be the site code.
-
-
-
-    # Map network drive to SCCM
-    # Test an arbitrary folder on the share
-    $Networkpath = "$($SCCM_Share_Letter):\$SCCM_Share_Test_Folder"
-
-    If (Test-Path -Path $Networkpath) {
-        Write-Host "$($SCCM_Share_Letter) Drive to SCCM Exists already"
+    begin {
+        $App = $App.ToLower()
     }
-    Else {
-        #map network drive
-        New-PSDrive -Name "$($SCCM_Share_Letter)" -PSProvider "FileSystem" -Root "$SCCM_Share" -Persist
 
-        #check mapping again
+    process {
+        Import-Module "$($ENV:SMS_ADMIN_UI_PATH)\..\ConfigurationManager.psd1" # Import the ConfigurationManager.psd1 module
+        Set-Location "$($SCCM_Site):" # Set the current location to be the site code.
+
+        # Map network drive to SCCM
+        # Test an arbitrary folder on the share
+        $Networkpath = "$($SCCM_Share_Letter):\$SCCM_Share_Test_Folder"
+
         If (Test-Path -Path $Networkpath) {
-            Write-Host "$($SCCM_Share_Letter) Drive has been mapped to SCCM"
+            Write-Host "$($SCCM_Share_Letter) Drive to SCCM Exists already"
         }
         Else {
-            Write-Error "Couldn't map $($SCCM_Share_Letter) Drive to SCCM, aborting"
-            Return
+            #map network drive
+            New-PSDrive -Name "$($SCCM_Share_Letter)" -PSProvider "FileSystem" -Root "$SCCM_Share" -Persist
+
+            #check mapping again
+            If (Test-Path -Path $Networkpath) {
+                Write-Host "$($SCCM_Share_Letter) Drive has been mapped to SCCM"
+            }
+            Else {
+                Write-Error "Couldn't map $($SCCM_Share_Letter) Drive to SCCM, aborting"
+                Return
+            }
         }
+        # End Map Network Drive
+
+        # Package 7zip
+        if ($App.ToLower() -eq '7zip') {
+            Update-AppHelper -AppName "7zip" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Igor Pavlov"
+        }
+
+        # Package Bigfix
+        if ($App.ToLower() -eq 'bigfix') {
+            Update-AppHelper -AppName "BigFix Client" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "IBM"
+        }
+
+
+        # Package Google Chrome
+        if ($App.ToLower() -eq 'chrome') {
+            Update-AppHelper -AppName "Chrome" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Google"
+        }
+
+        #Package Firefox
+        if ($App.ToLower() -eq 'firefox') {
+            Update-AppHelper -AppName "Firefox" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Mozilla"
+        }
+
+        # Package Adobe Flash
+        if ($App.ToLower() -eq 'flash') {
+            Update-AppHelper -AppName "Flash" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Adobe"
+        }
+
+        # Package GIMP
+        if ($App.ToLower() -eq 'gimp') {
+            Update-AppHelper -AppName "GIMP" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "GIMP Development Team"
+        }
+
+        # Package GIMP
+        if ($App.ToLower() -eq 'git') {
+            Update-AppHelper -AppName "Git" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Software Freedom Conservancy"
+        }
+
+        # Package Druva InSync
+        if ($App.ToLower() -eq 'insync') {
+            Update-AppHelper -AppName "InSync" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Druva"
+        }
+
+        # Package Java
+        if ($App.ToLower() -eq 'java') {
+            Update-AppHelper -AppName "Java" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Oracle"
+        }
+
+        # Package Notepad++
+        if ($App.ToLower() -eq 'notepad++') {
+            Update-AppHelper -AppName "Notepad++" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Notepad++ Team"
+        }
+
+        # Package putty
+        if ($App.ToLower() -eq 'putty') {
+            Update-AppHelper -AppName "Putty" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Simon Tatham"
+        }
+
+        # Package Adobe Reader
+        if ($App.ToLower() -eq 'reader') {
+            Update-AppHelper -AppName "Reader" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Adobe"
+        }
+
+        # Package Citrix Receiver
+        if ($App.ToLower() -eq 'receiver') {
+            Update-AppHelper -AppName "Receiver" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Citrix"
+        }
+
+        # Package vlc
+        if ($App.ToLower() -eq 'vlc') {
+            Update-AppHelper -AppName "VLC" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "VideoLAN"
+        }
+
+        # Package vlc
+        if ($App.ToLower() -eq 'vscode') {
+            Update-AppHelper -AppName "VSCode" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Microsoft"
+        }
+
+        # Package winscp
+        if ($App.ToLower() -eq 'winscp') {
+            Update-AppHelper -AppName "WinSCP" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Martin Prikryl"
+        }
+
+        # Package wireshark
+        if ($App.ToLower() -eq 'wireshark') {
+            Update-AppHelper -AppName "WireShark" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "The WireShark Team"
+        }
+
+        Set-Location "c:" #change location back to c drive. Otherwise other functions break
     }
-    # End Map Network Drive
-
-    # Package 7zip
-    if ($App.ToLower() -eq '7zip') {
-        Update-AppHelper -AppName "7zip" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Igor Pavlov"
-    }
-
-    # Package Bigfix
-    if ($App.ToLower() -eq 'bigfix') {
-        Update-AppHelper -AppName "BigFix Client" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "IBM"
-    }
-
-
-    # Package Google Chrome
-    if ($App.ToLower() -eq 'chrome') {
-        Update-AppHelper -AppName "Chrome" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Google"
-    }
-
-    #Package Firefox
-    if ($App.ToLower() -eq 'firefox') {
-        Update-AppHelper -AppName "Firefox" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Mozilla"
-    }
-
-    # Package Adobe Flash
-    if ($App.ToLower() -eq 'flash') {
-        Update-AppHelper -AppName "Flash" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Adobe"
-    }
-
-    # Package GIMP
-    if ($App.ToLower() -eq 'gimp') {
-        Update-AppHelper -AppName "GIMP" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "GIMP Development Team"
-    }
-
-    # Package GIMP
-    if ($App.ToLower() -eq 'git') {
-        Update-AppHelper -AppName "Git" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Software Freedom Conservancy"
-    }
-
-    # Package Druva InSync
-    if ($App.ToLower() -eq 'insync') {
-        Update-AppHelper -AppName "InSync" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Druva"
-    }
-
-    # Package Java
-    if ($App.ToLower() -eq 'java') {
-        Update-AppHelper -AppName "Java" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Oracle"
-    }
-
-    # Package Notepad++
-    if ($App.ToLower() -eq 'notepad++') {
-        Update-AppHelper -AppName "Notepad++" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Notepad++ Team"
-    }
-
-    # Package putty
-    if ($App.ToLower() -eq 'putty') {
-        Update-AppHelper -AppName "Putty" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Simon Tatham"
-    }
-
-    # Package Adobe Reader
-    if ($App.ToLower() -eq 'reader') {
-        Update-AppHelper -AppName "Reader" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Adobe"
-    }
-
-    # Package Citrix Receiver
-    if ($App.ToLower() -eq 'receiver') {
-        Update-AppHelper -AppName "Receiver" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Citrix"
-    }
-
-    # Package vlc
-    if ($App.ToLower() -eq 'vlc') {
-        Update-AppHelper -AppName "VLC" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "VideoLAN"
-    }
-
-    # Package vlc
-    if ($App.ToLower() -eq 'vscode') {
-        Update-AppHelper -AppName "VSCode" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Microsoft"
-    }
-
-    # Package winscp
-    if ($App.ToLower() -eq 'winscp') {
-        Update-AppHelper -AppName "WinSCP" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Martin Prikryl"
-    }
-
-    # Package wireshark
-    if ($App.ToLower() -eq 'wireshark') {
-        Update-AppHelper -AppName "WireShark" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "The WireShark Team"
-    }
-
-    Set-Location "c:" #change location back to c drive. Otherwise other functions break
 
 }
 

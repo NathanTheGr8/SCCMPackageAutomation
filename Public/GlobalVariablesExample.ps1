@@ -32,3 +32,24 @@ $global:Computers = @{
     'Person3' = "CompName3"
     'Person4' = "CompName4"
 }
+
+$global:Apps = @(
+    '7zip',
+    'BigFix',
+    'Chrome',
+    'CutePDF',
+    'Firefox',
+    'Flash',
+    'GIMP',
+    'Git',
+    'insync',
+    'Java',
+    'Notepad++',
+    'Putty',
+    'Reader',
+    'Receiver',
+    'VLC',
+    'VSCode',
+    'WinSCP',
+    'WireShark'
+    )
