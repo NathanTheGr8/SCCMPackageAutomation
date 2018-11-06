@@ -14,6 +14,11 @@ If the app is out of date it prints out in red. If it is up to date it prints ou
 Get-OutDatedApps
 #>
     [CmdletBinding()]
+    param
+    (
+        [switch]
+        $HTML
+    )
 
     $MaintainedApps = @()
     $BlackList = @("java","insync","cutepdf")
@@ -24,16 +29,35 @@ Get-OutDatedApps
     }
     $MaintainedApps= $MaintainedApps | Sort-Object
 
+    # save the current color
+    $CurrentForegroundColor = $host.UI.RawUI.ForegroundColor
+
     Foreach ($App in $MaintainedApps){
         [version]$currVer = Get-CurrentAppVersion -App $app
         [version]$LatestVer = Get-LatestAppVersion -App $App
 
         if ($LatestVer -gt $currVer){
-            Write-Host "$App needs updated to $LatestVer. We are currently on $currVer" -ForegroundColor Red
+            if ($HTML) {
+                "<font color=`"800000`">$App needs updated to $LatestVer. We are currently on $currVer</font> <br>"
+            }
+            else {
+                # set the new color
+                $host.UI.RawUI.ForegroundColor = "Red"
+                Write-Output "$App needs updated to $LatestVer. We are currently on $currVer"
+            }
         }
         else {
-            Write-Host "$app is on latest version $LatestVer" -ForegroundColor Green
+            if ($HTML) {
+                "<font color=`"008000`">$App is on latest version $LatestVer</font> <br>"
+            }
+            else {
+                # set the new color
+                $host.UI.RawUI.ForegroundColor = "Green"
+                Write-Output "$App is on latest version $LatestVer"
+            }
         }
-
     }
+
+    # restore the original color
+    $host.UI.RawUI.ForegroundColor = $CurrentForegroundColor
 }

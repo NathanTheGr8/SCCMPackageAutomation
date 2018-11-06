@@ -24,7 +24,6 @@ Update-AppPackageSource -App Firefox
         $App,
         [switch]
         $ForceUpdate
-
     )
 
     $CurrentAppVersion = Get-CurrentAppVersion -App $App
