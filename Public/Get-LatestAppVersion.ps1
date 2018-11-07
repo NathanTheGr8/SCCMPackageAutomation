@@ -16,32 +16,37 @@ The app you want the latest version of. Dynamic tab completion from GlobalVariab
 Get-LatestAppVersion -App Firefox
 #>
     [CmdletBinding()]
-    param 
+    param
     (
+        [Parameter(Mandatory = $true,
+        HelpMessage = 'What standard app are you trying to get the version of?')]
+        [string]
+        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Firefox','Flash','GIMP','Git','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        $App
     )
-    DynamicParam {
-        #Example from https://mcpmag.com/articles/2016/10/06/implement-dynamic-parameters.aspx
-        $ParamAttrib = New-Object System.Management.Automation.ParameterAttribute -Property @{
-            Mandatory = $true
-            Position = 0
-            HelpMessage = "What App are you trying to get the version of"
-        }
-        $ParamAttrib.ParameterSetName  = '__AllParameterSets'
+    # DynamicParam {
+    #     #Example from https://mcpmag.com/articles/2016/10/06/implement-dynamic-parameters.aspx
+    #     $ParamAttrib = New-Object System.Management.Automation.ParameterAttribute -Property @{
+    #         Mandatory = $true
+    #         Position = 0
+    #         HelpMessage = "What App are you trying to get the version of"
+    #     }
+    #     $ParamAttrib.ParameterSetName  = '__AllParameterSets'
 
-        $AttribColl = New-Object  System.Collections.ObjectModel.Collection[System.Attribute]
-        $AttribColl.Add($ParamAttrib)
-        $AttribColl.Add((New-Object  System.Management.Automation.ValidateSetAttribute($global:Apps)))
+    #     $AttribColl = New-Object  System.Collections.ObjectModel.Collection[System.Attribute]
+    #     $AttribColl.Add($ParamAttrib)
+    #     $AttribColl.Add((New-Object  System.Management.Automation.ValidateSetAttribute($global:Apps)))
 
-        $RuntimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter('App',  [string], $AttribColl)
+    #     $RuntimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter('App',  [string], $AttribColl)
 
-        $RuntimeParamDic = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
-        $RuntimeParamDic.Add('App',  $RuntimeParam)
+    #     $RuntimeParamDic = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
+    #     $RuntimeParamDic.Add('App',  $RuntimeParam)
 
-        return  $RuntimeParamDic
-    }
+    #     return  $RuntimeParamDic
+    # }
 
     begin {
-        $App = $PSBoundParameters['App']
+        #$App = $PSBoundParameters['App']
         $App = $App.toLower()
     }
 
@@ -245,5 +250,5 @@ Get-LatestAppVersion -App Firefox
             return [version]$LatestAppVersion
         }
     }
-    
+
 }
