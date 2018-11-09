@@ -38,7 +38,7 @@ Get-OutDatedApps
 
         if ($LatestVer -gt $currVer){
             if ($HTML) {
-                "<font color=`"800000`">$App needs updated to $LatestVer. We are currently on $currVer</font> <br>"
+                "<font color=`"CD0000`">$App needs updated to $LatestVer. We are currently on $currVer</font> <br>"
             }
             else {
                 # set the new color
@@ -47,8 +47,8 @@ Get-OutDatedApps
             }
         }
         else {
-            if ($HTML) {
-                "<font color=`"008000`">$App is on latest version $LatestVer</font> <br>"
+            if ($HTML) {#008000
+                "<font color=`"00A000`">$App is on latest version $LatestVer</font> <br>"
             }
             else {
                 # set the new color

@@ -25,6 +25,28 @@ Get-CurrentAppVersion -App Firefox
 
     begin {
         $App = $App.ToLower()
+
+        # Map network drive to SCCM
+        # Test an arbitrary folder on the share
+        $Networkpath = "$($SCCM_Share_Letter):\$SCCM_Share_Test_Folder"
+
+        If (Test-Path -Path $Networkpath) {
+            Write-Verbose "$($SCCM_Share_Letter) Drive to SCCM Exists already"
+        }
+        Else {
+            #map network drive
+            New-PSDrive -Name "$($SCCM_Share_Letter)" -PSProvider "FileSystem" -Root "$SCCM_Share" -Persist | out-null
+
+            #check mapping again
+            If (Test-Path -Path $Networkpath) {
+                Write-Verbose "$($SCCM_Share_Letter) Drive has been mapped to SCCM"
+            }
+            Else {
+                Write-Error "Couldn't map $($SCCM_Share_Letter) Drive to SCCM, aborting"
+                Return
+            }
+        }
+        # End Map Network Drive
     }
 
     process {

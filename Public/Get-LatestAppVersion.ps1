@@ -129,10 +129,10 @@ Get-LatestAppVersion -App Firefox
                 #gimp-(\d+\.*){3}-setup(-\d+)*\.exe[^.]
 
                 if(($Gimp_MinorVersions[-1].innerHTML -split "." | Select-Object -Last 1) -eq "torrent"){
-                    $LatestAppVersion = $Gimp_MinorVersions[-2].innerHTML -split "-" | Select-Nth -N 2
+                    $LatestAppVersion = $Gimp_MinorVersions[-2].innerHTML -split "-" | Select-Object -First 2 | Select-Object -Last 1
                 }
                 else {
-                    $LatestAppVersion = $Gimp_MinorVersions[-1].innerHTML -split "-" | Select-Nth -N 2
+                    $LatestAppVersion = $Gimp_MinorVersions[-1].innerHTML -split "-" | Select-Object -First 2 | Select-Object -Last 1
                 }
             }
             'git'{
@@ -144,6 +144,7 @@ Get-LatestAppVersion -App Firefox
             }
             'java' {
                 Write-Output "Java can't be automatically downloaded."
+                $url = "https://java.com/en/download/manual.jsp"
                 #todo?
             }
             'notepad++' {
