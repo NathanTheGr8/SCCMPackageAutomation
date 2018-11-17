@@ -211,9 +211,13 @@ Get-LatestAppVersion -App Firefox
             'vscode' {
                 $url = "https://github.com/Microsoft/vscode/releases"
                 $html = Invoke-WebRequest -Uri "$url" -UseBasicParsing
-                $versionlinks = $html.Links | Where-Object href -match "\d+(\.\d+)+" | Sort-Object -Descending
-                $LatestAppVersion = [regex]::match($versionlinks[0].href,'\d+(\.\d+)+').Value
-
+                $versionlinks = $html.Links | Where-Object href -match "\d+(\.\d+)+"
+                $versionNumbers = @()
+                foreach ($link in $versionlinks){
+                    $versionNumbers += [regex]::match($link.href,'\d+(\.\d+)+').Value
+                }
+                $versionNumbers = $versionNumbers | Sort-Object -Descending
+                $LatestAppVersion = $versionNumbers[0]
             }
             'winscp' {
                 $url = "https://winscp.net/eng/downloads.php"

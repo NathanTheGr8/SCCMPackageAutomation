@@ -30,7 +30,7 @@ Get-OutDatedApps
     $MaintainedApps= $MaintainedApps | Sort-Object
 
     # save the current color
-    $CurrentForegroundColor = $host.UI.RawUI.ForegroundColor
+    # $CurrentForegroundColor = $host.UI.RawUI.ForegroundColor
 
     Foreach ($App in $MaintainedApps){
         [version]$currVer = Get-CurrentAppVersion -App $app
@@ -41,9 +41,9 @@ Get-OutDatedApps
                 "<font color=`"CD0000`">$App needs updated to $LatestVer. We are currently on $currVer</font> <br>"
             }
             else {
-                # set the new color
-                $host.UI.RawUI.ForegroundColor = "Red"
-                Write-Output "$App needs updated to $LatestVer. We are currently on $currVer"
+                # # set the new color
+                # $host.UI.RawUI.ForegroundColor = "Red"
+                Write-Host "$App needs updated to $LatestVer. We are currently on $currVer" -ForegroundColor Red
             }
         }
         else {
@@ -51,13 +51,13 @@ Get-OutDatedApps
                 "<font color=`"00A000`">$App is on latest version $LatestVer</font> <br>"
             }
             else {
-                # set the new color
-                $host.UI.RawUI.ForegroundColor = "Green"
-                Write-Output "$App is on latest version $LatestVer"
+                # # set the new color
+                # $host.UI.RawUI.ForegroundColor = "Green"
+                Write-Host "$App is on latest version $LatestVer" -ForegroundColor Green
             }
         }
     }
 
     # restore the original color
-    $host.UI.RawUI.ForegroundColor = $CurrentForegroundColor
+    # $host.UI.RawUI.ForegroundColor = $CurrentForegroundColor
 }

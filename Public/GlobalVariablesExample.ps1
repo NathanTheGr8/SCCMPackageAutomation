@@ -52,4 +52,9 @@ $global:Apps = @(
     'VSCode',
     'WinSCP',
     'WireShark'
-    )
+)
+
+# For Get-OutDatedApps Scheduled Task.
+$Recipients = "test@domain.com"
+$EmailSender = "test@domain.com"
+$SMTPServer = "authappmail.domain.com"
