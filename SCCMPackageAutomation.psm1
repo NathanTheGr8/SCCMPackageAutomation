@@ -12,13 +12,19 @@
 #>
 
 # Global varibles
-. $PSScriptRoot\Public\GlobalVariables.ps1
+try {
+    . $PSScriptRoot\GlobalVariables.ps1
+}
+catch {
+    Write-Error "You need to create GlobalVariables.ps1"
+}
 
 #Get public and private function definition files.
     $Public  = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -ErrorAction SilentlyContinue )
+    $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue )
 
 #Dot source the files
-    Foreach($import in @($Public))
+    Foreach($import in @($Public + $Private))
     {
         if ($import -like "*-*") { # only export functions that have - in their name
             Try
@@ -39,7 +45,7 @@
 
 
 
-#export functions
+#export public functions
 Export-ModuleMember -Function $Public.Basename
 
 #Export-ModuleMember -Variable
