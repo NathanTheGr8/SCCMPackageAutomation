@@ -56,28 +56,25 @@ Download-LatestAppVersion -App Chrome
 
         switch ($App) {
             '7zip' {
+                $LatestAppVersion = Get-LatestAppVersion -App 7zip -AsString
+                $LatestAppVersion = $LatestAppVersion.replace(".","")
                 $Domain = "http://www.7-zip.org"
-                $AppendToDomain = "/download.html"
+                $DownloadPage = "https://www.7-zip.org/download.html"
+                $html = Invoke-WebRequest -Uri "$DownloadPage"
 
-                # build URL to scan
-                $SiteToScan = $Domain + $AppendToDomain
+                #Get Relative Path URLS
+                $TempURLS32 = $html.Links.href -match ".+7z$LatestAppVersion.msi"
+                $TempURLS64 = $html.Links.href -match ".+7z$LatestAppVersion-x64.msi"
 
-                # build URL to scan
-                $TempURLS32 = (Invoke-WebRequest -uri $SiteToScan).links | Where-Object innerText -like “*Download*” | Where-Object href -Like "*.msi" | Select-Object -First 2 | Where-Object href -NotLike "*x64*"
-                $TempURLS64 = (Invoke-WebRequest -uri $SiteToScan).links | Where-Object innerText -like “*Download*” | Where-Object href -Like "*.msi" | Select-Object -First 2 | Where-Object href -Like "*x64*"
-
-                $32bitDownload = $Domain + "/" + $TempURLS32.href
-                $64bitdownload = $Domain + "/" + $TempURLS64.href
+                #Build Download URL
+                $32bitDownload = $Domain + "/" + $TempURLS32
+                $64bitdownload = $Domain + "/" + $TempURLS64
 
                 # Build install filename
-                $InstallFileName = $($32bitDownload.Split("/") | Select-Object -Last 1).Split(".") | Select-Object -First 1
-
-
-                #32bit
-                Invoke-WebRequest -Uri $32bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName).msi"
-
-                #64bit
-                Invoke-WebRequest -Uri $64bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName)-x64.msi"
+                $InstallFileName = "7z$LatestAppVersion"
+                #Download
+                $ReturnCode1 = Invoke-WebRequest -Uri $32bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName).msi"
+                $ReturnCode2 = Invoke-WebRequest -Uri $64bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName)-x64.msi"
             }
             'bigfix' {
                 $url = "http://support.bigfix.com/bes/release/"
@@ -296,13 +293,13 @@ Download-LatestAppVersion -App Chrome
                 $WebRequestOutput = Invoke-WebRequest -Uri "$url" -OutFile "$DownloadDir\$($InstallFileName)"
             }
             'winscp' {
-                $domain = "https://winscp.net"
-                $url = "https://winscp.net/eng/downloads.php"
-                $html = Invoke-WebRequest -Uri "$url" -UseBasicParsing
-                $versionlinks = $html.Links -match ".+download\/WinSCP-\d+(\.\d+)+-Setup\.exe"
-                $downloadURL = $Domain + $versionLinks[0].href
-                $InstallFileName = $versionLinks[0].href -split "/" | Select-Object -Last 1
-                $WebRequestOutput = Invoke-WebRequest -Uri "$downloadURL" -OutFile "$DownloadDir\$InstallFileName"
+                $LatestAppVersion = Get-LatestAppVersion -App WinSCP
+                $downloadPage = "https://winscp.net/download/WinSCP-$LatestAppVersion-Setup.exe"
+                $html = Invoke-WebRequest -Uri "$downloadPage" -UseBasicParsing
+                $CDNDownload = $html.Links.href -match ".+files\/WinSCP-\d+(\.\d+)+-Setup\.exe.*"
+                $CDNDownload = $CDNDownload[0] # Selects the first link
+                $InstallFileName = "WinSCP-$LatestAppVersion-Setup.exe"
+                $WebRequestOutput = Invoke-WebRequest -Uri "$CDNDownload" -OutFile "$DownloadDir\$InstallFileName"
             }
             'wireshark' {
                 $LatestAppVersion = Get-LatestAppVersion -App $App
@@ -324,5 +321,4 @@ Download-LatestAppVersion -App Chrome
         $InstallFiles = Get-ChildItem -Path "$DownloadDir\$InstallFileName*"
         return $InstallFiles
     }
-
 }

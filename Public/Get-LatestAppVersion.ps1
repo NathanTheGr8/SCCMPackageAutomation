@@ -12,6 +12,8 @@ scrapes a web page with download links for the latest version (most apps require
 .PARAMETER App
 
 The app you want the latest version of. Dynamic tab completion from GlobalVariables Apps list.
+.PARAMETER AsString
+Returns the version # as a string. Useful for apps that a have leading zeros in version number.
 .EXAMPLE
 Get-LatestAppVersion -App Firefox
 #>
@@ -22,7 +24,9 @@ Get-LatestAppVersion -App Firefox
         HelpMessage = 'What standard app are you trying to get the version of?')]
         [string]
         [ValidateSet('7zip','BigFix','Chrome','CutePDF','Firefox','Flash','GIMP','Git','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
-        $App
+        $App,
+        [switch]
+        $AsString
     )
     # DynamicParam {
     #     #Example from https://mcpmag.com/articles/2016/10/06/implement-dynamic-parameters.aspx
@@ -222,13 +226,8 @@ Get-LatestAppVersion -App Firefox
             'winscp' {
                 $url = "https://winscp.net/eng/downloads.php"
                 $html = Invoke-WebRequest -Uri "$url" -UseBasicParsing
-                $versionlinks = $html.Links -match ".+Download/WINSCP.+Setup.exe" | Sort-Object -Descending
-                if ($versionlinks[0].href.Contains("beta")){
-                    $LatestAppVersion = [regex]::match($versionlinks[1].href,'\d+(\.\d+)+').Value
-                }
-                else {
-                    $LatestAppVersion = [regex]::match($versionlinks[0].href,'\d+(\.\d+)+').Value
-                }
+                $versionlinks = $html.Links -match ".+download\/WinSCP-\d+(\.\d+)+-Setup\.exe" | Sort-Object -Descending
+                $LatestAppVersion = [regex]::match($versionlinks[0].href,'\d+(\.\d+)+').Value
             }
             'wireshark' {
                 $url = "https://www.wireshark.org/download/win64/all-versions/"
@@ -248,7 +247,7 @@ Get-LatestAppVersion -App Firefox
             }
         }
 
-        if ($app -eq "reader"){
+        if (($app -eq "reader") -or ($AsString) ){
             return $LatestAppVersion
         }
         else {
