@@ -6,7 +6,6 @@ $Date = Get-Date -DisplayHint Date | Out-String
 $Date = $Date -replace "`n","" -replace "`r",""
 $DateTime = Get-Date
 $Subject = "Out Of Date Apps For $Date"
-$Recipients = ""
 # Email Body
 $Body = @"
 <body>

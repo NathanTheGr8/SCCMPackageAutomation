@@ -26,7 +26,7 @@ Download-LatestAppVersion -App Chrome
     begin {
         $App = $App.ToLower()
     }
-    
+
     process {
 
         #Make Temp Download dir if it doesn't exist
@@ -299,7 +299,7 @@ Download-LatestAppVersion -App Chrome
                 $domain = "https://winscp.net"
                 $url = "https://winscp.net/eng/downloads.php"
                 $html = Invoke-WebRequest -Uri "$url" -UseBasicParsing
-                $versionlinks = $html.Links -match ".+Download/WINSCP.+Setup.exe"
+                $versionlinks = $html.Links -match ".+download\/WinSCP-\d+(\.\d+)+-Setup\.exe"
                 $downloadURL = $Domain + $versionLinks[0].href
                 $InstallFileName = $versionLinks[0].href -split "/" | Select-Object -Last 1
                 $WebRequestOutput = Invoke-WebRequest -Uri "$downloadURL" -OutFile "$DownloadDir\$InstallFileName"
