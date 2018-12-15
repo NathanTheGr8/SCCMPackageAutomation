@@ -100,64 +100,74 @@ Get-LatestAppVersion -App Firefox
                 $FlashVersions = Sort-Object -InputObject $FlashVersions -Descending
                 $LatestAppVersion = $FlashVersions[0]
             }
-            'gimp'{ # todo  -UseBasicParsing
+            'gimp'{
                 $url = "https://download.gimp.org/mirror/pub/gimp/"
-                $html = Invoke-WebRequest -Uri "$url"
+                $html = Invoke-WebRequest -UseBasicParsing -Uri "$url"
 
-                $GIMP_Versions = $html.Links | Where-Object innerHTML -Match "v\d+\.\d+\.*\d*/"
-                $GIMP_Versions = Sort-Object -InputObject $GIMP_Versions -Property innerHTML
+                $GIMP_Versions = $html.Links | Where-Object outerHTML -Match "v\d+\.\d+\.*\d*/"
+                $GIMP_Versions = Sort-Object -InputObject $GIMP_Versions -Property outerHTML
 
                 $Gimp_MinorVersionsUrl = $url + "$($GIMP_Versions[-1].href)" + "windows/"
                 $html2 = Invoke-WebRequest -Uri $Gimp_MinorVersionsUrl
-                $Gimp_MinorVersions = $html2.Links | Where-Object innerHTML -Match "gimp-\d+\.\d+\.*\d*-setup.+exe"
-                $Gimp_MinorVersions = Sort-Object -InputObject $Gimp_MinorVersions -Property innerHTML
+                $Gimp_MinorVersions = $html2.Links | Where-Object outerHTML -Match "gimp-\d+\.\d+\.*\d*-setup.+exe"
+                $Gimp_MinorVersions = Sort-Object -InputObject $Gimp_MinorVersions -Property outerHTML
                 #gimp-(\d+\.*){3}-setup(-\d+)*\.exe[^.]
 
-                if(($Gimp_MinorVersions[-1].innerHTML -split "." | Select-Object -Last 1) -eq "torrent"){
-                    $LatestAppVersion = $Gimp_MinorVersions[-2].innerHTML -split "-" | Select-Object -First 2 | Select-Object -Last 1
+                if(($Gimp_MinorVersions[-1].outerHTML -split "." | Select-Object -Last 1) -eq "torrent"){
+                    $LatestAppVersion = $Gimp_MinorVersions[-2].outerHTML -split "-" | Select-Object -First 2 | Select-Object -Last 1
                 }
                 else {
-                    $LatestAppVersion = $Gimp_MinorVersions[-1].innerHTML -split "-" | Select-Object -First 2 | Select-Object -Last 1
+                    $LatestAppVersion = $Gimp_MinorVersions[-1].outerHTML -split "-" | Select-Object -First 2 | Select-Object -Last 1
                 }
             }
             'git'{ #todo  -UseBasicParsing
                     $url = "https://git-scm.com/download/win"
-                    $html = Invoke-WebRequest -Uri $url
+                    $html = Invoke-WebRequest -uri $url
+                    $Versions = $html.Links | Where-Object outerHTML -Match "$VersionRegex"
 
-                    $32bitDownload = ($html.links | Where-Object innerHTML -Match "32-bit Git for Windows Setup" | Select-Object -First 1).href
-                    $LatestAppVersion = [regex]::match($32bitDownload,'\d+(\.\d+)+').Value
+                    $versionArray = @()
+                    foreach ($Version in $Versions){
+                        [version]$VersionNumber = [regex]::match($Version.outerHTML ,"$VersionRegex").Value
+                        $versionArray += $VersionNumber
+                    }
+
+                    $versionArray = $versionArray | Sort-Object -Descending
+                    $LatestAppVersion = $versionArray[0]
             }
             'java' {
                 Write-Output "Java can't be automatically downloaded."
                 $url = "https://java.com/en/download/manual.jsp"
                 #todo?
             }
-            'notepad++' { #todo  -UseBasicParsing
-                <#
-                I am scrapping the domain for links like *Notepad++ Installer 64-bit.
-                This solution will break if they change their link naming format. However there is on offical notepad++
-                api to query.
-                #>
-                # URL to scan
-                $SiteToScan = "https://notepad-plus-plus.org/download"
-                $html = Invoke-WebRequest -uri $SiteToScan
-                # Scan URL to download file
-                $url64 = ($html.links | Where-Object innerHTML -like "*Notepad++ Installer 64-bit*").href
-                $LatestAppVersion = $url64 -split "/" | Select-Object -Last 2 | Select-Object -first 1
+            'notepad++' {
+                $url = "https://notepad-plus-plus.org/download"
+                $html = Invoke-WebRequest -uri $url
+                $Versions = $html.Links | Where-Object outerHTML -Match "$VersionRegex"
 
-            }
-            'putty' {#todo  -UseBasicParsing
-                $SiteToScan = "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html"
-                $foundVersion = (Invoke-WebRequest -Uri $SiteToScan).Parsedhtml.title -match "$VersionRegex"
+                $versionArray = @()
+                foreach ($Version in $Versions){
+                    [version]$VersionNumber = [regex]::match($Version.outerHTML ,"$VersionRegex").Value
+                    $versionArray += $VersionNumber
+                }
 
-                if ($foundVersion){
-                    $LatestAppVersion = $Matches[0]
-                }
-                else {
-                    throw "Error $app version not found"
-                }
+                $versionArray = $versionArray | Sort-Object -Descending
+                $LatestAppVersion = $versionArray[0]
             }
-            'reader' {#todo  -UseBasicParsing
+            'putty' {
+                $url = "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html"
+                $html = Invoke-WebRequest -UseBasicParsing -Uri $url
+                $Versions = $html.Links | Where-Object outerHTML -Match "$VersionRegex"
+
+                $versionArray = @()
+                foreach ($Version in $Versions){
+                    [version]$VersionNumber = [regex]::match($Version.outerHTML ,"$VersionRegex").Value
+                    $versionArray += $VersionNumber
+                }
+
+                $versionArray = $versionArray | Sort-Object -Descending
+                $LatestAppVersion = $versionArray[0]
+            }
+            'reader' {
                 $url = "https://helpx.adobe.com/acrobat/release-note/release-notes-acrobat-reader.html"
                 $html = Invoke-WebRequest -UseBasicParsing -Uri "$url"
 
