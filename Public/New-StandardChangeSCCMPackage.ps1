@@ -262,7 +262,7 @@ function Update-AppHelper {
         Import-Module "$($ENV:SMS_ADMIN_UI_PATH)\..\ConfigurationManager.psd1" # Import the ConfigurationManager.psd1 module
         Set-Location "$($SCCM_Site):" # Set the current location to be the site code.
         try {
-            $WMIQuerries = Get-CMDeviceCollectionQueryMembershipRule -CollectionName "Not Current Version $app"
+            $WMIQuerries = Get-CMDeviceCollectionQueryMembershipRule -CollectionName "Not Current Version $app*"
         }
         catch {
             Write-Output "Error, try importing the SCCM Module manuelly."
