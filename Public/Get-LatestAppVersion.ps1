@@ -28,30 +28,11 @@ Get-LatestAppVersion -App Firefox
         [switch]
         $AsString
     )
-    # DynamicParam {
-    #     #Example from https://mcpmag.com/articles/2016/10/06/implement-dynamic-parameters.aspx
-    #     $ParamAttrib = New-Object System.Management.Automation.ParameterAttribute -Property @{
-    #         Mandatory = $true
-    #         Position = 0
-    #         HelpMessage = "What App are you trying to get the version of"
-    #     }
-    #     $ParamAttrib.ParameterSetName  = '__AllParameterSets'
-
-    #     $AttribColl = New-Object  System.Collections.ObjectModel.Collection[System.Attribute]
-    #     $AttribColl.Add($ParamAttrib)
-    #     $AttribColl.Add((New-Object  System.Management.Automation.ValidateSetAttribute($global:Apps)))
-
-    #     $RuntimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter('App',  [string], $AttribColl)
-
-    #     $RuntimeParamDic = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
-    #     $RuntimeParamDic.Add('App',  $RuntimeParam)
-
-    #     return  $RuntimeParamDic
-    # }
 
     begin {
         #$App = $PSBoundParameters['App']
         $App = $App.toLower()
+        $VersionRegex = "\d+(\.\d+)+"
     }
 
     process {
@@ -62,7 +43,7 @@ Get-LatestAppVersion -App Firefox
             '7zip' {
                 # https://www.reddit.com/r/PowerShell/comments/9gwbed/scrape_7zip_website_for_the_latest_version/
                 $Domain = "https://www.7-zip.org/download.html"
-                $temp   = (Invoke-WebRequest -uri $Domain)
+                $temp   = (Invoke-WebRequest -UseBasicParsing -uri $Domain)
                 $regex  = $temp.Content -match 'Download 7-Zip (.*)\s(.*) for Windows'
 
                 if ($regex) {
@@ -75,11 +56,11 @@ Get-LatestAppVersion -App Firefox
             }
             'bigfix' {
                 $url = "http://support.bigfix.com/bes/release/"
-                $html = Invoke-WebRequest -Uri "$url"
-                $versionLinks = $html.Links | Where-Object href -Match "\d+\.\d+\/patch\d+"
+                $html = Invoke-WebRequest -UseBasicParsing -Uri "$url"
+                $versionLinks = $html.Links | Where-Object href -Match "$VersionRegex\/patch\d+"
                 #todo get "| Sort-Object -Descending" to work
                 $latestURL = $url + $versionLinks[0].href
-                $html = Invoke-WebRequest -Uri "$latestURL"
+                $html = Invoke-WebRequest -UseBasicParsing -Uri "$latestURL"
                 $ClientDownload = $html.Links | Where-Object href -Match "Client.+\.exe"
                 $LatestAppVersion = [regex]::match($ClientDownload.href,'\d+(\.\d+)+').Value
             }
@@ -88,7 +69,7 @@ Get-LatestAppVersion -App Firefox
                 # https://omahaproxy.appspot.com/
 
 
-                $LatestAppVersion = (Invoke-WebRequest -Uri "https://omahaproxy.appspot.com/all.json" | ConvertFrom-Json)[0].versions[-1].version
+                $LatestAppVersion = (Invoke-WebRequest -UseBasicParsing -Uri "https://omahaproxy.appspot.com/all.json" | ConvertFrom-Json)[0].versions[-1].version
             }
             'cutepdf' {
                     #Scrubbing the page for version is difficult. It also gives an incomplete version.
@@ -98,7 +79,7 @@ Get-LatestAppVersion -App Firefox
                     $LatestAppVersion = $download.VersionInfo.ProductVersion
             }
             'firefox' {
-                $LatestAppVersion = (Invoke-WebRequest -Uri "https://product-details.mozilla.org/1.0/firefox_versions.json" | ConvertFrom-Json).LATEST_FIREFOX_VERSION
+                $LatestAppVersion = (Invoke-WebRequest -UseBasicParsing -Uri "https://product-details.mozilla.org/1.0/firefox_versions.json" | ConvertFrom-Json).LATEST_FIREFOX_VERSION
             }
             'flash' {
                 # https://github.com/auberginehill/update-adobe-flash-player/blob/master/Update-AdobeFlashPlayer.ps1
@@ -119,7 +100,7 @@ Get-LatestAppVersion -App Firefox
                 $FlashVersions = Sort-Object -InputObject $FlashVersions -Descending
                 $LatestAppVersion = $FlashVersions[0]
             }
-            'gimp'{
+            'gimp'{ # todo  -UseBasicParsing
                 $url = "https://download.gimp.org/mirror/pub/gimp/"
                 $html = Invoke-WebRequest -Uri "$url"
 
@@ -139,7 +120,7 @@ Get-LatestAppVersion -App Firefox
                     $LatestAppVersion = $Gimp_MinorVersions[-1].innerHTML -split "-" | Select-Object -First 2 | Select-Object -Last 1
                 }
             }
-            'git'{
+            'git'{ #todo  -UseBasicParsing
                     $url = "https://git-scm.com/download/win"
                     $html = Invoke-WebRequest -Uri $url
 
@@ -151,7 +132,7 @@ Get-LatestAppVersion -App Firefox
                 $url = "https://java.com/en/download/manual.jsp"
                 #todo?
             }
-            'notepad++' {
+            'notepad++' { #todo  -UseBasicParsing
                 <#
                 I am scrapping the domain for links like *Notepad++ Installer 64-bit.
                 This solution will break if they change their link naming format. However there is on offical notepad++
@@ -165,9 +146,9 @@ Get-LatestAppVersion -App Firefox
                 $LatestAppVersion = $url64 -split "/" | Select-Object -Last 2 | Select-Object -first 1
 
             }
-            'putty' {
+            'putty' {#todo  -UseBasicParsing
                 $SiteToScan = "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html"
-                $foundVersion = (Invoke-WebRequest -Uri $SiteToScan).Parsedhtml.title -match "\d+.\d+"
+                $foundVersion = (Invoke-WebRequest -Uri $SiteToScan).Parsedhtml.title -match "$VersionRegex"
 
                 if ($foundVersion){
                     $LatestAppVersion = $Matches[0]
@@ -176,28 +157,28 @@ Get-LatestAppVersion -App Firefox
                     throw "Error $app version not found"
                 }
             }
-            'reader' {
+            'reader' {#todo  -UseBasicParsing
                 $url = "https://helpx.adobe.com/acrobat/release-note/release-notes-acrobat-reader.html"
-                $html = Invoke-WebRequest -Uri "$url"
+                $html = Invoke-WebRequest -UseBasicParsing -Uri "$url"
 
-                $DC_Versions = $html.Links | Where-Object innerHTML -Match "\(\d+\.\d+\.\d+\)"
-
+                $DC_Versions = $html.Links | Where-Object outerHTML -Match "\($VersionRegex\)"
+                $versionArray = @()
                 foreach ($version in $DC_Versions){
-                    $index = $version.innerHTML.indexOf("(")
-                    $version.innerHTML = $version.innerHTML.substring($index)
+                    $VersionNumber = [regex]::match($Version.outerHTML ,"$VersionRegex").Value
+                    $versionArray += $VersionNumber
                 }
 
-                $DC_Versions = $DC_Versions | Sort-Object -Descending -Property innerHTML
-                $LatestAppVersion = $DC_Versions[0].innerHTML.Replace("(","").replace(")","")
+                $versionArray = $versionArray | Sort-Object -Descending
+                $LatestAppVersion = $versionArray[0]
             }
             'receiver' {
                 $url = "https://www.citrix.com/downloads/citrix-receiver/"
-                $html = Invoke-WebRequest -Uri "$url"
-                $versionLinks = $html.Links | Where-Object innerHTML -Match "Receiver \d+(\.\d+)+.* for Windows$"
+                $html = Invoke-WebRequest -UseBasicParsing -Uri "$url"
+                $Versions = $html.Links | Where-Object outerHTML -Match "Receiver $VersionRegex.* for Windows"
 
                 $versionArray = @()
-                foreach ($version in $versionLinks){
-                    [version]$VersionNumber = $version.innerHTML -split " " | Select-Object -First 2 | Select-Object -Last 1
+                foreach ($Version in $Versions){
+                    [version]$VersionNumber = [regex]::match($Version.outerHTML ,"$VersionRegex").Value
                     $versionArray += $VersionNumber
                 }
 
@@ -206,7 +187,7 @@ Get-LatestAppVersion -App Firefox
             }
             'vlc' {
                 $url = "http://download.videolan.org/pub/videolan/vlc/"
-                $html = Invoke-WebRequest -Uri "$url"
+                $html = Invoke-WebRequest -UseBasicParsing -Uri "$url"
 
                 $versionlinks = $html.Links | Where-Object href -match "^(\d+\.)?(\d+\.)?(\*|\d+)\/$" | Sort-Object -Property href -Descending
                 $LatestAppVersion = $versionlinks[0].href -replace "/",""
@@ -214,31 +195,30 @@ Get-LatestAppVersion -App Firefox
             }
             'vscode' {
                 $url = "https://github.com/Microsoft/vscode/releases"
-                $html = Invoke-WebRequest -Uri "$url" -UseBasicParsing
-                $versionlinks = $html.Links | Where-Object href -match "\d+(\.\d+)+"
+                $html = Invoke-WebRequest -UseBasicParsing -Uri "$url"
+                $versionlinks = $html.Links | Where-Object href -match "$VersionRegex"
                 $versionNumbers = @()
                 foreach ($link in $versionlinks){
-                    $versionNumbers += [regex]::match($link.href,'\d+(\.\d+)+').Value
+                    $versionNumbers += [regex]::match($link.href,"$VersionRegex").Value
                 }
                 $versionNumbers = $versionNumbers | Sort-Object -Descending
                 $LatestAppVersion = $versionNumbers[0]
             }
             'winscp' {
                 $url = "https://winscp.net/eng/downloads.php"
-                $html = Invoke-WebRequest -Uri "$url" -UseBasicParsing
-                $versionlinks = $html.Links -match ".+download\/WinSCP-\d+(\.\d+)+-Setup\.exe" | Sort-Object -Descending
-                $LatestAppVersion = [regex]::match($versionlinks[0].href,'\d+(\.\d+)+').Value
+                $html = Invoke-WebRequest -UseBasicParsing -Uri "$url"
+                $versionlinks = $html.Links -match ".+download\/WinSCP-$VersionRegex-Setup\.exe" | Sort-Object -Descending
+                $LatestAppVersion = [regex]::match($versionlinks[0].href,"$VersionRegex").Value
             }
             'wireshark' {
-                $url = "https://www.wireshark.org/download/win64/all-versions/"
-                $html = Invoke-WebRequest -Uri "$url"
+                $url = "https://www.wireshark.org/docs/relnotes/"
+                $html = Invoke-WebRequest -UseBasicParsing -Uri "$url"
 
-                $Versions = $html.Links | Where-Object innerHTML -Match "\d+\.\d+\.\d+\.msi"
+                $Versions = $html.Links | Where-Object -Property outerHTML -Match "$VersionRegex"
 
                 $versionArray = @()
-                foreach ($version in $Versions){
-                    $VersionNumber = $version.innerHTML -split "-" | Select-Object -Last 1
-                    $VersionNumber = $VersionNumber -replace ".msi", ""
+                foreach ($Version in $Versions){
+                    $VersionNumber = [regex]::match($Version.outerHTML ,"$VersionRegex").Value
                     $versionArray += $VersionNumber
                 }
 
