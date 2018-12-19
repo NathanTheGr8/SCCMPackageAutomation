@@ -22,7 +22,7 @@ function Deploy-ToSCCMCollection {
     (
         [Parameter(Mandatory = $false)]
         [string]
-        $Collection = "Dell Desktops*",
+        $Collection,
         [Parameter(Mandatory = $true)]
         [string]
         $PackageName
@@ -59,9 +59,7 @@ function Deploy-ToSCCMCollection {
         }
         # End Pick Default Program
 
-        #'Start-CMPackageDeployment' has been deprecated in 1702 and may be removed in a future release.
-        #The cmdlet 'New-CMPackageDeployment' may be used as a replacement.
-        $NewDeployment = New-CMPackageDeployment -CollectionName "$Collection" -PackageName $PackageName -AllowSharedContent $false -DeployPurpose Required -ProgramName $DefaultProgram -StandardProgram -RerunBehavior RerunIfFailedPreviousAttempt -ScheduleEvent AsSoonAsPossible -SlowNetworkOption DownloadContentFromDistributionPointAndLocally -FastNetworkOption DownloadContentFromDistributionPointAndRunLocally -RunFromSoftwareCenter $true
+        $NewDeployment = New-CMPackageDeployment -CollectionName $Collection -PackageName $PackageName -AllowSharedContent $false -DeployPurpose Required -ProgramName $DefaultProgram -StandardProgram -RerunBehavior RerunIfFailedPreviousAttempt -ScheduleEvent AsSoonAsPossible -SlowNetworkOption DownloadContentFromDistributionPointAndLocally -FastNetworkOption DownloadContentFromDistributionPointAndRunLocally -RunFromSoftwareCenter $true
         Write-Output "Deployment Succeded"
     }
     catch

@@ -34,25 +34,25 @@ New-StandardChangeSCCMPackage -App Firefox
 
     process {
         Import-Module "$($ENV:SMS_ADMIN_UI_PATH)\..\ConfigurationManager.psd1" # Import the ConfigurationManager.psd1 module
-        Set-Location "$($SCCM_Site):" # Set the current location to be the site code.
+        Set-Location "$($global:SCCM_Site):" # Set the current location to be the site code.
 
         # Map network drive to SCCM
         # Test an arbitrary folder on the share
-        $Networkpath = "$($SCCM_Share_Letter):\$SCCM_Share_Test_Folder"
+        $Networkpath = "$($global:SCCM_Share_Letter):\$($global:SCCM_Share_Test_Folder)"
 
         If (Test-Path -Path $Networkpath) {
-            Write-Host "$($SCCM_Share_Letter) Drive to SCCM Exists already"
+            Write-Host "$($global:SCCM_Share_Letter) Drive to SCCM Exists already"
         }
         Else {
             #map network drive
-            New-PSDrive -Name "$($SCCM_Share_Letter)" -PSProvider "FileSystem" -Root "$SCCM_Share" -Persist
+            New-PSDrive -Name "$($global:SCCM_Share_Letter)" -PSProvider "FileSystem" -Root "$($global:SCCM_Share)" -Persist
 
             #check mapping again
             If (Test-Path -Path $Networkpath) {
-                Write-Host "$($SCCM_Share_Letter) Drive has been mapped to SCCM"
+                Write-Host "$($global:SCCM_Share_Letter) Drive has been mapped to SCCM"
             }
             Else {
-                Write-Error "Couldn't map $($SCCM_Share_Letter) Drive to SCCM, aborting"
+                Write-Error "Couldn't map $($global:SCCM_Share_Letter) Drive to SCCM, aborting"
                 Return
             }
         }
@@ -240,7 +240,7 @@ function Update-AppHelper {
     }
 
     try {
-        Deploy-ToSCCMCollection -PackageName $AppNameFull# -Collection "$global:TestCollection"
+        Deploy-ToSCCMCollection -PackageName $AppNameFull -Collection "$global:TestCollection"
         Write-Output "Deployed $AppNameFull to $global:TestCollection"
     }
     catch [exception]{
