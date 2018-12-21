@@ -58,3 +58,10 @@ $global:Apps = @(
 $Recipients = "test@domain.com"
 $EmailSender = "test@domain.com"
 $SMTPServer = "authappmail.domain.com"
+
+# For Deploy-ToSCCMCollection
+$global:TestCollection = "Test Collection"
+
+# Internal Powershell Repo
+# https://kevinmarquette.github.io/2017-05-30-Powershell-your-first-PSScript-repository/
+$InternalModuleRepo = "Test"
