@@ -20,8 +20,8 @@ function Publish-SCCMPackageAutomation {
 		[string]
 		$Path = "$Home\Documents\Projects\SCCMPackageAutomation",
 		[string]
-        [ValidateSet('Major','Minor','Build', 'None')]
-		$Increment = 'None'
+        [ValidateSet('Major','Minor','Build','None')]
+		$Increment = 'Build'
 	)
 
     #test the path
@@ -36,27 +36,8 @@ function Publish-SCCMPackageAutomation {
         $data = Import-PowerShellDataFile -Path "$path\$ModuleName.psd1"
         Write-Output -InputObject "New version = $($data.ModuleVersion)"
 
-        # Get the files and ignore .git directory
-        $files = Get-ChildItem -Path $path -Exclude ".git"
-
-
-        Write-Output "Pushing new version to $($global:computers.count) computers"
-        Foreach ($comp in $global:Computers.Values){
-            $comp
-            if(Test-Connection -ComputerName $comp -Quiet -Count 1){
-                $Dest = "\\$comp\C$\Windows\System32\WindowsPowerShell\v1.0\Modules"
-                $StopWatch = [system.diagnostics.stopwatch]::StartNew()
-                if (Test-Path -Path $Dest\$ModuleName){
-                    Remove-Item -Path $Dest\$ModuleName -Recurse -Force
-                }
-                Copy-Item -Path $files -Destination $Dest\$ModuleName -Force -Recurse
-                Write-Output "Pushed to $comp in $($StopWatch.Elapsed.TotalSeconds) Seconds"
-            }
-            else {
-                Write-Error -Message "$comp is not connected to the network? Didn't push code to $comp"
-            }
-
-        }
+        #Publish Nuget Module
+        Publish-Module -Name "$Path" -Repository $InternalModuleRepo
     }
     else {
         Write-Error -Message "$path does not exist, please specify a -path flag"
