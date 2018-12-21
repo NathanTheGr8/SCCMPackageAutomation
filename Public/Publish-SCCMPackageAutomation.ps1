@@ -37,6 +37,7 @@ function Publish-SCCMPackageAutomation {
         Write-Output -InputObject "New version = $($data.ModuleVersion)"
 
         #Publish Nuget Module
+        Write-Output "Creating new nuget package"
         Publish-Module -Name "$Path" -Repository $InternalModuleRepo
     }
     else {
