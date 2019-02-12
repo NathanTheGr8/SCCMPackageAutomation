@@ -90,8 +90,6 @@ Get-LatestAppVersion -App Firefox
 
                 # The different flash types can have different version numbers. I need to loop through
                 # all of them to get be sure
-                [version]$xml_activex_win10_current = ($xml_versions.version.release.ActiveX_win10.version).replace(",",".")
-                [version]$xml_activex_edge_current = ($xml_versions.version.release.ActiveX_Edge.version).replace(",",".")
                 [version]$xml_activex_win_current = ($xml_versions.version.release.ActiveX_win.version).replace(",",".")
                 [version]$xml_plugin_win_current = ($xml_versions.version.release.NPAPI_win.version).replace(",",".")
                 [version]$xml_ppapi_win_current = ($xml_versions.version.release.PPAPI_win.version).replace(",",".")
