@@ -94,7 +94,7 @@ Get-LatestAppVersion -App Firefox
                 [version]$xml_plugin_win_current = ($xml_versions.version.release.NPAPI_win.version).replace(",",".")
                 [version]$xml_ppapi_win_current = ($xml_versions.version.release.PPAPI_win.version).replace(",",".")
 
-                $FlashVersions = $xml_activex_win10_current,$xml_activex_edge_current,$xml_activex_win_current,$xml_plugin_win_current,$xml_ppapi_win_current
+                $FlashVersions = $xml_activex_win_current,$xml_plugin_win_current,$xml_ppapi_win_current
                 $FlashVersions = Sort-Object -InputObject $FlashVersions -Descending
                 $LatestAppVersion = $FlashVersions[0]
             }
