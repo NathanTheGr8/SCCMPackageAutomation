@@ -21,7 +21,7 @@ Get-OutDatedApps
     )
 
     $MaintainedApps = @()
-    $BlackList = @("java","insync","cutepdf")
+    $BlackList = @("java","cutepdf")
     ForEach ($App in $RootApplicationPath.Keys){
         if (!($BlackList.Contains($App))){
             $MaintainedApps += $app
@@ -38,12 +38,12 @@ Get-OutDatedApps
 
         if ($LatestVer -gt $currVer){
             if ($HTML) {
-                "<font color=`"CD0000`">$App needs updated to $LatestVer, We are currently on $currVer</font> <br>"
+                "<font color=`"CD0000`">$App needs updated to $LatestVer, we are currently on $currVer</font> <br>"
             }
             else {
                 # # set the new color
                 # $host.UI.RawUI.ForegroundColor = "Red"
-                Write-Host "$App needs updated to $LatestVer. We are currently on $currVer" -ForegroundColor Red
+                Write-Host "$App needs updated to $LatestVer, we are currently on $currVer" -ForegroundColor Red
             }
         }
         else {
