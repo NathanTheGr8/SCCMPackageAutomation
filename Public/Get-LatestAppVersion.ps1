@@ -132,6 +132,13 @@ Get-LatestAppVersion -App Firefox
                     $versionArray = $versionArray | Sort-Object -Descending
                     $LatestAppVersion = $versionArray[0]
             }
+            'insync' {
+                $url = "https://downloads.druva.com/insync/client/cloud/"
+                $html = Invoke-WebRequest -uri $url
+                $Versions = $html.Links | Where-Object href -Match "windows/$VersionRegex"
+                $VersionNumber = $Versions.href -match "$VersionRegex"
+                $LatestAppVersion = $Matches[0]
+            }
             'java' {
                 Write-Output "Java can't be automatically downloaded."
                 $url = "https://java.com/en/download/manual.jsp"

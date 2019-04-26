@@ -79,7 +79,7 @@ Download-LatestAppVersion -App Chrome
             'bigfix' {
                 $url = "http://support.bigfix.com/bes/release/"
                 $html = Invoke-WebRequest -Uri "$url"
-                $versionLinks = $html.Links | Where-Object href -Match "\d+\.\d+\/patch\d+" | Sort-Object -Descending
+                $versionLinks = $html.Links | Where-Object href -Match "\d+\.\d+\/patch\d+"
                 $latestURL = $url + $versionLinks[0].href
                 $html = Invoke-WebRequest -Uri "$latestURL"
                 $ClientDownload = ($html.Links | Where-Object href -Match "Client.+\.exe").href
@@ -180,6 +180,13 @@ Download-LatestAppVersion -App Chrome
                 $WebRequestOutput = Invoke-WebRequest -Uri $32bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName)-32-bit.exe"
                 $WebRequestOutput = Invoke-WebRequest -Uri $64bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName)-64-bit.exe"
 
+            }
+            'insync' {
+                $url = "https://downloads.druva.com/insync/client/cloud/"
+                $html = Invoke-WebRequest -uri $url
+                $Versions = $html.Links | Where-Object href -Match "windows/$VersionRegex"
+                $InstallFileName = "inSync$(Get-LatestAppVersion -App $App).msi"
+                $WebRequestOutput = Invoke-WebRequest -Uri $Versions.href -PassThru -OutFile "$DownloadDir\$InstallFileName"
             }
             'java' {
                 Write-Output "Java can't be automatically downloaded."

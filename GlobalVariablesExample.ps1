@@ -26,6 +26,27 @@ $global:RootApplicationPath = @{
     'wireshark' = "$SCCM_Share\HOME OFFICE\WireShark"
 }
 
+$ProductionAppCollections = @{
+    '7zip' = "7Zip - Prod"
+    'bigfix' = "BigFix Client - Prod"
+    'chrome' = "Chrome - Prod"
+    'cutepdf' = "CutePDF - Windows 10"
+    'firefox' = "Firefox - Prod"
+    'flash'  = "Adobe Flash - Prod"
+    'gimp'= "GIMP - Prod"
+    'git' = "Git - Prod"
+    'insync' = "Druva inSync - Prod"
+    'java' = "Java - Prod"
+    'notepad++'  = "Notepad++ - Prod"
+    'putty' = "Putty - Prod"
+    'reader' = "Adobe Reader - Prod"
+    'receiver' = "Citrix Receiver IE - Prod"
+    'vlc' = "VLC - Prod"
+    'vscode' = "VSCode - Prod"
+    'winscp'  = "WinSCP - Prod"
+    'wireshark' = "WireShark - Testing"
+}
+
 $global:Computers = @{
     'Person1' = "CompName1"
     'Person2' = "CompName2"
