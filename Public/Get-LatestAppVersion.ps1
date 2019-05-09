@@ -23,7 +23,7 @@ Get-LatestAppVersion -App Firefox
         [Parameter(Mandatory = $true,
         HelpMessage = 'What standard app are you trying to get the version of?')]
         [string]
-        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Firefox','Flash','GIMP','Git','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
         $App,
         [switch]
         $AsString
@@ -77,6 +77,17 @@ Get-LatestAppVersion -App Firefox
 
                     $download = Download-LatestAppVersion -App $App
                     $LatestAppVersion = $download.VersionInfo.ProductVersion
+            }
+            'etcher' {
+                $url = "https://github.com/balena-io/etcher/releases"
+                $html = Invoke-WebRequest -UseBasicParsing -Uri "$url"
+                $versionlinks = $html.Links | Where-Object href -match "$VersionRegex"
+                $versionNumbers = @()
+                foreach ($link in $versionlinks){
+                    $versionNumbers += [regex]::match($link.href,"$VersionRegex").Value
+                }
+                $versionNumbers = $versionNumbers | Sort-Object -Descending
+                $LatestAppVersion = $versionNumbers[0]
             }
             'firefox' {
                 $LatestAppVersion = (Invoke-WebRequest -UseBasicParsing -Uri "https://product-details.mozilla.org/1.0/firefox_versions.json" | ConvertFrom-Json).LATEST_FIREFOX_VERSION
@@ -134,15 +145,10 @@ Get-LatestAppVersion -App Firefox
             }
             'insync' {
                 $url = "https://downloads.druva.com/insync/client/cloud/"
-                $html = Invoke-WebRequest -uri $url
+                $html = Invoke-WebRequest -uri $url -UseBasicParsing
                 $Versions = $html.Links | Where-Object href -Match "windows/$VersionRegex"
                 $VersionNumber = $Versions.href -match "$VersionRegex"
                 $LatestAppVersion = $Matches[0]
-            }
-            'java' {
-                Write-Output "Java can't be automatically downloaded."
-                $url = "https://java.com/en/download/manual.jsp"
-                #todo?
             }
             'notepad++' {
                 $url = "https://notepad-plus-plus.org/download"
@@ -157,6 +163,22 @@ Get-LatestAppVersion -App Firefox
 
                 $versionArray = $versionArray | Sort-Object -Descending
                 $LatestAppVersion = $versionArray[0]
+            }
+            'openjdk' {
+                $url = "https://api.adoptopenjdk.net/v2/info/releases/openjdk8"
+                $queries = @(
+                    "?os=windows"
+                    "&arch=x64"
+                    "&openjdk_impl=hotspot"
+                    "&type=jdk"
+                    "&release=latest"
+                )
+                foreach ($query in $queries){
+                    $url = $url + $query
+                }
+
+                $json = (Invoke-WebRequest -Uri "$url" -UseBasicParsing  | ConvertFrom-Json)
+                $LatestAppVersion = $json[0].binaries[0].version_data.semver.Split("+") | Select-Object -First 1
             }
             'putty' {
                 $url = "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html"

@@ -19,7 +19,7 @@ Download-LatestAppVersion -App Chrome
         [Parameter(Mandatory = $true,
         HelpMessage = 'What standard app are you trying to get the version of?')]
         [string]
-        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Firefox','Flash','GIMP','Git','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
         $App
     )
 
@@ -102,6 +102,13 @@ Download-LatestAppVersion -App Chrome
                 $downloadURL = "http://www.cutepdf.com/download/CuteWriter.exe"
                 $InstallFileName = "CuteWriter.exe"
                 $WebRequestOutput = Invoke-WebRequest -Uri $downloadURL -PassThru -OutFile "$DownloadDir\$($InstallFileName)"
+            }
+            'etcher' {
+                #$url = "https://github.com/balena-io/etcher/releases"
+                $LatestAppVersion = Get-LatestAppVersion -App "$app"
+                $InstallFileName = "balenaEtcher-Setup-$($LatestAppVersion)-x64.exe"
+                $DownloadURL = "https://github.com/balena-io/etcher/releases/download/v$LatestAppVersion/balenaEtcher-Setup-$LatestAppVersion-x64.exe"
+                $WebRequestOutput = Invoke-WebRequest -Uri "$DownloadURL" -OutFile "$DownloadDir\$($InstallFileName)"
             }
             'firefox' {
                 $64bitdownload = "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US"
@@ -188,11 +195,6 @@ Download-LatestAppVersion -App Chrome
                 $InstallFileName = "inSync$(Get-LatestAppVersion -App $App).msi"
                 $WebRequestOutput = Invoke-WebRequest -Uri $Versions.href -PassThru -OutFile "$DownloadDir\$InstallFileName"
             }
-            'java' {
-                Write-Output "Java can't be automatically downloaded."
-                #todo I think I can still get the most recent java 8 update version
-                return
-            }
             'notepad++' {
                 # Configure Domain to scrape
                 $Domain = "https://notepad-plus-plus.org"
@@ -219,6 +221,26 @@ Download-LatestAppVersion -App Chrome
                 #64bit
                 $WebRequestOutput = Invoke-WebRequest -Uri $64bitdownload -PassThru -OutFile "$DownloadDir\$($InstallFileName).x64.exe"
 
+            }
+            'openjdk' {
+                $url = "https://api.adoptopenjdk.net/v2/info/releases/openjdk8"
+                $queries = @(
+                    "?os=windows"
+                    "&arch=x64"
+                    "&openjdk_impl=hotspot"
+                    "&type=jdk"
+                    "&release=latest"
+                )
+                foreach ($query in $queries){
+                    $url = $url + $query
+                }
+
+                $json = (Invoke-WebRequest -Uri "$url"  | ConvertFrom-Json)
+                $DownloadURL = $json[0].binaries[0].installer_link
+                $LatestAppVersion = Get-LatestAppVersion -App $App
+
+                $InstallFileName = "OpenJDK8U-jdk_x64_windows_hotspot_$($LatestAppVersion).msi"
+                $WebRequestOutput = Invoke-WebRequest -Uri $DownloadURL -OutFile "$DownloadDir\$InstallFileName"
             }
             'putty' {
                 # build URL to scan

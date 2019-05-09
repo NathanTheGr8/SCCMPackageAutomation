@@ -10,6 +10,7 @@ $global:RootApplicationPath = @{
     'bigfix' = "$SCCM_Share\CoreApps_ALL\BixFixClient"
     'chrome' = "$SCCM_Share\CoreApps_ALL\GoogleChrome"
     'cutepdf' = "$SCCM_Share\HOME OFFICE\CutePDF"
+    'etcher' = "$SCCM_Share\HOME OFFICE\Etcher"
     'firefox' = "$SCCM_Share\HOME OFFICE\Mozilla FireFox"
     'flash'  = "$SCCM_Share\CoreApps_ALL\Adobe\AdobeFlash"
     'gimp'= "$SCCM_Share\HOME OFFICE\GIMP"
@@ -31,6 +32,7 @@ $ProductionAppCollections = @{
     'bigfix' = "BigFix Client - Prod"
     'chrome' = "Chrome - Prod"
     'cutepdf' = "CutePDF - Windows 10"
+    'etcher' = 'Balena Etcher - Prod'
     'firefox' = "Firefox - Prod"
     'flash'  = "Adobe Flash - Prod"
     'gimp'= "GIMP - Prod"
@@ -59,6 +61,7 @@ $global:Apps = @(
     'BigFix',
     'Chrome',
     'CutePDF',
+    'Etcher',
     'Firefox',
     'Flash',
     'GIMP',

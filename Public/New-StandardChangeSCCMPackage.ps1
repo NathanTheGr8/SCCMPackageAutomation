@@ -24,7 +24,7 @@ New-StandardChangeSCCMPackage -App Firefox
         [Parameter(Mandatory = $true,
         HelpMessage = 'What standard app are you trying to get the version of?')]
         [string]
-        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Firefox','Flash','GIMP','Git','insync','Java','Notepad++','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
         $App
     )
 
@@ -74,6 +74,11 @@ New-StandardChangeSCCMPackage -App Firefox
             Update-AppHelper -AppName "Chrome" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Google"
         }
 
+        # Balena Etcher
+        if ($App.ToLower() -eq 'etcher') {
+            Update-AppHelper -AppName "Etcher" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Balena"
+        }
+
         #Package Firefox
         if ($App.ToLower() -eq 'firefox') {
             Update-AppHelper -AppName "Firefox" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Mozilla"
@@ -99,14 +104,14 @@ New-StandardChangeSCCMPackage -App Firefox
             Update-AppHelper -AppName "InSync" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Druva"
         }
 
-        # Package Java
-        if ($App.ToLower() -eq 'java') {
-            Update-AppHelper -AppName "Java" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder CoreApps -Manufacturer "Oracle"
-        }
-
         # Package Notepad++
         if ($App.ToLower() -eq 'notepad++') {
             Update-AppHelper -AppName "Notepad++" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "Notepad++ Team"
+        }
+
+        # Package OpenJDK
+        if ($App.ToLower() -eq 'openjdk') {
+            Update-AppHelper -AppName "OpenJDK" -rootApplicationPath $global:RootApplicationPath[$app] -SCCMFolder HomeOffice -Manufacturer "HotSpot"
         }
 
         # Package putty
@@ -222,8 +227,15 @@ function Update-AppHelper {
     }
 
     try {
-        Start-CMContentDistribution -PackageName "$AppNameFull" -DistributionPointGroupName "All Distribution Points"
-        Write-Output "Package Distribution to all DP started"
+        if ($AWSDistributionApps.Contains($app)){
+            Start-CMContentDistribution -PackageName "$AppNameFull" -DistributionPointGroupName "All Distribution Points"
+            Start-CMContentDistribution -PackageName "$AppNameFull" -DistributionPointGroupName "AWS"
+            Write-Output "Package Distribution to all DP and AWS started"
+        }
+        else {
+            Start-CMContentDistribution -PackageName "$AppNameFull" -DistributionPointGroupName "All Distribution Points"
+            Write-Output "Package Distribution to all DP started"
+        }
     }
     catch [exception]{
         Write-Output "$_"

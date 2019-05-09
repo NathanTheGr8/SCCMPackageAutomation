@@ -21,7 +21,7 @@ Get-OutDatedApps
     )
 
     $MaintainedApps = @()
-    $BlackList = @("java","cutepdf")
+    $BlackList = @("cutepdf")
     ForEach ($App in $RootApplicationPath.Keys){
         if (!($BlackList.Contains($App))){
             $MaintainedApps += $app
