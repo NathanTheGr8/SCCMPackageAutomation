@@ -19,21 +19,49 @@ function Publish-AppToProduction {
     (
         [Parameter(Mandatory = $true)]
         [string]
-        $App
+        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        $App,
+        [switch]
+        $NoCleanUp
     )
 
     Import-Module "$($ENV:SMS_ADMIN_UI_PATH)\..\ConfigurationManager.psd1" # Import the ConfigurationManager.psd1 module
     Set-Location "$($global:SCCM_Site):" # Set the current location to be the site code.
 
+  
+    $ExistingDeployments = Get-CMPackageDeployment -CollectionName "$($ProductionAppCollections[$app])" | Sort-Object -property {$_.AssignedSchedule.StartTime}
+
+    Write-Output "Expiring Old Deployments to $($ProductionAppCollections[$app])"
+    foreach ($Deployment in $ExistingDeployments){
+        if ($Deployment.ExpirationTimeEnabled -ne $true){
+            Write-Output "Expiring Deployment from $($Deployment.PresentTime)"
+            Set-CMPackageDeployment -EnableExpireSchedule $true -DeploymentExpireDateTime (Get-Date) -StandardProgramName "$($Deployment.ProgramName)" -CollectionId $Deployment.CollectionID -PackageId $Deployment.PackageID
+        }
+        else {
+            Write-Output "Deployment from $($Deployment.PresentTime) already expired on $($Deployment.ExpirationTime)"
+        }
+    }
+
+    
+    $NumberOfDeploymentsToKeep = 2
+    while ($ExistingDeployments.Count -gt $NumberOfDeploymentsToKeep){
+        Write-Output "There were more than $NumberOfDeploymentsToKeep old deployments to $($ProductionAppCollections[$app]). Removing old deployments till there $NumberOfDeploymentsToKeep old deployments"
+        $ExistingDeployments[0] | Remove-CMPackageDeployment -Force
+        $ExistingDeployments = $ExistingDeployments[1..($ExistingDeployments.length-1)]
+    }
+
+    
+
     Write-Output "Deploying $App to $($ProductionAppCollections[$app])"
     $packagesByName = Get-CMPackage -Name "*$app*"
+    $packagesByName = $packagesByName | Where-Object {$_.Name -imatch "$app $VersionRegex \(R\d+\)"}
     $newestPackagesByName = $packagesByName | Sort-Object -Property name | Select-Object -Last 1
 
-    Write-Output "Deploying $($newestPackagesByName.Name) to $($ProductionAppCollections[$app])"
+    #Write-Output "Deploying $($newestPackagesByName.Name) to $($ProductionAppCollections[$app])"
 
     try{
         Deploy-ToSCCMCollection -PackageName "$($newestPackagesByName.Name)" -Collection "$($ProductionAppCollections[$app])"
-        Write-Output "Deployment Succeded"
+        Move-CMObject -FolderPath "" -ObjectId $newestPackagesByName.PackageID
     }
     catch
     {

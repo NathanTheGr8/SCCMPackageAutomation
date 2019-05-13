@@ -32,7 +32,6 @@ Get-LatestAppVersion -App Firefox
     begin {
         #$App = $PSBoundParameters['App']
         $App = $App.toLower()
-        $VersionRegex = "\d+(\.\d+)+"
     }
 
     process {
