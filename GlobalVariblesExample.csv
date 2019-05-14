@@ -18,4 +18,4 @@ receiver,HOME OFFICE\Citrix Receiver,Citrix Receiver IE - Prod,HomeOffice,Citrix
 vlc,HOME OFFICE\VLC,VLC - Prod,HomeOffice,VideoLAN,FALSE,FALSE
 vscode,HOME OFFICE\VSCode,VSCode - Prod,HomeOffice,Microsoft,FALSE,TRUE
 winscp,HOME OFFICE\WinSCP,WinSCP - Prod,HomeOffice,Martin Prikryl,FALSE,FALSE
-wireshark,HOME OFFICE\WireShark,WireShark - Testing,HomeOffice,The WireShark Team,FALSE,FALSE
+wireshark,HOME OFFICE\WireShark,WireShark - Prod,HomeOffice,The WireShark Team,FALSE,FALSE
