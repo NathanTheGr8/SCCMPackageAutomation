@@ -2,7 +2,7 @@
 
 $global:SCCM_Site = "AAA"
 $global:SCCM_Share = "\\server\Packages"
-$global:SCCM_Share_Test_Folder = "CoreApps_ALL"
+$global:SCCM_Share_Test_Folder = "FolderName"
 $global:SCCM_Share_Letter = "P"
 
 $VersionRegex = "\d+(\.\d+)+"

@@ -52,16 +52,27 @@ function Publish-AppToProduction {
 
 
 
-    Write-Output "Deploying $App to $($GlobalApps[$app].ProductionAppCollection)"
+    Write-Output "Preparing to deploy $App to $($GlobalApps[$app].ProductionAppCollection)"
     $packagesByName = Get-CMPackage -Name "*$app*"
     $packagesByName = $packagesByName | Where-Object {$_.Name -imatch "$app $VersionRegex \(R\d+\)"}
     $newestPackagesByName = $packagesByName | Sort-Object -Property name | Select-Object -Last 1
 
-    #Write-Output "Deploying $($newestPackagesByName.Name) to $($GlobalApps[$app].ProductionAppCollection)"
-
     try{
         Deploy-ToSCCMCollection -PackageName "$($newestPackagesByName.Name)" -Collection "$($GlobalApps[$app].ProductionAppCollection)"
-        Move-CMObject -FolderPath "" -ObjectId $newestPackagesByName.PackageID
+        $SCCMFolderPath
+        switch ($GlobalApps[$app].SCCMFolder) {
+            "HomeOffice" {
+                $SCCMFolderPath = "$($SCCM_Site):\Package\Home Office\Prod_Home Office"
+            }
+            "CoreApps" {
+                $SCCMFolderPath = "$($SCCM_Site):\Package\Core_Apps_ALL\ALL_PRODUCTION Core Packages"
+            }
+            "Misc" {
+                $SCCMFolderPath = "$($SCCM_Site):\Package\MISC\Prod MISC"
+            }
+        }
+        Move-CMObject -FolderPath "$SCCMFolderPath" -ObjectId $newestPackagesByName.PackageID
+        Write-Output "Moved $($newestPackagesByName.Name) to $SCCMFolderPath"
     }
     catch
     {
