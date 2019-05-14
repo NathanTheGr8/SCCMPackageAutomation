@@ -54,7 +54,7 @@ Get-CurrentAppVersion -App Firefox
         # Get-ChildItem has trouble working with UNC paths from the $SCCM_Site: drive. That is why I map a $SCCM_Share_Letter drive
         $count = (Measure-Object -InputObject $SCCM_Share -Character).Characters + 1
         # Gets the most recent folder for a given app, split it up into multiple lines to make it easier to read and debug
-        $LatestApplicationPath =  "$($SCCM_Share_Letter):\" + $global:RootApplicationPath[$app].Substring($count) | Get-ChildItem
+        $LatestApplicationPath =  "$($SCCM_Share_Letter):\" + $GlobalApps[$app].RootApplicationPath.Substring($count) | Get-ChildItem
         $LatestApplicationPath = $LatestApplicationPath | Where-Object {$_.Name -match "[a-zA-Z0-9_.+-]+ [a-zA-Z0-9_.]+ \(R[0-9]\)"}
         $LatestApplicationPath = $LatestApplicationPath | Sort-Object -Property CreationTime -Descending | Select-Object -First 1
         $CurrentAppVersion = Get-PSADTAppVersion -PackageRootFolder "$($LatestApplicationPath.Fullname)"

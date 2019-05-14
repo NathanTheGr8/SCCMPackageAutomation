@@ -34,7 +34,7 @@ Update-AppPackageSource -App Firefox
 
         $CurrentAppVersion = Get-CurrentAppVersion -App $App
         $LatestAppVersion = Get-LatestAppVersion -App $App
-        $RootApplicationPathTemp = $global:RootApplicationPath[$app]
+        $RootApplicationPathTemp = $GlobalApps[$app].RootApplicationPath
 
         # Map network drive to SCCM
         # Test an arbitrary folder on the share
@@ -82,7 +82,7 @@ Update-AppPackageSource -App Firefox
                 $newAppPath = "$RootApplicationPathTemp\$App $LatestAppVersion (R$RevNumber)"
                 $alreadyExists = Test-Path -Path "$newAppPath"
             }
-            Write-Output "rootapppath is: $($global:RootApplicationPath[$app])"
+            Write-Output "rootapppath is: $($GlobalApps[$app].RootApplicationPath)"
             $newAppPath
 
             #Copies the Current Package to the new. Replaces install files and increments version.
