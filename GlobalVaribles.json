@@ -1,90 +1,22 @@
 {
-    "release_name": "jdk8u162-b12_openj9-0.8.0",
-    "release_link": "https://github.com/AdoptOpenJDK/openjdk8-openj9-releases/releases/tag/jdk8u162-b12_openj9-0.8.0",
-    "timestamp": "2018-03-15T12:12:35Z",
-    "release": true,
-    "binaries": [
-      {
-        "os": "linux",
-        "architecture": "ppc64le",
-        "binary_type": "jdk",
-        "openjdk_impl": "openj9",
-        "binary_name": "OpenJDK8-OPENJ9_ppc64le_Linux_jdk8u162-b12_openj9-0.8.0.tar.gz",
-        "binary_link": "https://github.com/AdoptOpenJDK/openjdk8-openj9-releases/releases/download/jdk8u162-b12_openj9-0.8.0/OpenJDK8-OPENJ9_ppc64le_Linux_jdk8u162-b12_openj9-0.8.0.tar.gz",
-        "binary_size": 81735788,
-        "checksum_link": "https://github.com/AdoptOpenJDK/openjdk8-openj9-releases/releases/download/jdk8u162-b12_openj9-0.8.0/OpenJDK8-OPENJ9_ppc64le_Linux_jdk8u162-b12_openj9-0.8.0.tar.gz.sha256.txt",
-        "version": "8",
-        "version_data": {
-          "openjdk_version": "8u162-b12_openj9-0.8.0",
-          "semver": "8.0.162+12",
-          "optional": "openj9-0.8.0"
+    "SCCMFolders": {
+        "HomeOffice": {
+            "Prod": "Package\\Home Office\\Prod_Home Office",
+            "QA": "Package\\Home Office\\QA_Home Office"
         },
-        "heap_size": "normal",
-        "download_count": 296,
-        "updated_at": "2018-03-15T12:12:49Z"
-      },
-      {
-        "os": "aix",
-        "architecture": "ppc64",
-        "binary_type": "jdk",
-        "openjdk_impl": "openj9",
-        "binary_name": "OpenJDK8-OPENJ9_ppc64_AIX_jdk8u162-b12_openj9-0.8.0.tar.gz",
-        "binary_link": "https://github.com/AdoptOpenJDK/openjdk8-openj9-releases/releases/download/jdk8u162-b12_openj9-0.8.0/OpenJDK8-OPENJ9_ppc64_AIX_jdk8u162-b12_openj9-0.8.0.tar.gz",
-        "binary_size": 87337200,
-        "checksum_link": "https://github.com/AdoptOpenJDK/openjdk8-openj9-releases/releases/download/jdk8u162-b12_openj9-0.8.0/OpenJDK8-OPENJ9_ppc64_AIX_jdk8u162-b12_openj9-0.8.0.tar.gz.sha256.txt",
-        "version": "8",
-        "version_data": {
-          "openjdk_version": "8u162-b12_openj9-0.8.0",
-          "semver": "8.0.162+12",
-          "optional": "openj9-0.8.0"
+        "CoreApps": {
+            "Prod": "Package\\Core_Apps_ALL\\ALL_PRODUCTION Core Packages",
+            "QA": "Package\\Core_Apps_ALL\\ALL_QA Core Packages"
         },
-        "heap_size": "normal",
-        "download_count": 69,
-        "updated_at": "2018-03-15T12:12:42Z"
-      },
-      {
-        "os": "linux",
-        "architecture": "s390x",
-        "binary_type": "jdk",
-        "openjdk_impl": "openj9",
-        "binary_name": "OpenJDK8-OPENJ9_s390x_Linux_jdk8u162-b12_openj9-0.8.0.tar.gz",
-        "binary_link": "https://github.com/AdoptOpenJDK/openjdk8-openj9-releases/releases/download/jdk8u162-b12_openj9-0.8.0/OpenJDK8-OPENJ9_s390x_Linux_jdk8u162-b12_openj9-0.8.0.tar.gz",
-        "binary_size": 83736367,
-        "checksum_link": "https://github.com/AdoptOpenJDK/openjdk8-openj9-releases/releases/download/jdk8u162-b12_openj9-0.8.0/OpenJDK8-OPENJ9_s390x_Linux_jdk8u162-b12_openj9-0.8.0.tar.gz.sha256.txt",
-        "version": "8",
-        "version_data": {
-          "openjdk_version": "8u162-b12_openj9-0.8.0",
-          "semver": "8.0.162+12",
-          "optional": "openj9-0.8.0"
-        },
-        "heap_size": "normal",
-        "download_count": 2817,
-        "updated_at": "2018-03-15T12:12:57Z"
-      },
-      {
-        "os": "linux",
-        "architecture": "x64",
-        "binary_type": "jdk",
-        "openjdk_impl": "openj9",
-        "binary_name": "OpenJDK8-OPENJ9_x64_Linux_jdk8u162-b12_openj9-0.8.0.tar.gz",
-        "binary_link": "https://github.com/AdoptOpenJDK/openjdk8-openj9-releases/releases/download/jdk8u162-b12_openj9-0.8.0/OpenJDK8-OPENJ9_x64_Linux_jdk8u162-b12_openj9-0.8.0.tar.gz",
-        "binary_size": 82573385,
-        "checksum_link": "https://github.com/AdoptOpenJDK/openjdk8-openj9-releases/releases/download/jdk8u162-b12_openj9-0.8.0/OpenJDK8-OPENJ9_x64_Linux_jdk8u162-b12_openj9-0.8.0.tar.gz.sha256.txt",
-        "version": "8",
-        "version_data": {
-          "openjdk_version": "8u162-b12_openj9-0.8.0",
-          "semver": "8.0.162+12",
-          "optional": "openj9-0.8.0"
-        },
-        "heap_size": "normal",
-        "download_count": 3887,
-        "updated_at": "2018-03-15T12:13:07Z"
-      }
-    ],
-    "download_count": 7069,
-    "maintained_apps": [
+        "Misc": {
+            "Prod": "Package\\MISC\\Prod MISC",
+            "QA": "Package\\MISC\\QA MISC"
+        }
+    },
+    "MaintainedApps": {
         "7zip": {
             "Name": "7zip",
+            "DisplayName": "7zip",
             "RootApplicationPath": "HOME OFFICE\\7Zip",
             "ProductionAppCollection": "7Zip - Prod",
             "SCCMFolder": "HomeOffice",
@@ -92,8 +24,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "TRUE"
         },
-        {
+        "bigfix": {
             "Name": "bigfix",
+            "DisplayName": "BigFix Client",
             "RootApplicationPath": "CoreApps_ALL\\BixFixClient",
             "ProductionAppCollection": "BigFix Client - Prod",
             "SCCMFolder": "CoreApps",
@@ -101,8 +34,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "TRUE"
         },
-        {
+        "chrome": {
             "Name": "chrome",
+            "DisplayName": "Chrome",
             "RootApplicationPath": "CoreApps_ALL\\GoogleChrome",
             "ProductionAppCollection": "Chrome - Prod",
             "SCCMFolder": "CoreApps",
@@ -110,8 +44,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "FALSE"
         },
-        {
+        "cutepdf": {
             "Name": "cutepdf",
+            "DisplayName": "CutePDF",
             "RootApplicationPath": "HOME OFFICE\\CutePDF",
             "ProductionAppCollection": "CutePDF - Windows 10",
             "SCCMFolder": "HomeOffice",
@@ -119,8 +54,9 @@
             "BlackList": "TRUE",
             "AWSDistributionApp": "FALSE"
         },
-        {
+        "etcher": {
             "Name": "etcher",
+            "DisplayName": "Etcher",
             "RootApplicationPath": "HOME OFFICE\\Etcher",
             "ProductionAppCollection": "Balena Etcher - Prod",
             "SCCMFolder": "HomeOffice",
@@ -128,8 +64,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "FALSE"
         },
-        {
+        "firefox": {
             "Name": "firefox",
+            "DisplayName": "Firefox",
             "RootApplicationPath": "HOME OFFICE\\Mozilla FireFox",
             "ProductionAppCollection": "Firefox - Prod",
             "SCCMFolder": "HomeOffice",
@@ -137,8 +74,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "FALSE"
         },
-        {
+        "flash": {
             "Name": "flash",
+            "DisplayName": "Flash",
             "RootApplicationPath": "CoreApps_ALL\\Adobe\\AdobeFlash",
             "ProductionAppCollection": "Adobe Flash - Prod",
             "SCCMFolder": "HomeOffice",
@@ -146,8 +84,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "FALSE"
         },
-        {
+        "gimp": {
             "Name": "gimp",
+            "DisplayName": "Gimp",
             "RootApplicationPath": "HOME OFFICE\\GIMP",
             "ProductionAppCollection": "GIMP - Prod",
             "SCCMFolder": "HomeOffice",
@@ -155,8 +94,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "FALSE"
         },
-        {
+        "git": {
             "Name": "git",
+            "DisplayName": "Git",
             "RootApplicationPath": "HOME OFFICE\\Git",
             "ProductionAppCollection": "Git - Prod",
             "SCCMFolder": "HomeOffice",
@@ -164,8 +104,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "TRUE"
         },
-        {
+        "insync": {
             "Name": "insync",
+            "DisplayName": "Insync",
             "RootApplicationPath": "CoreApps_ALL\\DruvaCloud",
             "ProductionAppCollection": "Druva inSync - Prod",
             "SCCMFolder": "CoreApps",
@@ -173,17 +114,19 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "FALSE"
         },
-        {
+        "java": {
             "Name": "java",
+            "DisplayName": "Java",
             "RootApplicationPath": "CoreApps_ALL\\java",
             "ProductionAppCollection": "Java - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "Oracle",
-            "BlackList": "FALSE",
+            "BlackList": "Truee",
             "AWSDistributionApp": "FALSE"
         },
-        {
+        "notepad++": {
             "Name": "notepad++",
+            "DisplayName": "Notepad++",
             "RootApplicationPath": "HOME OFFICE\\Notepad++",
             "ProductionAppCollection": "Notepad++ - Prod",
             "SCCMFolder": "HomeOffice",
@@ -191,8 +134,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "TRUE"
         },
-        {
+        "openjdk": {
             "Name": "openjdk",
+            "DisplayName": "OpenJDK",
             "RootApplicationPath": "HOME OFFICE\\OpenJDK",
             "ProductionAppCollection": "OpenJDK - Prod",
             "SCCMFolder": "HomeOffice",
@@ -200,8 +144,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "FALSE"
         },
-        {
+        "putty": {
             "Name": "putty",
+            "DisplayName": "Putty",
             "RootApplicationPath": "HOME OFFICE\\Putty",
             "ProductionAppCollection": "Putty - Prod",
             "SCCMFolder": "HomeOffice",
@@ -209,8 +154,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "FALSE"
         },
-        {
+        "reader": {
             "Name": "reader",
+            "DisplayName": "Reader",
             "RootApplicationPath": "CoreApps_ALL\\Adobe\\AdobeReader",
             "ProductionAppCollection": "Adobe Reader - Prod",
             "SCCMFolder": "CoreApps",
@@ -218,8 +164,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "FALSE"
         },
-        {
+        "receiver": {
             "Name": "receiver",
+            "DisplayName": "Receiver",
             "RootApplicationPath": "HOME OFFICE\\Citrix Receiver",
             "ProductionAppCollection": "Citrix Receiver IE - Prod",
             "SCCMFolder": "HomeOffice",
@@ -227,8 +174,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "FALSE"
         },
-        {
+        "vlc": {
             "Name": "vlc",
+            "DisplayName": "VLC",
             "RootApplicationPath": "HOME OFFICE\\VLC",
             "ProductionAppCollection": "VLC - Prod",
             "SCCMFolder": "HomeOffice",
@@ -236,8 +184,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "FALSE"
         },
-        {
+        "vscode": {
             "Name": "vscode",
+            "DisplayName": "VSCode",
             "RootApplicationPath": "HOME OFFICE\\VSCode",
             "ProductionAppCollection": "VSCode - Prod",
             "SCCMFolder": "HomeOffice",
@@ -245,8 +194,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "TRUE"
         },
-        {
+        "winscp": {
             "Name": "winscp",
+            "DisplayName": "WinSCP",
             "RootApplicationPath": "HOME OFFICE\\WinSCP",
             "ProductionAppCollection": "WinSCP - Prod",
             "SCCMFolder": "HomeOffice",
@@ -254,8 +204,9 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "FALSE"
         },
-        {
+        "wireshark": {
             "Name": "wireshark",
+            "DisplayName": "wireshark",
             "RootApplicationPath": "HOME OFFICE\\WireShark",
             "ProductionAppCollection": "WireShark - Testing",
             "SCCMFolder": "HomeOffice",
@@ -263,5 +214,6 @@
             "BlackList": "FALSE",
             "AWSDistributionApp": "FALSE"
         }
-    ]
+
+    }
 }

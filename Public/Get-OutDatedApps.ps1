@@ -20,14 +20,7 @@ Get-OutDatedApps
         $HTML
     )
 
-    $MaintainedApps = @()
-    $BlackList = @("cutepdf")
-    ForEach ($App in $RootApplicationPath.Keys){
-        if (!($BlackList.Contains($App))){
-            $MaintainedApps += $app
-        }
-    }
-    $MaintainedApps= $MaintainedApps | Sort-Object
+    $MaintainedApps = $MaintainedApps | Sort-Object
 
     # save the current color
     # $CurrentForegroundColor = $host.UI.RawUI.ForegroundColor
