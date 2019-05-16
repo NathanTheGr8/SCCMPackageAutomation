@@ -1,219 +1,219 @@
 {
     "SCCMFolders": {
         "HomeOffice": {
-            "Prod": "Package\\Home Office\\Prod_Home Office",
-            "QA": "Package\\Home Office\\QA_Home Office"
+            "Prod": "Path\\To\\Prod_Home Office",
+            "QA": "Path\\To\\QA_Home Office"
         },
         "CoreApps": {
-            "Prod": "Package\\Core_Apps_ALL\\ALL_PRODUCTION Core Packages",
-            "QA": "Package\\Core_Apps_ALL\\ALL_QA Core Packages"
+            "Prod": "Path\\To\\ALL_PRODUCTION Core Packages",
+            "QA": "Path\\To\\ALL_QA Core Packages"
         },
         "Misc": {
-            "Prod": "Package\\MISC\\Prod MISC",
-            "QA": "Package\\MISC\\QA MISC"
+            "Prod": "Path\\To\\Prod MISC",
+            "QA": "Path\\To\\QA MISC"
         }
     },
-    "MaintainedApps": {
-        "7zip": {
+    "MaintainedApps": [
+        {
             "Name": "7zip",
             "DisplayName": "7zip",
-            "RootApplicationPath": "HOME OFFICE\\7Zip",
+            "RootApplicationPath": "Path\\To\\7Zip",
             "ProductionAppCollection": "7Zip - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "Igor Pavlov",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "TRUE"
+            "BlackList": false,
+            "AWSDistributionApp": true
         },
-        "bigfix": {
+        {
             "Name": "bigfix",
             "DisplayName": "BigFix Client",
-            "RootApplicationPath": "CoreApps_ALL\\BixFixClient",
+            "RootApplicationPath": "Path\\To\\BigFixClient",
             "ProductionAppCollection": "BigFix Client - Prod",
             "SCCMFolder": "CoreApps",
             "Manufacturer": "IBM",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "TRUE"
+            "BlackList": false,
+            "AWSDistributionApp": true
         },
-        "chrome": {
+        {
             "Name": "chrome",
             "DisplayName": "Chrome",
-            "RootApplicationPath": "CoreApps_ALL\\GoogleChrome",
+            "RootApplicationPath": "Path\\To\\GoogleChrome",
             "ProductionAppCollection": "Chrome - Prod",
             "SCCMFolder": "CoreApps",
             "Manufacturer": "Google",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "FALSE"
+            "BlackList": false,
+            "AWSDistributionApp": false
         },
-        "cutepdf": {
+        {
             "Name": "cutepdf",
             "DisplayName": "CutePDF",
-            "RootApplicationPath": "HOME OFFICE\\CutePDF",
-            "ProductionAppCollection": "CutePDF - Windows 10",
+            "RootApplicationPath": "Path\\To\\CutePDF",
+            "ProductionAppCollection": "CutePDF - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "Acro",
-            "BlackList": "TRUE",
-            "AWSDistributionApp": "FALSE"
+            "BlackList": true,
+            "AWSDistributionApp": false
         },
-        "etcher": {
+        {
             "Name": "etcher",
             "DisplayName": "Etcher",
-            "RootApplicationPath": "HOME OFFICE\\Etcher",
+            "RootApplicationPath": "Path\\To\\Etcher",
             "ProductionAppCollection": "Balena Etcher - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "Balena",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "FALSE"
+            "BlackList": true,
+            "AWSDistributionApp": false
         },
-        "firefox": {
+        {
             "Name": "firefox",
             "DisplayName": "Firefox",
-            "RootApplicationPath": "HOME OFFICE\\Mozilla FireFox",
+            "RootApplicationPath": "Path\\To\\Mozilla FireFox",
             "ProductionAppCollection": "Firefox - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "Mozilla",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "FALSE"
+            "BlackList": false,
+            "AWSDistributionApp": false
         },
-        "flash": {
+        {
             "Name": "flash",
             "DisplayName": "Flash",
-            "RootApplicationPath": "CoreApps_ALL\\Adobe\\AdobeFlash",
+            "RootApplicationPath": "Path\\To\\AdobeFlash",
             "ProductionAppCollection": "Adobe Flash - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "Adobe",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "FALSE"
+            "BlackList": false,
+            "AWSDistributionApp": false
         },
-        "gimp": {
+        {
             "Name": "gimp",
             "DisplayName": "Gimp",
-            "RootApplicationPath": "HOME OFFICE\\GIMP",
+            "RootApplicationPath": "Path\\To\\GIMP",
             "ProductionAppCollection": "GIMP - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "GIMP Development Team",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "FALSE"
+            "BlackList": false,
+            "AWSDistributionApp": false
         },
-        "git": {
+        {
             "Name": "git",
             "DisplayName": "Git",
-            "RootApplicationPath": "HOME OFFICE\\Git",
+            "RootApplicationPath": "Path\\To\\Git",
             "ProductionAppCollection": "Git - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "Software Freedom Conservancy",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "TRUE"
+            "BlackList": false,
+            "AWSDistributionApp": true
         },
-        "insync": {
+        {
             "Name": "insync",
             "DisplayName": "Insync",
-            "RootApplicationPath": "CoreApps_ALL\\DruvaCloud",
+            "RootApplicationPath": "Path\\To\\DruvaCloud",
             "ProductionAppCollection": "Druva inSync - Prod",
             "SCCMFolder": "CoreApps",
             "Manufacturer": "Druva",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "FALSE"
+            "BlackList": false,
+            "AWSDistributionApp": false
         },
-        "java": {
+        {
             "Name": "java",
             "DisplayName": "Java",
-            "RootApplicationPath": "CoreApps_ALL\\java",
+            "RootApplicationPath": "Path\\To\\java",
             "ProductionAppCollection": "Java - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "Oracle",
-            "BlackList": "Truee",
-            "AWSDistributionApp": "FALSE"
+            "BlackList": "truee",
+            "AWSDistributionApp": false
         },
-        "notepad++": {
+        {
             "Name": "notepad++",
             "DisplayName": "Notepad++",
-            "RootApplicationPath": "HOME OFFICE\\Notepad++",
+            "RootApplicationPath": "Path\\To\\Notepad++",
             "ProductionAppCollection": "Notepad++ - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "Notepad++ Team",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "TRUE"
+            "BlackList": false,
+            "AWSDistributionApp": true
         },
-        "openjdk": {
+        {
             "Name": "openjdk",
             "DisplayName": "OpenJDK",
-            "RootApplicationPath": "HOME OFFICE\\OpenJDK",
+            "RootApplicationPath": "Path\\To\\OpenJDK",
             "ProductionAppCollection": "OpenJDK - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "HotSpot",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "FALSE"
+            "BlackList": false,
+            "AWSDistributionApp": false
         },
-        "putty": {
+        {
             "Name": "putty",
             "DisplayName": "Putty",
-            "RootApplicationPath": "HOME OFFICE\\Putty",
+            "RootApplicationPath": "Path\\To\\Putty",
             "ProductionAppCollection": "Putty - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "Simon Tatham",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "FALSE"
+            "BlackList": false,
+            "AWSDistributionApp": false
         },
-        "reader": {
+        {
             "Name": "reader",
             "DisplayName": "Reader",
-            "RootApplicationPath": "CoreApps_ALL\\Adobe\\AdobeReader",
+            "RootApplicationPath": "Path\\To\\AdobeReader",
             "ProductionAppCollection": "Adobe Reader - Prod",
             "SCCMFolder": "CoreApps",
             "Manufacturer": "Adobe",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "FALSE"
+            "BlackList": false,
+            "AWSDistributionApp": false
         },
-        "receiver": {
+        {
             "Name": "receiver",
             "DisplayName": "Receiver",
-            "RootApplicationPath": "HOME OFFICE\\Citrix Receiver",
+            "RootApplicationPath": "Path\\To\\Citrix Receiver",
             "ProductionAppCollection": "Citrix Receiver IE - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "Citrix",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "FALSE"
+            "BlackList": false,
+            "AWSDistributionApp": false
         },
-        "vlc": {
+        {
             "Name": "vlc",
             "DisplayName": "VLC",
-            "RootApplicationPath": "HOME OFFICE\\VLC",
+            "RootApplicationPath": "Path\\To\\VLC",
             "ProductionAppCollection": "VLC - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "VideoLAN",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "FALSE"
+            "BlackList": false,
+            "AWSDistributionApp": false
         },
-        "vscode": {
+        {
             "Name": "vscode",
             "DisplayName": "VSCode",
-            "RootApplicationPath": "HOME OFFICE\\VSCode",
+            "RootApplicationPath": "Path\\To\\VSCode",
             "ProductionAppCollection": "VSCode - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "Microsoft",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "TRUE"
+            "BlackList": false,
+            "AWSDistributionApp": true
         },
-        "winscp": {
+        {
             "Name": "winscp",
             "DisplayName": "WinSCP",
-            "RootApplicationPath": "HOME OFFICE\\WinSCP",
+            "RootApplicationPath": "Path\\To\\WinSCP",
             "ProductionAppCollection": "WinSCP - Prod",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "Martin Prikryl",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "FALSE"
+            "BlackList": false,
+            "AWSDistributionApp": false
         },
-        "wireshark": {
+        {
             "Name": "wireshark",
             "DisplayName": "wireshark",
-            "RootApplicationPath": "HOME OFFICE\\WireShark",
+            "RootApplicationPath": "Path\\To\\WireShark",
             "ProductionAppCollection": "WireShark - Testing",
             "SCCMFolder": "HomeOffice",
             "Manufacturer": "The WireShark Team",
-            "BlackList": "FALSE",
-            "AWSDistributionApp": "FALSE"
+            "BlackList": false,
+            "AWSDistributionApp": false
         }
 
-    }
+    ]
 }

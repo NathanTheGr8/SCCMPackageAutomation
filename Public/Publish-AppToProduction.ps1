@@ -26,12 +26,12 @@ function Publish-AppToProduction {
     )
 
     Import-Module "$($ENV:SMS_ADMIN_UI_PATH)\..\ConfigurationManager.psd1" # Import the ConfigurationManager.psd1 module
-    Set-Location "$($global:SCCM_Site):" # Set the current location to be the site code.
+    Set-Location "$($SCCM_Site):" # Set the current location to be the site code.
 
+    $MaintainedApp = $MaintainedApps | where {$_.Name -eq $App}
+    $ExistingDeployments = Get-CMPackageDeployment -CollectionName "$($MaintainedApp.ProductionAppCollection)" | Sort-Object -property {$_.AssignedSchedule.StartTime}
 
-    $ExistingDeployments = Get-CMPackageDeployment -CollectionName "$($GlobalApps[$app].ProductionAppCollection)" | Sort-Object -property {$_.AssignedSchedule.StartTime}
-
-    Write-Output "Expiring Old Deployments to $($GlobalApps[$app].ProductionAppCollection)"
+    Write-Output "Expiring Old Deployments to $($MaintainedApp.ProductionAppCollection)"
     foreach ($Deployment in $ExistingDeployments){
         if ($Deployment.ExpirationTimeEnabled -ne $true){
             Write-Output "Expiring Deployment from $($Deployment.PresentTime)"
@@ -45,30 +45,29 @@ function Publish-AppToProduction {
 
     $NumberOfDeploymentsToKeep = 2
     while ($ExistingDeployments.Count -gt $NumberOfDeploymentsToKeep){
-        Write-Output "There were more than $NumberOfDeploymentsToKeep old deployments to $($GlobalApps[$app].ProductionAppCollection). Removing old deployments till there $NumberOfDeploymentsToKeep old deployments"
+        Write-Output "There were more than $NumberOfDeploymentsToKeep old deployments to $($MaintainedApp.ProductionAppCollection). Removing old deployments till there $NumberOfDeploymentsToKeep old deployments"
         $ExistingDeployments[0] | Remove-CMPackageDeployment -Force
         $ExistingDeployments = $ExistingDeployments[1..($ExistingDeployments.length-1)]
     }
 
 
 
-    Write-Output "Preparing to deploy $App to $($GlobalApps[$app].ProductionAppCollection)"
+    Write-Output "Preparing to deploy $App to $($MaintainedApp.ProductionAppCollection)"
     $packagesByName = Get-CMPackage -Name "*$app*"
     $packagesByName = $packagesByName | Where-Object {$_.Name -imatch "$app $VersionRegex \(R\d+\)"}
     $newestPackagesByName = $packagesByName | Sort-Object -Property name | Select-Object -Last 1
 
     try{
-        Deploy-ToSCCMCollection -PackageName "$($newestPackagesByName.Name)" -Collection "$($GlobalApps[$app].ProductionAppCollection)"
-        $SCCMFolderPath
-        switch ($GlobalApps[$app].SCCMFolder) {
+        Deploy-ToSCCMCollection -PackageName "$($newestPackagesByName.Name)" -Collection "$($MaintainedApp.ProductionAppCollection)"
+        switch ($MaintainedApp.SCCMFolder) {
             "HomeOffice" {
-                $SCCMFolderPath = "$($SCCM_Site):\Package\Home Office\Prod_Home Office"
+                $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.HomeOffice.Prod)"
             }
             "CoreApps" {
-                $SCCMFolderPath = "$($SCCM_Site):\Package\Core_Apps_ALL\ALL_PRODUCTION Core Packages"
+                $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.CoreApps.Prod)"
             }
             "Misc" {
-                $SCCMFolderPath = "$($SCCM_Site):\Package\MISC\Prod MISC"
+                $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.Misc.Prod)"
             }
         }
         Move-CMObject -FolderPath "$SCCMFolderPath" -ObjectId $newestPackagesByName.PackageID

@@ -20,33 +20,34 @@ Get-OutDatedApps
         $HTML
     )
 
-    $MaintainedApps = $MaintainedApps | Sort-Object
 
     # save the current color
     # $CurrentForegroundColor = $host.UI.RawUI.ForegroundColor
 
     Foreach ($App in $MaintainedApps){
-        [version]$currVer = Get-CurrentAppVersion -App $app
-        [version]$LatestVer = Get-LatestAppVersion -App $App
+        if (!($App.BlackList)){
+            [version]$currVer = Get-CurrentAppVersion -App $App.Name
+            [version]$LatestVer = Get-LatestAppVersion -App $App.Name
 
-        if ($LatestVer -gt $currVer){
-            if ($HTML) {
-                "<font color=`"CD0000`">$App needs updated to $LatestVer, we are currently on $currVer</font> <br>"
+            if ($LatestVer -gt $currVer){
+                if ($HTML) {
+                    "<font color=`"CD0000`">$($App.Name) needs updated to $LatestVer, we are currently on $currVer</font> <br>"
+                }
+                else {
+                    # # set the new color
+                    # $host.UI.RawUI.ForegroundColor = "Red"
+                    Write-Host "$($App.Name) needs updated to $LatestVer, we are currently on $currVer" -ForegroundColor Red
+                }
             }
             else {
-                # # set the new color
-                # $host.UI.RawUI.ForegroundColor = "Red"
-                Write-Host "$App needs updated to $LatestVer, we are currently on $currVer" -ForegroundColor Red
-            }
-        }
-        else {
-            if ($HTML) {#008000
-                "<font color=`"00A000`">$App is on latest version $LatestVer</font> <br>"
-            }
-            else {
-                # # set the new color
-                # $host.UI.RawUI.ForegroundColor = "Green"
-                Write-Host "$App is on latest version $LatestVer" -ForegroundColor Green
+                if ($HTML) {#008000
+                    "<font color=`"00A000`">$($App.Name) is on latest version $LatestVer</font> <br>"
+                }
+                else {
+                    # # set the new color
+                    # $host.UI.RawUI.ForegroundColor = "Green"
+                    Write-Host "$($App.Name) is on latest version $LatestVer" -ForegroundColor Green
+                }
             }
         }
     }
