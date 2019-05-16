@@ -10,10 +10,10 @@ Deploys a given App to a the app's prod collection. The prod collections are set
 The app to promote to prod
 .EXAMPLE
 
-Publish-AppToProduction -App Firefox
+Deploy-AppToProduction -App Firefox
 #>
 
-function Publish-AppToProduction {
+function Deploy-AppToProduction {
     [CmdletBinding()]
     param
     (
@@ -61,16 +61,16 @@ function Publish-AppToProduction {
     Write-Output "Moving old packages of $($MaintainedApp.DisplayName) to previous versions folder"
     switch ($MaintainedApp.SCCMFolder) {
         "HomeOffice" {
-            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.HomeOffice.QA)"
+            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.HomeOffice.PreviousVersion)"
         }
         "CoreApps" {
-            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.CoreApps.QA)"
+            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.CoreApps.PreviousVersion)"
         }
         "Misc" {
-            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.Misc.QA)"
+            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.Misc.PreviousVersion)"
         }
     }
-    For ($i=0; $i -le $ExistingPackages.count-1; $i++) {
+    For ($i=0; $i -le $ExistingPackages.count-2; $i++) {
         Move-CMObject -FolderPath "$SCCMFolderPath" -ObjectId $ExistingPackages[$i].PackageID
         Write-Output "Moved $($ExistingPackages[$i].Name) to $SCCMFolderPath"
     }
