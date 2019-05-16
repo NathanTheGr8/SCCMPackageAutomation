@@ -43,22 +43,43 @@ function Publish-AppToProduction {
     }
 
 
-    $NumberOfDeploymentsToKeep = 2
+    $NumberOfDeploymentsToKeep = 2 # Number of Previous Deployments to the Prod collection to keep.
     while ($ExistingDeployments.Count -gt $NumberOfDeploymentsToKeep){
-        Write-Output "There were more than $NumberOfDeploymentsToKeep old deployments to $($MaintainedApp.ProductionAppCollection). Removing old deployments till there $NumberOfDeploymentsToKeep old deployments"
+        Write-Output "There were more than $NumberOfDeploymentsToKeep old deployments to $($MaintainedApp.ProductionAppCollection). Removing oldest deployment."
         $ExistingDeployments[0] | Remove-CMPackageDeployment -Force
         $ExistingDeployments = $ExistingDeployments[1..($ExistingDeployments.length-1)]
     }
 
+    # $NumberOfPackagesToKeep is in GlobalVaribles.ps1
+    $ExistingPackages = Get-CMPackage -Name "*$App*" | Where-Object {$_.Name -imatch "$app $VersionRegex \(R\d+\)"} | Sort-Object -Property Name
+    while ($ExistingPackages.Count -gt $NumberOfPackagesToKeep){
+        Write-Output "There were more than $NumberOfPackagesToKeep old packages of $($MaintainedApp.DisplayName). Removing old package $($ExistingPackages[0].Name)"
+        $ExistingPackages[0] | Remove-CMPackage -Force
+        $ExistingPackages = $ExistingDeployments[1..($ExistingDeployments.length-1)]
+    }
 
+    Write-Output "Moving old packages of $($MaintainedApp.DisplayName) to previous versions folder"
+    switch ($MaintainedApp.SCCMFolder) {
+        "HomeOffice" {
+            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.HomeOffice.QA)"
+        }
+        "CoreApps" {
+            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.CoreApps.QA)"
+        }
+        "Misc" {
+            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.Misc.QA)"
+        }
+    }
+    For ($i=0; $i -le $ExistingPackages.count-1; $i++) {
+        Move-CMObject -FolderPath "$SCCMFolderPath" -ObjectId $ExistingPackages[$i].PackageID
+        Write-Output "Moved $($ExistingPackages[$i].Name) to $SCCMFolderPath"
+    }
 
     Write-Output "Preparing to deploy $App to $($MaintainedApp.ProductionAppCollection)"
-    $packagesByName = Get-CMPackage -Name "*$app*"
-    $packagesByName = $packagesByName | Where-Object {$_.Name -imatch "$app $VersionRegex \(R\d+\)"}
-    $newestPackagesByName = $packagesByName | Sort-Object -Property name | Select-Object -Last 1
+    $newestExistingPackage = $ExistingPackages | Sort-Object -Property name | Select-Object -Last 1
 
     try{
-        Deploy-ToSCCMCollection -PackageName "$($newestPackagesByName.Name)" -Collection "$($MaintainedApp.ProductionAppCollection)"
+        Deploy-ToSCCMCollection -PackageName "$($newestExistingPackage.Name)" -Collection "$($MaintainedApp.ProductionAppCollection)"
         switch ($MaintainedApp.SCCMFolder) {
             "HomeOffice" {
                 $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.HomeOffice.Prod)"
@@ -70,8 +91,8 @@ function Publish-AppToProduction {
                 $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.Misc.Prod)"
             }
         }
-        Move-CMObject -FolderPath "$SCCMFolderPath" -ObjectId $newestPackagesByName.PackageID
-        Write-Output "Moved $($newestPackagesByName.Name) to $SCCMFolderPath"
+        Move-CMObject -FolderPath "$SCCMFolderPath" -ObjectId $newestExistingPackage.PackageID
+        Write-Output "Moved $($newestExistingPackage.Name) to $SCCMFolderPath"
     }
     catch
     {

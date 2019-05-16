@@ -2,15 +2,18 @@
     "SCCMFolders": {
         "HomeOffice": {
             "Prod": "Path\\To\\Prod_Home Office",
-            "QA": "Path\\To\\QA_Home Office"
+            "QA": "Path\\To\\QA_Home Office",
+            "PreviousVersion": "Path\\To\\ZZ_PREVIOUS VERSIONS"
         },
         "CoreApps": {
             "Prod": "Path\\To\\ALL_PRODUCTION Core Packages",
-            "QA": "Path\\To\\ALL_QA Core Packages"
+            "QA": "Path\\To\\ALL_QA Core Packages",
+            "PreviousVersion": "Path\\To\\ZZ_PREVIOUS VERSIONS"
         },
         "Misc": {
             "Prod": "Path\\To\\Prod MISC",
-            "QA": "Path\\To\\QA MISC"
+            "QA": "Path\\To\\QA MISC",
+            "PreviousVersion": "Path\\To\\ZZ_PREVIOUS VERSIONS"
         }
     },
     "MaintainedApps": [
