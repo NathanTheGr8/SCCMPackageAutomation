@@ -26,27 +26,7 @@ Get-CurrentAppVersion -App Firefox
     begin {
         $App = $App.ToLower()
 
-        # Map network drive to SCCM
-        # Test an arbitrary folder on the share
-        $Networkpath = "$($SCCM_Share_Letter):\$SCCM_Share_Test_Folder"
-
-        If (Test-Path -Path $Networkpath) {
-            Write-Verbose "$($SCCM_Share_Letter) Drive to SCCM Exists already"
-        }
-        Else {
-            #map network drive
-            New-PSDrive -Name "$($SCCM_Share_Letter)" -PSProvider "FileSystem" -Root "$SCCM_Share" -Persist | out-null
-
-            #check mapping again
-            If (Test-Path -Path $Networkpath) {
-                Write-Verbose "$($SCCM_Share_Letter) Drive has been mapped to SCCM"
-            }
-            Else {
-                Write-Error "Couldn't map $($SCCM_Share_Letter) Drive to SCCM, aborting"
-                Return
-            }
-        }
-        # End Map Network Drive
+        Mount-PackageShare
     }
 
     process {
@@ -54,7 +34,7 @@ Get-CurrentAppVersion -App Firefox
         # Get-ChildItem has trouble working with UNC paths from the $SCCM_Site: drive. That is why I map a $SCCM_Share_Letter drive
         $count = (Measure-Object -InputObject $SCCM_Share -Character).Characters + 1
         # Gets the most recent folder for a given app, split it up into multiple lines to make it easier to read and debug
-        $RootAppPath = $($MaintainedApps | where {$_.Name -eq $App}).RootApplicationPath
+        $RootAppPath = $($MaintainedApps | Where-Object {$_.Name -eq $App}).RootApplicationPath
         $LatestApplicationPath =  "$($SCCM_Share_Letter):\" + $RootAppPath.Substring($count) | Get-ChildItem
         $LatestApplicationPath = $LatestApplicationPath | Where-Object {$_.Name -match "[a-zA-Z0-9_.+-]+ [a-zA-Z0-9_.]+ \(R[0-9]\)"}
         $LatestApplicationPath = $LatestApplicationPath | Sort-Object -Property CreationTime -Descending | Select-Object -First 1

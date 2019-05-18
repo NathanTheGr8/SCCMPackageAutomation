@@ -25,8 +25,8 @@ function Deploy-AppToProduction {
         $NoCleanUp
     )
 
-    Import-Module "$($ENV:SMS_ADMIN_UI_PATH)\..\ConfigurationManager.psd1" # Import the ConfigurationManager.psd1 module
-    Set-Location "$($SCCM_Site):" # Set the current location to be the site code.
+    Push-Location $PWD -StackName ModuleStack
+    Import-ConfigManagerModule
 
     $MaintainedApp = $MaintainedApps | where {$_.Name -eq $App}
     $ExistingDeployments = Get-CMPackageDeployment -CollectionName "$($MaintainedApp.ProductionAppCollection)" | Sort-Object -property {$_.AssignedSchedule.StartTime}
@@ -58,21 +58,30 @@ function Deploy-AppToProduction {
         $ExistingPackages = $ExistingDeployments[1..($ExistingDeployments.length-1)]
     }
 
-    Write-Output "Moving old packages of $($MaintainedApp.DisplayName) to previous versions folder"
-    switch ($MaintainedApp.SCCMFolder) {
-        "HomeOffice" {
-            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.HomeOffice.PreviousVersion)"
+    if (!($NoCleanUp)){
+        Write-Output "Moving old packages of $($MaintainedApp.DisplayName) to previous versions folder"
+        switch ($MaintainedApp.SCCMFolder) {
+            "HomeOffice" {
+                $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.HomeOffice.PreviousVersion)"
+            }
+            "CoreApps" {
+                $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.CoreApps.PreviousVersion)"
+            }
+            "Misc" {
+                $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.Misc.PreviousVersion)"
+            }
         }
-        "CoreApps" {
-            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.CoreApps.PreviousVersion)"
+        For ($i=0; $i -le $ExistingPackages.count-2; $i++) {
+            Try {
+                Move-CMObject -FolderPath "$SCCMFolderPath" -ObjectId $ExistingPackages[$i].PackageID
+            }
+            catch
+            {
+                Write-Host "Failed" -ForegroundColor Red
+                Write-Host "$_"
+            }
+            Write-Output "Moved $($ExistingPackages[$i].Name) to $SCCMFolderPath"
         }
-        "Misc" {
-            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.Misc.PreviousVersion)"
-        }
-    }
-    For ($i=0; $i -le $ExistingPackages.count-2; $i++) {
-        Move-CMObject -FolderPath "$SCCMFolderPath" -ObjectId $ExistingPackages[$i].PackageID
-        Write-Output "Moved $($ExistingPackages[$i].Name) to $SCCMFolderPath"
     }
 
     Write-Output "Preparing to deploy $App to $($MaintainedApp.ProductionAppCollection)"
@@ -100,5 +109,5 @@ function Deploy-AppToProduction {
         Write-Host "$_"
     }
 
-    Set-Location "C:"
+    Pop-Location -StackName ModuleStack
 }

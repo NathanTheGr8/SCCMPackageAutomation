@@ -23,12 +23,14 @@ Update-AppPackageSource -App Firefox
         [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
         $App,
         [switch]
-        $ForceUpdate
+        $ForceUpdate,
+        [switch]
+        $NoCleanUp
     )
 
     begin {
         $App = $App.ToLower()
-        $MaintainedApp = $MaintainedApps | where {$_.Name -eq $App}
+        $MaintainedApp = $MaintainedApps | Where-Object {$_.Name -eq $App}
     }
 
     process {
@@ -37,27 +39,7 @@ Update-AppPackageSource -App Firefox
         $LatestAppVersion = Get-LatestAppVersion -App $App
         $RootApplicationPathTemp = $MaintainedApp.RootApplicationPath
 
-        # Map network drive to SCCM
-        # Test an arbitrary folder on the share
-        $Networkpath = "$($SCCM_Share_Letter):\$SCCM_Share_Test_Folder"
-
-        If (Test-Path -Path $Networkpath) {
-            Write-Host "$($SCCM_Share_Letter) Drive to SCCM Exists already"
-        }
-        Else {
-            #map network drive
-            New-PSDrive -Name "$($SCCM_Share_Letter)" -PSProvider "FileSystem" -Root "$SCCM_Share" -Persist
-
-            #check mapping again
-            If (Test-Path -Path $Networkpath) {
-                Write-Host "$($SCCM_Share_Letter) Drive has been mapped to SCCM"
-            }
-            Else {
-                Write-Error "Couldn't map $($SCCM_Share_Letter) Drive to SCCM, aborting"
-                Return
-            }
-        }
-        # End Map Network Drive
+        Mount-PackageShare
 
         if (([version]$CurrentAppVersion -lt [version]$LatestAppVersion) -or ($ForceUpdate)) {
             if ($ForceUpdate) {
@@ -67,10 +49,18 @@ Update-AppPackageSource -App Firefox
                 Write-Host "Upgrading $App package from $CurrentAppVersion to $LatestAppVersion"
             }
 
+            # Check SCCM Share Free Space
+            $FreeDiskSpace = (Get-PSDrive | Where-Object {$_.Name -eq "$SCCM_Share_Letter"}).Free
+            If ($FreeDiskSpace -lt 1000000000) {
+                Write-Error "$SCCM_Share has less than 1 GB free."
+                Throw
+            }
+
             $InstallFiles = Download-LatestAppVersion -App $App
             $count = (Measure-Object -InputObject $SCCM_Share -Character).Characters + 1
             # Gets the most recent folder for a given app
-            $CurrentAppPath =  "$($SCCM_Share_Letter):\" + $RootApplicationPathTemp.Substring($count) | Get-ChildItem | Sort-Object CreationTime -Descending | Select-Object -f 1
+            $AllAppVersions = "$($SCCM_Share_Letter):\" + $RootApplicationPathTemp.Substring($count) | Get-ChildItem | Sort-Object CreationTime -Descending
+            $CurrentApp =  $AllAppVersions | Select-Object -f 1
 
             $RevNumber = 1
             $newAppPath = "$RootApplicationPathTemp\$App $LatestAppVersion (R$RevNumber)"
@@ -88,10 +78,22 @@ Update-AppPackageSource -App Firefox
 
             #Copies the Current Package to the new. Replaces install files and increments version.
             Write-Output "Creating folder '$App $LatestAppVersion (R$RevNumber)'"
-            Copy-PSADTAppFolders -OldPackageRootFolder "$($CurrentAppPath.FullName)" -NewPackageRootFolder "$newAppPath" -NewPSADTFiles $InstallFiles
+            Copy-PSADTAppFolders -OldPackageRootFolder "$($CurrentApp.FullName)" -NewPackageRootFolder "$newAppPath" -NewPSADTFiles $InstallFiles
             Write-Output "Updating version numbers from $CurrentAppVersion to $LatestAppVersion"
             Update-PSADTAppVersion -PackageRootFolder "$newAppPath" -CurrentVersion "$CurrentAppVersion" -NewVersion "$LatestAppVersion"
 
+            #Delete old package versions
+            if (!$NoCleanUp) {
+                $NumberOfPreviousVersionsToKeep = 5
+                while ($AllAppVersions.count -gt $NumberOfPreviousVersionsToKeep){
+                    Write-Output "There are more than $NumberOfPreviousVersionsToKeep previous versions of $app. Deleting $($AllAppVersions[-1].FullName) source files."
+                    $AllAppVersions[-1].FullName | Remove-Item -Force -Recurse
+                    $AllAppVersions = $AllAppVersions[0..($ExistingDeployments.length-2)]
+                }
+            }
+            else {
+                Write-Output "NoCleanUp switch used. Not removing previous version soruce files."
+            }
         }
         else {
             Write-Host "$App $CurrentAppVersion package is already up to date"
