@@ -19,7 +19,7 @@ Download-LatestAppVersion -App Chrome
         [Parameter(Mandatory = $true,
         HelpMessage = 'What standard app are you trying to get the version of?')]
         [string]
-        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','SoapUI','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
         $App
     )
 
@@ -106,8 +106,8 @@ Download-LatestAppVersion -App Chrome
             'etcher' {
                 #$url = "https://github.com/balena-io/etcher/releases"
                 $LatestAppVersion = Get-LatestAppVersion -App "$app"
-                $InstallFileName = "balenaEtcher-Setup-$($LatestAppVersion)-x64.exe"
-                $DownloadURL = "https://github.com/balena-io/etcher/releases/download/v$LatestAppVersion/balenaEtcher-Setup-$LatestAppVersion-x64.exe"
+                $InstallFileName = "balenaEtcher-Setup-$($LatestAppVersion).exe"
+                $DownloadURL = "https://github.com/balena-io/etcher/releases/download/v$LatestAppVersion/balenaEtcher-Setup-$LatestAppVersion.exe"
                 $WebRequestOutput = Invoke-WebRequest -Uri "$DownloadURL" -OutFile "$DownloadDir\$($InstallFileName)"
             }
             'firefox' {
@@ -299,6 +299,16 @@ Download-LatestAppVersion -App Chrome
                 $InstallFileName = "CitrixReceiver.exe"
                 $WebRequestOutput = Invoke-WebRequest -Uri "https:$($downloadLink.rel)" -OutFile "$DownloadDir\$InstallFileName"
             }
+            'soapui' {
+                $url = "https://www.soapui.org/downloads/latest-release.html"
+                $html = Invoke-WebRequest -UseBasicParsing -Uri "$url"
+                $downloadlinks = $html.Links | Where-Object -property href -match "$VersionRegex\/SoapUI-x64-$VersionRegex\.exe" | Sort-Object -Descending
+
+                $LatestAppVersion = Get-LatestAppVersion -App $app
+                $downloadLink = $downloadlinks.href | Select-Object -First 1
+                $InstallFileName = "SoapUI-x64-$LatestAppVersion.exe"
+                $WebRequestOutput = Invoke-WebRequest -Uri $downloadLink -OutFile "$DownloadDir\$InstallFileName"
+            }
             'vlc' {
                 $url = "http://download.videolan.org/pub/videolan/vlc/"
                 $LatestAppVersion =  Get-LatestAppVersion -App $app
@@ -344,6 +354,13 @@ Download-LatestAppVersion -App Chrome
                 $WebRequestOutput = Invoke-WebRequest -Uri "$64bitdownload" -OutFile "$DownloadDir\Wireshark-win64-$LatestAppVersion.msi"
 
             }
+
+            <#
+            todo
+
+            Add a try catch for the download request for every app. I will need to specify if the app needs 64bit and 32bit.
+            $WebRequestOutput = Invoke-WebRequest -Uri "$DownloadURL" -OutFile "$DownloadDir\$($InstallFileName)"
+            #>
         }
 
         #Get the install files to return

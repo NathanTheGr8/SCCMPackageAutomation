@@ -23,7 +23,7 @@ Get-LatestAppVersion -App Firefox
         [Parameter(Mandatory = $true,
         HelpMessage = 'What standard app are you trying to get the version of?')]
         [string]
-        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','SoapUI','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
         $App,
         [switch]
         $AsString
@@ -220,6 +220,17 @@ Get-LatestAppVersion -App Firefox
 
                 $versionArray = $versionArray | Sort-Object -Descending
                 $LatestAppVersion = $versionArray[0]
+            }
+            'soapui' {
+                $url = "https://www.soapui.org/downloads/latest-release.html"
+                $html = Invoke-WebRequest -UseBasicParsing -Uri "$url"
+                $versionlinks = $html.Links | Where-Object -property href -match "$VersionRegex\/SoapUI-x64-$VersionRegex\.exe"
+                $versionNumbers = @()
+                foreach ($link in $versionlinks){
+                    $versionNumbers += [regex]::match($link.href,"$VersionRegex").Value
+                }
+                $versionNumbers = $versionNumbers | Sort-Object -Descending
+                $LatestAppVersion = $versionNumbers | Select-Object -first 1
             }
             'vlc' {
                 $url = "http://download.videolan.org/pub/videolan/vlc/"

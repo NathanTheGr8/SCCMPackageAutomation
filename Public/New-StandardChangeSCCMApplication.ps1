@@ -1,22 +1,21 @@
-function New-StandardChangeSCCMPackage {
+function New-StandardChangeSCCMApplication {
 <#
 .SYNOPSIS
 
-Creates a new SCCM package for one of the standard change apps.
+Creates a new SCCM application for one of the standard change apps.
 .DESCRIPTION
 
 Packages a given locaiton's install files in SCCM. It
-Creates the new package
+Creates the new application
 Makes an install program
-Distrubutes the package to DPs
-Moves the package to a given folder
-Updates "not current version" collections to the new version
+Distrubutes the application to DPs
+Moves the application to a given folder
 .PARAMETER App
 
-The app you are trying to package in SCCM. Valid options have tab completion.
+The app you are trying to application in SCCM. Valid options have tab completion.
 .EXAMPLE
 
-New-StandardChangeSCCMPackage -App Firefox
+New-StandardChangeSCCMApplication -App Firefox
 #>
     [CmdletBinding()]
     param
@@ -39,7 +38,7 @@ New-StandardChangeSCCMPackage -App Firefox
         Mount-PackageShare
 
         $MaintainedApp = $MaintainedApps | where {$_.Name -eq $App}
-        New-PackageHelper -AppName "$($MaintainedApp.DisplayName)" -rootApplicationPath "$($MaintainedApp.RootApplicationPath)" -SCCMFolder "$($MaintainedApp.SCCMFolder)" -Manufacturer "$($MaintainedApp.Manufacturer)"
+        New-ApplicationHelper -AppName "$($MaintainedApp.DisplayName)" -rootApplicationPath "$($MaintainedApp.RootApplicationPath)" -SCCMFolder "$($MaintainedApp.SCCMFolder)" -Manufacturer "$($MaintainedApp.Manufacturer)"
 
         Pop-Location -StackName ModuleStack
     }
