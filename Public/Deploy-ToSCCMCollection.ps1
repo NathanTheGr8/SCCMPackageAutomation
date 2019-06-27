@@ -64,7 +64,7 @@ function Deploy-ToSCCMCollection {
     }
     catch
     {
-        Write-Host "Failed" -ForegroundColor Red
+        Write-Host "Deployment Failed" -ForegroundColor Red
         Write-Host "$_"
     }
 }

@@ -87,8 +87,9 @@ function Deploy-AppToProduction {
     Write-Output "Preparing to deploy $App to $($MaintainedApp.ProductionAppCollection)"
     $newestExistingPackage = $ExistingPackages | Sort-Object -Property name | Select-Object -Last 1
 
+    Deploy-ToSCCMCollection -PackageName "$($newestExistingPackage.Name)" -Collection "$($MaintainedApp.ProductionAppCollection)"
+
     try{
-        Deploy-ToSCCMCollection -PackageName "$($newestExistingPackage.Name)" -Collection "$($MaintainedApp.ProductionAppCollection)"
         switch ($MaintainedApp.SCCMFolder) {
             "HomeOffice" {
                 $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.HomeOffice.Prod)"
@@ -105,7 +106,7 @@ function Deploy-AppToProduction {
     }
     catch
     {
-        Write-Host "Failed" -ForegroundColor Red
+        Write-Host "Moving of Package Failed" -ForegroundColor Red
         Write-Host "$_"
     }
 
