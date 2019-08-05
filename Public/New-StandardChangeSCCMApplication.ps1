@@ -38,7 +38,7 @@ New-StandardChangeSCCMApplication -App Firefox
         Mount-PackageShare
 
         $MaintainedApp = $MaintainedApps | where {$_.Name -eq $App}
-        New-ApplicationHelper -AppName "$($MaintainedApp.DisplayName)" -rootApplicationPath "$($MaintainedApp.RootApplicationPath)" -SCCMFolder "$($MaintainedApp.SCCMFolder)" -Publisher "$($MaintainedApp.Manufacturer)"
+        New-ApplicationHelper -AppName "$($MaintainedApp.DisplayName)" -rootApplicationPath "$($MaintainedApp.RootApplicationPath)" -SCCMFolder "$($MaintainedApp.SCCMFolder)" -Publisher "$($MaintainedApp.Manufacturer)" -Icon "$IconsFolder\$($MaintainedApp.IconName)"
 
         Pop-Location -StackName ModuleStack
     }
