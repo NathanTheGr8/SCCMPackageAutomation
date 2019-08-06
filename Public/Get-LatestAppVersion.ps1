@@ -23,7 +23,7 @@ Get-LatestAppVersion -App Firefox
         [Parameter(Mandatory = $true,
         HelpMessage = 'What standard app are you trying to get the version of?')]
         [string]
-        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','SoapUI','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Slack','Receiver','SoapUI','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
         $App,
         [switch]
         $AsString
@@ -221,6 +221,20 @@ Get-LatestAppVersion -App Firefox
                 $versionArray = $versionArray | Sort-Object -Descending
                 $LatestAppVersion = $versionArray[0]
             }
+            'slack'{
+                $url = "https://slack.com/release-notes/windows"
+                $html = Invoke-WebRequest -UseBasicParsing -Uri "$url"
+                $Versions = $html.Links | Where-Object outerHTML -Match "Slack $VersionRegex"
+
+                $versionArray = @()
+                foreach ($Version in $Versions){
+                    [version]$VersionNumber = [regex]::match($Version.outerHTML ,"$VersionRegex").Value
+                    $versionArray += $VersionNumber
+                }
+
+                $versionArray = $versionArray | Sort-Object -Descending
+                $LatestAppVersion = $versionArray[0]
+            }
             'soapui' {
                 $url = "https://www.soapui.org/downloads/latest-release.html"
                 $html = Invoke-WebRequest -UseBasicParsing -Uri "$url"
@@ -271,6 +285,9 @@ Get-LatestAppVersion -App Firefox
 
                 $versionArray = $versionArray | Sort-Object -Descending
                 $LatestAppVersion = $versionArray[0]
+            }
+            'zoom' {
+                
             }
         }
 

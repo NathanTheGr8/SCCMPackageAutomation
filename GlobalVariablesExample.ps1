@@ -1,9 +1,11 @@
 #Edit this file to suit your enviorment. Change the name to GlobalVaribles.ps1
 
-$global:SCCM_Site = "AAA"
-$global:SCCM_Share = "\\server\Packages"
-$global:SCCM_Share_Test_Folder = "FolderName"
+$global:SCCM_Site = "LAB"
+$global:SCCM_Share = "\\SCCMPS1\SoftwareShare\Applications"
+$global:SCCM_Share_Test_Folder = "SomeFolderThatExists"
 $global:SCCM_Share_Letter = "P"
+$global:IconsFolder = "$PSScriptRoot\bin\icons"
+$global:SCCM_ALL_DP_Group = "All Distribution Points"
 
 $VersionRegex = "\d+(\.\d+)+"
 
@@ -15,13 +17,16 @@ $SCCMFolders = (Get-Content "$PSScriptRoot\GlobalVaribles.json" | ConvertFrom-Js
 $SCCMAppFolders = (Get-Content "$PSScriptRoot\GlobalVaribles.json" | ConvertFrom-Json).SCCMAppFolders
 
 # For Get-OutDatedApps Scheduled Task.
-$Recipients = ""
-$EmailSender = ""
+$Recipients = "Name@domain.com"
+$EmailSender = "Name@domain.com"
 $SMTPServer = "authappmail.domain.local"
 
 # For Deploy-ToSCCMCollection
-$global:TestCollection = "Dell Desktop*"
+$TestCollection = "Test Collection"
+
+# For Pub-AppToProduction
+$NumberOfPackagesToKeep = 3 #1 current and 2 previous
 
 # Internal Powershell Repo
 # https://kevinmarquette.github.io/2017-05-30-Powershell-your-first-PSScript-repository/
-$InternalModuleRepo = "moduleRepo"
+$InternalModuleRepo = "lab-modules"

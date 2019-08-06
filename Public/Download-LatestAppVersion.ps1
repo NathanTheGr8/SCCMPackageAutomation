@@ -19,7 +19,7 @@ Download-LatestAppVersion -App Chrome
         [Parameter(Mandatory = $true,
         HelpMessage = 'What standard app are you trying to get the version of?')]
         [string]
-        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','SoapUI','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','Slack','SoapUI','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
         $App
     )
 
@@ -309,6 +309,12 @@ Download-LatestAppVersion -App Chrome
                 $InstallFileName = "SoapUI-x64-$LatestAppVersion.exe"
                 $WebRequestOutput = Invoke-WebRequest -Uri $downloadLink -OutFile "$DownloadDir\$InstallFileName"
             }
+            'slack' {
+                $LatestAppVersion = Get-LatestAppVersion -App $app
+                $InstallFileName = "slack-standalone.msi"
+                $downloadLink = "http://slack.com/ssb/download-win64-msi"
+                $WebRequestOutput = Invoke-WebRequest -Uri $downloadLink -OutFile "$DownloadDir\$InstallFileName"
+            }
             'vlc' {
                 $url = "http://download.videolan.org/pub/videolan/vlc/"
                 $LatestAppVersion =  Get-LatestAppVersion -App $app
@@ -353,6 +359,11 @@ Download-LatestAppVersion -App Chrome
                 #64bit
                 $WebRequestOutput = Invoke-WebRequest -Uri "$64bitdownload" -OutFile "$DownloadDir\Wireshark-win64-$LatestAppVersion.msi"
 
+            }
+            'zoom'{
+                $url = "http://zoom.us/client/latest/ZoomInstallerFull.msi"
+                $InstallFileName = "ZoomInstallerFull.msi"
+                $WebRequestOutput = Invoke-WebRequest -Uri "$url" -OutFile "$DownloadDir\$($InstallFileName)"
             }
 
             <#

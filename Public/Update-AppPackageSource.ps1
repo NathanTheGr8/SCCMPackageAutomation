@@ -81,6 +81,7 @@ Update-AppPackageSource -App Firefox
             Copy-PSADTAppFolders -OldPackageRootFolder "$($CurrentApp.FullName)" -NewPackageRootFolder "$newAppPath" -NewPSADTFiles $InstallFiles
             Write-Output "Updating version numbers from $CurrentAppVersion to $LatestAppVersion"
             Update-PSADTAppVersion -PackageRootFolder "$newAppPath" -CurrentVersion "$CurrentAppVersion" -NewVersion "$LatestAppVersion"
+            Update-DetectionScriptAppVersion -PackageRootFolder "$newAppPath" -CurrentVersion "$CurrentAppVersion" -NewVersion "$LatestAppVersion"
 
             #Delete old package versions
             if (!$NoCleanUp) {
