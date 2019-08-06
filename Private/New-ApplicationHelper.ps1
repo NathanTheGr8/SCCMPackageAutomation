@@ -29,13 +29,13 @@ function New-ApplicationHelper {
     )
     switch ($SCCMFolder) {
         "HomeOffice" {
-            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMAppFolders.HomeOffice.QA)"
+            $SCCMFolderPath = "$($SCCMAppFolders.HomeOffice.QA)"
         }
         "CoreApps" {
-            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMAppFolders.CoreApps.QA)"
+            $SCCMFolderPath = "$($SCCMAppFolders.CoreApps.QA)"
         }
         "Misc" {
-            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMAppFolders.Misc.QA)"
+            $SCCMFolderPath = "$($SCCMAppFolders.Misc.QA)"
         }
     }
 
@@ -103,17 +103,17 @@ function New-ApplicationHelper {
         Write-Output "Moved $AppNameFull to $SCCMFolderPath"
     }
     catch [exception]{
+        Write-Output "Failed to moved $AppNameFull to $SCCMFolderPath"
         Write-Output "$_"
         Set-Location "c:"
         break
     }
-    #todo
-    # try {
-    #     Deploy-ToSCCMCollection -PackageName $AppNameFull -Collection "$TestCollection"
-    #     Write-Output "Deployed $AppNameFull to $TestCollection"
-    # }
-    # catch [exception]{
-    #     Write-Output "$_"
-    #     break
-    # }
+    try {
+        Deploy-ApplicationToSCCMCollection -ApplicationName $AppNameFull -Collection "$TestCollection"
+    }
+    catch [exception]{
+        Write-Output "$_"
+        Set-Location "c:"
+        break
+    }
 }
