@@ -38,8 +38,9 @@ New-SCCMPackage -App Firefox
 
         Mount-PackageShare
 
-        $MaintainedApp = $MaintainedApps | where { $_.Name -eq $App }
-        New-PackageHelper -AppName "$($MaintainedApp.DisplayName)" -rootApplicationPath "$($MaintainedApp.RootApplicationPath)" -SCCMFolder "$($MaintainedApp.SCCMFolder)" -Manufacturer "$($MaintainedApp.Manufacturer)"
+        $MaintainedApp = $MaintainedApps | Where-Object { $_.Name -eq $App }
+        New-PackageHelper -AppName "$($MaintainedApp.DisplayName)" -rootApplicationPath "$($MaintainedApp.RootApplicationPath)" `
+        -SCCMFolder "$($MaintainedApp.SCCMPackageFolder.QA)" -Manufacturer "$($MaintainedApp.Manufacturer)"
 
         Pop-Location -StackName ModuleStack
     }

@@ -14,8 +14,6 @@ $MaintainedApps = (Get-Content "$PSScriptRoot\GlobalVaribles.json" | ConvertFrom
 foreach ($app in $MaintainedApps) {
     $app.RootApplicationPath = $SCCM_Share + "\" + $app.RootApplicationPath
 }
-$SCCMFolders = (Get-Content "$PSScriptRoot\GlobalVaribles.json" | ConvertFrom-Json).SCCMFolders
-$SCCMAppFolders = (Get-Content "$PSScriptRoot\GlobalVaribles.json" | ConvertFrom-Json).SCCMAppFolders
 
 # For Get-OutDatedApps Scheduled Task.
 $Recipients = "Name@domain.com"

@@ -1,280 +1,421 @@
 {
-    "SCCMFolders": {
-        "HomeOffice": {
-            "Prod": "Package\\Prod",
-            "QA": "Package\\QA",
-            "PreviousVersion": "Package\\Previous Versions"
-        },
-        "CoreApps": {
-            "Prod": "Package\\Prod",
-            "QA": "Package\\QA",
-            "PreviousVersion": "Package\\Previous Versions"
-        },
-        "Misc": {
-            "Prod": "Package\\Prod",
-            "QA": "Package\\QA",
-            "PreviousVersion": "Package\\Previous Versions"
-        }
-    },
-    "SCCMAppFolders": {
-        "HomeOffice": {
-            "Prod": "Application\\Prod",
-            "QA": "Application\\QA",
-            "PreviousVersion": "Application\\Previous Versions"
-        },
-        "CoreApps": {
-            "Prod": "Application\\Prod",
-            "QA": "Application\\QA",
-            "PreviousVersion": "Application\\Previous Versions"
-        },
-        "Misc": {
-            "Prod": "Application\\Prod",
-            "QA": "Application\\QA",
-            "PreviousVersion": "Application\\Previous Versions"
-        }
-    },
     "MaintainedApps": [
         {
             "Name": "7zip",
             "DisplayName": "7zip",
             "RootApplicationPath": "7zip",
             "ProductionAppCollection": "7Zip - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "Igor Pavlov",
             "IconName": "7zip.ico",
             "BlackList": false,
-            "AWSDistributionApp": true
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "bigfix",
             "DisplayName": "BigFix Client",
             "RootApplicationPath": "Path\\To\\BigFixClient",
             "ProductionAppCollection": "BigFix Client - Prod",
-            "SCCMFolder": "CoreApps",
             "Manufacturer": "IBM",
             "IconName": "BigFix.png",
             "BlackList": false,
-            "AWSDistributionApp": true
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "chrome",
             "DisplayName": "Chrome",
             "RootApplicationPath": "Google Chrome",
             "ProductionAppCollection": "Chrome - Prod",
-            "SCCMFolder": "CoreApps",
             "Manufacturer": "Google",
             "IconName": "Chrome.ico",
             "BlackList": false,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "cutepdf",
             "DisplayName": "CutePDF",
             "RootApplicationPath": "Path\\To\\CutePDF",
             "ProductionAppCollection": "CutePDF - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "Acro",
             "IconName": "CutePDF.jpeg",
             "BlackList": true,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "etcher",
             "DisplayName": "Etcher",
             "RootApplicationPath": "Path\\To\\Etcher",
             "ProductionAppCollection": "Balena Etcher - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "Balena",
             "IconName": "Etcher.png",
             "BlackList": true,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "firefox",
             "DisplayName": "Firefox",
             "RootApplicationPath": "Path\\To\\Mozilla FireFox",
             "ProductionAppCollection": "Firefox - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "Mozilla",
             "IconName": "Firefox.ico",
             "BlackList": false,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "flash",
             "DisplayName": "Flash",
             "RootApplicationPath": "Path\\To\\AdobeFlash",
             "ProductionAppCollection": "Adobe Flash - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "Adobe",
             "IconName": "Flash.ico",
             "BlackList": false,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "gimp",
             "DisplayName": "Gimp",
             "RootApplicationPath": "Path\\To\\GIMP",
             "ProductionAppCollection": "GIMP - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "GIMP Development Team",
             "IconName": "Gimp.png",
             "BlackList": false,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "git",
             "DisplayName": "Git",
             "RootApplicationPath": "Path\\To\\Git",
             "ProductionAppCollection": "Git - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "Software Freedom Conservancy",
             "IconName": "Git.ico",
             "BlackList": false,
-            "AWSDistributionApp": true
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "insync",
             "DisplayName": "Insync",
             "RootApplicationPath": "Path\\To\\DruvaCloud",
             "ProductionAppCollection": "Druva inSync - Prod",
-            "SCCMFolder": "CoreApps",
             "Manufacturer": "Druva",
             "IconName": "insync.jpg",
             "BlackList": false,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "java",
             "DisplayName": "Java",
             "RootApplicationPath": "Path\\To\\java",
             "ProductionAppCollection": "Java - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "Oracle",
             "IconName": "Java.ico",
             "BlackList": "true",
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "notepad++",
             "DisplayName": "Notepad++",
             "RootApplicationPath": "Path\\To\\Notepad++",
             "ProductionAppCollection": "Notepad++ - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "Notepad++ Team",
             "IconName": "notepad++.ico",
             "BlackList": false,
-            "AWSDistributionApp": true
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "openjdk",
             "DisplayName": "OpenJDK",
             "RootApplicationPath": "Path\\To\\OpenJDK",
             "ProductionAppCollection": "OpenJDK - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "HotSpot",
             "IconName": "Java.ico",
             "BlackList": false,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "putty",
             "DisplayName": "Putty",
             "RootApplicationPath": "Path\\To\\Putty",
             "ProductionAppCollection": "Putty - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "Simon Tatham",
             "IconName": "Putty.ico",
             "BlackList": false,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "reader",
             "DisplayName": "Reader",
             "RootApplicationPath": "AdobeReader",
             "ProductionAppCollection": "Adobe Reader - Prod",
-            "SCCMFolder": "CoreApps",
             "Manufacturer": "Adobe",
             "IconName": "AcrobatReader.ico",
             "BlackList": false,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "receiver",
             "DisplayName": "Receiver",
             "RootApplicationPath": "Path\\To\\Citrix Receiver",
             "ProductionAppCollection": "Citrix Receiver IE - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "Citrix",
             "IconName": "Receiver.ico",
             "BlackList": false,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "slack",
             "DisplayName": "Slack",
             "RootApplicationPath": "Path\\To\\Slack",
-            "ProductionAppCollection": "Slack - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "Slack",
             "IconName": "Slack.ico",
             "BlackList": false,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "vlc",
             "DisplayName": "VLC",
             "RootApplicationPath": "Path\\To\\VLC",
             "ProductionAppCollection": "VLC - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "VideoLAN",
             "IconName": "VLC.ico",
             "BlackList": false,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "vscode",
             "DisplayName": "VSCode",
             "RootApplicationPath": "Path\\To\\VSCode",
             "ProductionAppCollection": "VSCode - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "Microsoft",
             "IconName": "VScode.ico",
             "BlackList": false,
-            "AWSDistributionApp": true
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "winscp",
             "DisplayName": "WinSCP",
             "RootApplicationPath": "Path\\To\\WinSCP",
             "ProductionAppCollection": "WinSCP - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "Martin Prikryl",
             "IconName": "WinSCP.ico",
             "BlackList": false,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "wireshark",
             "DisplayName": "wireshark",
             "RootApplicationPath": "Path\\To\\WireShark",
             "ProductionAppCollection": "WireShark - Testing",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "The WireShark Team",
             "IconName": "Wireshark.ico",
             "BlackList": false,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         },
         {
             "Name": "zoom",
             "DisplayName": "Zoom",
             "RootApplicationPath": "Path\\To\\Zoom",
             "ProductionAppCollection": "Zoom - Prod",
-            "SCCMFolder": "HomeOffice",
             "Manufacturer": "Zoom Video Communications",
             "IconName": "Zoom.ico",
             "BlackList": false,
-            "AWSDistributionApp": false
+            "SCCMApplicationFolder": {
+                "Prod": "Application\\Prod",
+                "QA": "Application\\QA",
+                "PreviousVersion": "Application\\Previous Versions"
+            },
+            "SCCMPackageFolder": {
+                "Prod": "Package\\Prod",
+                "QA": "Package\\QA",
+                "PreviousVersion": "Package\\Previous Versions"
+            }
         }
     ]
 }

@@ -1,4 +1,4 @@
-function New-ChangeSCCMApplication {
+function New-SCCMApplication {
     <#
 .SYNOPSIS
 
@@ -37,8 +37,9 @@ New-ChangeSCCMApplication -App Firefox
 
         Mount-PackageShare
 
-        $MaintainedApp = $MaintainedApps | where { $_.Name -eq $App }
-        New-ApplicationHelper -AppName "$($MaintainedApp.DisplayName)" -rootApplicationPath "$($MaintainedApp.RootApplicationPath)" -SCCMFolder "$($MaintainedApp.SCCMFolder)" -Publisher "$($MaintainedApp.Manufacturer)" -Icon "$IconsFolder\$($MaintainedApp.IconName)"
+        $MaintainedApp = $MaintainedApps | Where-Object { $_.Name -eq $App }
+        New-ApplicationHelper -AppName "$($MaintainedApp.DisplayName)" -rootApplicationPath "$($MaintainedApp.RootApplicationPath)" `
+        -SCCMFolderPath "$($MaintainedApp.SCCMApplicationFolder.QA)" -Publisher "$($MaintainedApp.Manufacturer)" -Icon "$IconsFolder\$($MaintainedApp.IconName)"
 
         Pop-Location -StackName ModuleStack
     }

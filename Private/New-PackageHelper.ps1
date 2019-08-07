@@ -9,8 +9,8 @@ function New-PackageHelper {
         $rootApplicationPath,
         [Parameter(Mandatory = $true)]
         [string]
-        [ValidateSet('HomeOffice', 'CoreApps', 'Misc', IgnoreCase = $true)]
-        $SCCMFolder,
+        #todo validate path
+        $SCCMFolderPath,
         [Parameter(Mandatory = $true)]
         [string]
         $Manufacturer,
@@ -21,17 +21,6 @@ function New-PackageHelper {
         [string]
         $Language = "English"
     )
-    switch ($SCCMFolder) {
-        "HomeOffice" {
-            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.HomeOffice.QA)"
-        }
-        "CoreApps" {
-            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.CoreApps.QA)"
-        }
-        "Misc" {
-            $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.Misc.QA)"
-        }
-    }
 
     # Get-ChildItem has trouble working with UNC paths from the $SCCM_Site: drive. That is why I map a $SCCM_Share_Letter drive
     $count = (Measure-Object -InputObject $SCCM_Share -Character).Characters + 1

@@ -1,15 +1,11 @@
 <#
 .SYNOPSIS
-
 Deploy a given packaged application to the app's production program
 .DESCRIPTION
-
 Deploys a given App to a the app's prod collection. The prod collections are set in the global var config
 .PARAMETER App
-
 The app to promote to prod
 .EXAMPLE
-
 Deploy-AppToProduction -App Firefox
 #>
 
@@ -60,17 +56,8 @@ function Deploy-AppToProduction {
 
     if (!($NoCleanUp)) {
         Write-Output "Moving old packages of $($MaintainedApp.DisplayName) to previous versions folder"
-        switch ($MaintainedApp.SCCMFolder) {
-            "HomeOffice" {
-                $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.HomeOffice.PreviousVersion)"
-            }
-            "CoreApps" {
-                $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.CoreApps.PreviousVersion)"
-            }
-            "Misc" {
-                $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.Misc.PreviousVersion)"
-            }
-        }
+        $SCCMFolderPath = "$($SCCM_Site):\$($MaintainedApp.SCCMPackageFolder.PreviousVersion)"
+
         For ($i = 0; $i -le $ExistingPackages.count - 2; $i++) {
             Try {
                 Move-CMObject -FolderPath "$SCCMFolderPath" -ObjectId $ExistingPackages[$i].PackageID
@@ -89,17 +76,7 @@ function Deploy-AppToProduction {
     Deploy-PackageToSCCMCollection -PackageName "$($newestExistingPackage.Name)" -Collection "$($MaintainedApp.ProductionAppCollection)"
 
     try {
-        switch ($MaintainedApp.SCCMFolder) {
-            "HomeOffice" {
-                $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.HomeOffice.Prod)"
-            }
-            "CoreApps" {
-                $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.CoreApps.Prod)"
-            }
-            "Misc" {
-                $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.Misc.Prod)"
-            }
-        }
+        $SCCMFolderPath = "$($SCCM_Site):\$($MaintainedApp.SCCMPackageFolder.Prod)"
         Move-CMObject -FolderPath "$SCCMFolderPath" -ObjectId $newestExistingPackage.PackageID
         Write-Output "Moved $($newestExistingPackage.Name) to $SCCMFolderPath"
     }

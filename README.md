@@ -1,10 +1,10 @@
 # SCCMPackageAutomation
 
-A Powershell Module for SCCM Package Automation
+A Powershell Module for SCCM Automation
 
-The goal of this repo is to fully automate the maintaining of SCCM packages. I mostly scrape the download websites directly and don't rely on 3rd Party services. All of the install binaries are downloaded directly from the vendor site.
+The goal of this repo is to fully automate the maintaining of SCCM packages and applications. I mostly scrape the download websites directly and don't rely on 3rd Party services. All of the install binaries are downloaded directly from the vendor site.
 
-There are two main functions Update-AppPackageSource and New-StandardChangeSCCMPackages. The cmdlet names probally need to change to show they are related.
+There are three main functions Update-AppPackageSource, New-SCCMPackage, and New-SCCMApplication. The cmdlet names probally need to change to show they are related.
 
 Update-AppPackageSoruce accepts a app name from a predfined list of about a dozen apps. It then goes out and downloads the latest version of that app from the vendor's website. It then copies the latest source files for application x and makes a new folder called "X Version# (R#)". It then deletes all the install files in the "X Version# (R#)\Files" directory and copies the new install files to that directory. It then updates the deploy-application.ps1's $appversion barible to the latest version. There are a lot of checks and error handling thrown in. The function is also pretty verbose and writes out what it is doing.
 ```powershell
@@ -28,24 +28,17 @@ es\Firefox Setup 62.0.2-64bit.exe Destination: \\serversccm01\Packages\HOME OFFI
 irefox 62.0.2 (R2)\Files\Firefox Setup 62.0.2-64bit.exe".
 Updating version numbers from 62.0.2 to 62.0.2
 ```
-The next function is New-StandarChangeSCCMPackage. This function creates an SCCM package from the latest folder for a give app, makes the install program, distributes the package to DPs, and updates my "Not Curren Version Collection" for a given app. I would also like to deploy the package to a test collection, but I can't get the Start-CMApplicationDeployment cmdlet to work with my version of sccm.
-
-
+The next function is New-SCCMPackage. This function creates an SCCM package from the latest folder for a give app, makes the install program, distributes the package to DPs, moves it to a give folder in SCCM, and deploys it to a test collection. 
 
 ### Installation
 
-Edit the GlobalVariablesExample.ps1 file in .\Public to work with your enviroment. Rename it to GlobalVariables.ps1
+Edit the GlobalVariablesExample.ps1 and GlobalVariblesExample.json files in project root to work with your enviroment. Rename it to GlobalVariables.ps1 and GlobalVaribles.json
  - $SCCM_Site : Your SCCM Site Code
  - $SCCM_Share : A UNC path to the newtork share where your SCCM packages are.
  - $SCCM_Share_Test_Folder : A Folder Name (Not full path) that should exist on your SCCM share
  - $SCCM_Share_Letter : What drive letter do you want your SCCM share mounted under?
- - All the $rootApplicationPaths
-
-You will also have to change the
- - New-StandardChangeSCCMPackage Update-AppHelper $SCCMFolder Parms.
-	- HomeOffice
-	- CoreApps
-	- Misc
+ - $SCCM_ALL_DP_Group : The DP Name that you want your applications and packages distrubuted to.
+ - $SCCM_SourceFolderRegex : A regext that matches your source folder naming convention. All files and folders that don't match will be ignored.
 
 
 SCCM-PackageAutomation requires the following Powershell Modules
@@ -54,11 +47,14 @@ SCCM-PackageAutomation requires the following Powershell Modules
     - The SCCM Management console installed
     - The SCCM cmdlet library
 
-These imports should be handled automatically when running the New-StandardChangeSCCMPackage function.
+  Note tested with SCCM 1906, not sure if it works in other versions.
+
+These imports should be handled automatically when running the New-SCCMPackage and New-SCCMApplication functions.
 
 Powershell App Deployment Toolkit (PSADT)
   - I assume all packages are PSADT packages and install files are in the files directory.
   - I asssume you have Deploy-Application.ps1 at the root folder of the package.
+  - I assume you have a script called SCCMApplicationDetection.ps1 in the SupportFiles directory.
 
 
 ### Sources
