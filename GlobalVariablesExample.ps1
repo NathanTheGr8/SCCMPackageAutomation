@@ -22,7 +22,7 @@ $Recipients = "Name@domain.com"
 $EmailSender = "Name@domain.com"
 $SMTPServer = "authappmail.domain.local"
 
-# For Deploy-ToSCCMCollection
+# Newely Packaged Applications and Packages will auto deploy to this collection
 $TestCollection = "Test Collection"
 
 # For Pub-AppToProduction

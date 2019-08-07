@@ -1,22 +1,17 @@
 <#
 .SYNOPSIS
-
-This function doesn't currently work
+Deploys a given package to a given collection
 .DESCRIPTION
-
-Deploys a given App to a given SCCM collection. Defaults to deploying to a specified test collection.
+Deploys a given App to a given SCCM collection. 
 .PARAMETER Colleciton
-
 The Collection to Deploy to.
 .PARAMETER PackageName
-
 The package name to push.
 .EXAMPLE
-
-Deploy-ToSCCMCollection -PackageName "Firefox 63.0 (R1)"
+Deploy-PackageToSCCMCollection -PackageName "Firefox 63.0 (R1)"
 #>
 
-function Deploy-ToSCCMCollection {
+function Deploy-PackageToSCCMCollection {
     [CmdletBinding()]
     param
     (

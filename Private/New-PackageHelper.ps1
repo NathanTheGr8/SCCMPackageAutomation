@@ -96,7 +96,7 @@ function New-PackageHelper {
     }
 
     try {
-        Deploy-ToSCCMCollection -PackageName $AppNameFull -Collection "$TestCollection"
+        Deploy-PackageToSCCMCollection -PackageName $AppNameFull -Collection "$TestCollection"
         Write-Output "Deployed $AppNameFull to $TestCollection"
     }
     catch [exception]{

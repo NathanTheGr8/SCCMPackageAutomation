@@ -87,7 +87,7 @@ function Deploy-AppToProduction {
     Write-Output "Preparing to deploy $App to $($MaintainedApp.ProductionAppCollection)"
     $newestExistingPackage = $ExistingPackages | Sort-Object -Property name | Select-Object -Last 1
 
-    Deploy-ToSCCMCollection -PackageName "$($newestExistingPackage.Name)" -Collection "$($MaintainedApp.ProductionAppCollection)"
+    Deploy-PackageToSCCMCollection -PackageName "$($newestExistingPackage.Name)" -Collection "$($MaintainedApp.ProductionAppCollection)"
 
     try{
         switch ($MaintainedApp.SCCMFolder) {
