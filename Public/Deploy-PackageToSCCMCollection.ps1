@@ -24,21 +24,21 @@ function Deploy-PackageToSCCMCollection {
     )
 
     Write-Output "Deploying $PackageName to $Collection"
-    try{
+    try {
 
         # Begin Pick Default Program
         $Programs = Get-CMProgram -PackageName $PackageName
         $DefaultProgram
-        if ($Programs.count -gt 1){
+        if ($Programs.count -gt 1) {
             Write-Output "There was more than one program for $PackageName"
             $ProgramNames = $Programs.$ProgramName
-            $InstallProgram = $ProgramNames | Where-Object {$_ -Like "install*"}
-            if ($null -eq $InstallProgram){
+            $InstallProgram = $ProgramNames | Where-Object { $_ -Like "install*" }
+            if ($null -eq $InstallProgram) {
                 $DefaultProgram = $Programs[0].ProgramName
                 Write-Output "No install program found, defaulting to first program: $DefaultProgram"
             }
             else {
-                if ($InstallProgram.count -gt 1){
+                if ($InstallProgram.count -gt 1) {
                     $DefaultProgram = $InstallProgram[0]
                     Write-Output "More than one install program found defaulting to first one: $DefaultProgram"
                 }
@@ -57,8 +57,7 @@ function Deploy-PackageToSCCMCollection {
         $NewDeployment = New-CMPackageDeployment -CollectionName $Collection -PackageName $PackageName -AllowSharedContent $false -DeployPurpose Required -ProgramName $DefaultProgram -StandardProgram -RerunBehavior RerunIfFailedPreviousAttempt -ScheduleEvent AsSoonAsPossible -SlowNetworkOption DownloadContentFromDistributionPointAndLocally -FastNetworkOption DownloadContentFromDistributionPointAndRunLocally -RunFromSoftwareCenter $true
         Write-Output "Deployment Succeded"
     }
-    catch
-    {
+    catch {
         Write-Host "Deployment Failed" -ForegroundColor Red
         Write-Host "$_"
     }

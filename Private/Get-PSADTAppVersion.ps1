@@ -1,5 +1,5 @@
 function Get-PSADTAppVersion {
-<#
+    <#
 .SYNOPSIS
 
 Gets the $appversion varible for a given Powershell App Deployment Toolkit package
@@ -27,31 +27,31 @@ Get-PSADTAppVersion -PackageRootFolder \\servername\path\to\firefox\package
     (
         [Parameter(Mandatory = $true)]
         [string]
-        [ValidateScript({
-            if(-Not (Test-Path -Path "$_") ){
-                throw "Folder does not exist"
-            }
-            if(-Not (Test-Path -Path "$_" -PathType Container) ){
-                throw "The PackageRootFolder argument must be a folder. Files are not allowed."
-            }
-            return $true
-        })]
+        [ValidateScript( {
+                if (-Not (Test-Path -Path "$_") ) {
+                    throw "Folder does not exist"
+                }
+                if (-Not (Test-Path -Path "$_" -PathType Container) ) {
+                    throw "The PackageRootFolder argument must be a folder. Files are not allowed."
+                }
+                return $true
+            })]
         $PackageRootFolder,
         [string]
-        [ValidateScript({
-            if(-Not (Test-Path -Path "$PackageRootFolder\$InstallScript") ){
-                throw "The PackageRootFolder argument path does not exist"
-            }
-            if(-Not (Test-Path -Path "$PackageRootFolder\$InstallScript" -PathType Leaf) ){
-                throw "The InstallScript argument must be a file."
-            }
-            return $true
-        })]
+        [ValidateScript( {
+                if (-Not (Test-Path -Path "$PackageRootFolder\$InstallScript") ) {
+                    throw "The PackageRootFolder argument path does not exist"
+                }
+                if (-Not (Test-Path -Path "$PackageRootFolder\$InstallScript" -PathType Leaf) ) {
+                    throw "The InstallScript argument must be a file."
+                }
+                return $true
+            })]
         $InstallScript = "Deploy-Application.ps1" #defaults to this
 
     )
 
-    $Version = (Select-String -Path "$PackageRootFolder\$InstallScript" -SimpleMatch "appVersion")[0].ToString().Split("=")[1].Trim().Replace("'","")
+    $Version = (Select-String -Path "$PackageRootFolder\$InstallScript" -SimpleMatch "appVersion")[0].ToString().Split("=")[1].Trim().Replace("'", "")
 
     return $Version
 }

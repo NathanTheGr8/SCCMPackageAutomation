@@ -20,16 +20,16 @@ function Update-CMLimitingCollection {
         Contact:     @NickolajA
         DateCreated: 2014-11-17
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
-        [parameter(Mandatory=$true, HelpMessage="Site server where the SMS Provider is installed")]
-        [ValidateScript({Test-Connection -ComputerName $_ -Count 1 -Quiet})]
+        [parameter(Mandatory = $true, HelpMessage = "Site server where the SMS Provider is installed")]
+        [ValidateScript( { Test-Connection -ComputerName $_ -Count 1 -Quiet })]
         [string]$SiteServer,
-        [parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, HelpMessage="Collections that matches any of the targeted limiting collections will be updated with the specified limiting collection")]
+        [parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, HelpMessage = "Collections that matches any of the targeted limiting collections will be updated with the specified limiting collection")]
         [string[]]$TargetLimitingCollection,
-        [parameter(Mandatory=$true, HelpMessage="Limiting collection that will be set on target collection")]
+        [parameter(Mandatory = $true, HelpMessage = "Limiting collection that will be set on target collection")]
         [string]$LimitingCollection,
-        [parameter(Mandatory=$false, HelpMessage="Show a progressbar displaying the current operation")]
+        [parameter(Mandatory = $false, HelpMessage = "Show a progressbar displaying the current operation")]
         [switch]$ShowProgress
     )
     Begin {
@@ -50,7 +50,7 @@ function Update-CMLimitingCollection {
         if ($PSBoundParameters["ShowProgress"]) {
             $ProgressCount = 0
         }
-        $DisabledCollections = @("SMSDM001","SMS000US","SMSDM003","SMS00001")
+        $DisabledCollections = @("SMSDM001", "SMS000US", "SMSDM003", "SMS00001")
     }
     Process {
         try {
@@ -67,7 +67,7 @@ function Update-CMLimitingCollection {
                                 if ($Coll.CollectionID -notin $DisabledCollections) {
                                     $LCName = $LimitingCollectionObject | Select-Object -ExpandProperty Name
                                     $LCID = $LimitingCollectionObject | Select-Object -ExpandProperty CollectionID
-                                    if ($PSCmdlet.ShouldProcess("Collection: $($Coll.Name)","Update")) {
+                                    if ($PSCmdlet.ShouldProcess("Collection: $($Coll.Name)", "Update")) {
                                         $Coll.LimitToCollectionID = $LCID
                                         $Coll.LimitToCollectionName = $LCName
                                         $Coll.Put()

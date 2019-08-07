@@ -1,5 +1,5 @@
 function Write-ColoredOutput {
-<#
+    <#
 .SYNOPSIS
 Write-Ouput with color support!
 .DESCRIPTION

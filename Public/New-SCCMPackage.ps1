@@ -1,5 +1,5 @@
 function New-SCCMPackage {
-<#
+    <#
 .SYNOPSIS
 
 Creates a new SCCM package for one of the standard change apps.
@@ -22,9 +22,9 @@ New-SCCMPackage -App Firefox
     param
     (
         [Parameter(Mandatory = $true,
-        HelpMessage = 'What standard app are you trying to get the version of?')]
+            HelpMessage = 'What standard app are you trying to get the version of?')]
         [string]
-        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','SoapUI','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        [ValidateSet('7zip', 'BigFix', 'Chrome', 'CutePDF', 'Etcher', 'Firefox', 'Flash', 'GIMP', 'Git', 'Insync', 'Notepad++', 'OpenJDK', 'Putty', 'Reader', 'Receiver', 'SoapUI', 'VLC', 'VSCode', 'WinSCP', 'WireShark', IgnoreCase = $true)]
         $App
     )
 
@@ -38,7 +38,7 @@ New-SCCMPackage -App Firefox
 
         Mount-PackageShare
 
-        $MaintainedApp = $MaintainedApps | where {$_.Name -eq $App}
+        $MaintainedApp = $MaintainedApps | where { $_.Name -eq $App }
         New-PackageHelper -AppName "$($MaintainedApp.DisplayName)" -rootApplicationPath "$($MaintainedApp.RootApplicationPath)" -SCCMFolder "$($MaintainedApp.SCCMFolder)" -Manufacturer "$($MaintainedApp.Manufacturer)"
 
         Pop-Location -StackName ModuleStack

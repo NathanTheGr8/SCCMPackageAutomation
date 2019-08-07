@@ -1,5 +1,5 @@
 function Publish-SCCMPackageAutomation {
-<#
+    <#
 .SYNOPSIS
     Pushes the Module to a list of computers in GlobalVaribles
 .DESCRIPTION
@@ -16,13 +16,13 @@ function Publish-SCCMPackageAutomation {
 #>
     [CmdletBinding()]
     param
-	(
-		[string]
-		$Path = "$Home\Documents\Projects\SCCMPackageAutomation",
-		[string]
-        [ValidateSet('Major','Minor','Build','None')]
-		$Increment = 'Build'
-	)
+    (
+        [string]
+        $Path = "$Home\Documents\Projects\SCCMPackageAutomation",
+        [string]
+        [ValidateSet('Major', 'Minor', 'Build', 'None')]
+        $Increment = 'Build'
+    )
 
     #test the path
     $ModuleName = "SCCMPackageAutomation"
@@ -30,7 +30,7 @@ function Publish-SCCMPackageAutomation {
 
         #increment module version
         #https://github.com/RamblingCookieMonster/BuildHelpers/blob/master/BuildHelpers/Public/Step-ModuleVersion.ps1
-        if(-not ($Increment -eq 'None')){Step-ModuleVersion -Path "$path\$ModuleName.psd1" -By $Increment}
+        if (-not ($Increment -eq 'None')) { Step-ModuleVersion -Path "$path\$ModuleName.psd1" -By $Increment }
 
         #print out new verstion
         $data = Import-PowerShellDataFile -Path "$path\$ModuleName.psd1"

@@ -32,18 +32,17 @@ function Deploy-ApplicationToSCCMCollection {
     Write-Output "Deploying $ApplicaitonName to $Collection"
     $date = Get-Date
        
-    try{
+    try {
 
         # $NewDeployment = Start-CMApplicationDeployment -CollectionName $Collection -Name $ApplicationName -DeployPurpose $DeployPurpose `
         # -Comment "Deployed by PS module SCCMPackageAutomation" -DeployAction Install -UserNotification DisplayAll -AvailableDateTime $date.ToString() `
         # -DeadlineDateTime $date.ToString() -TimeBaseOn LocalTime -OverrideServiceWindow $true -PassThru
         $newDeployment = New-CMApplicationDeployment -CollectionName $Collection -Name $ApplicationName -DeployPurpose $DeployPurpose `
-        -Comment "Deployed by PS module SCCMPackageAutomation" -DeployAction Install -UserNotification DisplayAll -AvailableDateTime $date.ToString() `
-        -ApprovalRequired $false -TimeBaseOn LocalTime
+            -Comment "Deployed by PS module SCCMPackageAutomation" -DeployAction Install -UserNotification DisplayAll -AvailableDateTime $date.ToString() `
+            -ApprovalRequired $false -TimeBaseOn LocalTime
         Write-Output "Deployment of $ApplicationName to $Collection Successful"
     }
-    catch
-    {
+    catch {
         Write-Host "Deployment of $ApplicationName to $Collection Failed" -ForegroundColor Red
         Write-Host "$_"
     }

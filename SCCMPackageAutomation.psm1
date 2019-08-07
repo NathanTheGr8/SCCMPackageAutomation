@@ -20,23 +20,21 @@ catch {
 }
 
 #Get public and private function definition files.
-    $Public  = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -ErrorAction SilentlyContinue )
-    $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue )
+$Public = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -ErrorAction SilentlyContinue )
+$Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue )
 
 #Dot source the files
-    Foreach($import in @($Public + $Private))
-    {
-        if ($import -like "*-*") { # only export functions that have - in their name
-            Try
-            {
-                . $import.fullname
-            }
-            Catch
-            {
-                Write-Error -Message "Failed to import function $($import.fullname): $_"
-            }
+Foreach ($import in @($Public + $Private)) {
+    if ($import -like "*-*") {
+        # only export functions that have - in their name
+        Try {
+            . $import.fullname
+        }
+        Catch {
+            Write-Error -Message "Failed to import function $($import.fullname): $_"
         }
     }
+}
 
 # Here I might...
 # Read in or create an initial config file and variable

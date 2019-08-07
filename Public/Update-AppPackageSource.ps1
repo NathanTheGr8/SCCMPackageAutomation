@@ -1,5 +1,5 @@
 function Update-AppPackageSource {
-<#
+    <#
 .SYNOPSIS
 
 Updates a given apps package source to the latest version
@@ -18,9 +18,9 @@ Update-AppPackageSource -App Firefox
     param
     (
         [Parameter(Mandatory = $true,
-        HelpMessage = 'What standard app are you trying to get the version of?')]
+            HelpMessage = 'What standard app are you trying to get the version of?')]
         [string]
-        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','SoapUI','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        [ValidateSet('7zip', 'BigFix', 'Chrome', 'CutePDF', 'Etcher', 'Firefox', 'Flash', 'GIMP', 'Git', 'Insync', 'Notepad++', 'OpenJDK', 'Putty', 'Reader', 'Receiver', 'SoapUI', 'VLC', 'VSCode', 'WinSCP', 'WireShark', IgnoreCase = $true)]
         $App,
         [switch]
         $ForceUpdate,
@@ -30,7 +30,7 @@ Update-AppPackageSource -App Firefox
 
     begin {
         $App = $App.ToLower()
-        $MaintainedApp = $MaintainedApps | Where-Object {$_.Name -eq $App}
+        $MaintainedApp = $MaintainedApps | Where-Object { $_.Name -eq $App }
     }
 
     process {
@@ -50,7 +50,7 @@ Update-AppPackageSource -App Firefox
             }
 
             # Check SCCM Share Free Space
-            $FreeDiskSpace = (Get-PSDrive | Where-Object {$_.Name -eq "$SCCM_Share_Letter"}).Free
+            $FreeDiskSpace = (Get-PSDrive | Where-Object { $_.Name -eq "$SCCM_Share_Letter" }).Free
             If ($FreeDiskSpace -lt 1000000000) {
                 Write-Error "$SCCM_Share has less than 1 GB free."
                 Throw
@@ -59,14 +59,14 @@ Update-AppPackageSource -App Firefox
             $InstallFiles = Download-LatestAppVersion -App $App
             $count = (Measure-Object -InputObject $SCCM_Share -Character).Characters + 1
             # Gets the most recent folder for a given app
-            $AllAppVersions = "$($SCCM_Share_Letter):\" + $RootApplicationPathTemp.Substring($count) | Get-ChildItem | Where-Object {$_.Name -match $SCCM_SourceFolderRegex} | Sort-Object CreationTime -Descending
-            $CurrentApp =  $AllAppVersions | Select-Object -f 1
+            $AllAppVersions = "$($SCCM_Share_Letter):\" + $RootApplicationPathTemp.Substring($count) | Get-ChildItem | Where-Object { $_.Name -match $SCCM_SourceFolderRegex } | Sort-Object CreationTime -Descending
+            $CurrentApp = $AllAppVersions | Select-Object -f 1
 
             $RevNumber = 1
             $newAppPath = "$RootApplicationPathTemp\$App $LatestAppVersion (R$RevNumber)"
 
             $alreadyExists = Test-Path -Path "$newAppPath"
-            while ($alreadyExists){
+            while ($alreadyExists) {
                 #if the newAppPath already exists increments R#
                 Write-Output "'$App $LatestAppVersion (R$RevNumber)' already exists, auto incrementing the R`#"
                 $RevNumber++
@@ -86,10 +86,10 @@ Update-AppPackageSource -App Firefox
             #Delete old package versions
             if (!$NoCleanUp) {
                 $NumberOfPreviousVersionsToKeep = 5
-                while ($AllAppVersions.count -gt $NumberOfPreviousVersionsToKeep){
+                while ($AllAppVersions.count -gt $NumberOfPreviousVersionsToKeep) {
                     Write-Output "There are more than $NumberOfPreviousVersionsToKeep previous versions of $app. Deleting $($AllAppVersions[-1].FullName) source files."
                     $AllAppVersions[-1].FullName | Remove-Item -Force -Recurse
-                    $AllAppVersions = $AllAppVersions[0..($ExistingDeployments.length-2)]
+                    $AllAppVersions = $AllAppVersions[0..($ExistingDeployments.length - 2)]
                 }
             }
             else {

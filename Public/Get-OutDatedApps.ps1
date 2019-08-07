@@ -1,5 +1,5 @@
 function Get-OutDatedApps {
-<#
+    <#
 .SYNOPSIS
 
 Checks all currently maintianed apps for out of date versions
@@ -24,12 +24,12 @@ Get-OutDatedApps
     # save the current color
     # $CurrentForegroundColor = $host.UI.RawUI.ForegroundColor
 
-    Foreach ($App in $MaintainedApps){
-        if (!($App.BlackList)){
+    Foreach ($App in $MaintainedApps) {
+        if (!($App.BlackList)) {
             [version]$currVer = Get-CurrentAppVersion -App $App.Name
             [version]$LatestVer = Get-LatestAppVersion -App $App.Name
 
-            if ($LatestVer -gt $currVer){
+            if ($LatestVer -gt $currVer) {
                 if ($HTML) {
                     "<font color=`"CD0000`">$($App.Name) needs updated to $LatestVer, we are currently on $currVer</font> <br>"
                 }
@@ -40,7 +40,8 @@ Get-OutDatedApps
                 }
             }
             else {
-                if ($HTML) {#008000
+                if ($HTML) {
+                    #008000
                     "<font color=`"00A000`">$($App.Name) is on latest version $LatestVer</font> <br>"
                 }
                 else {

@@ -19,7 +19,7 @@ function Deploy-AppToProduction {
     (
         [Parameter(Mandatory = $true)]
         [string]
-        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','SoapUI','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        [ValidateSet('7zip', 'BigFix', 'Chrome', 'CutePDF', 'Etcher', 'Firefox', 'Flash', 'GIMP', 'Git', 'Insync', 'Notepad++', 'OpenJDK', 'Putty', 'Reader', 'Receiver', 'SoapUI', 'VLC', 'VSCode', 'WinSCP', 'WireShark', IgnoreCase = $true)]
         $App,
         [switch]
         $NoCleanUp
@@ -28,12 +28,12 @@ function Deploy-AppToProduction {
     Push-Location $PWD -StackName ModuleStack
     Import-ConfigManagerModule
 
-    $MaintainedApp = $MaintainedApps | where {$_.Name -eq $App}
-    $ExistingDeployments = Get-CMPackageDeployment -CollectionName "$($MaintainedApp.ProductionAppCollection)" | Sort-Object -property {$_.AssignedSchedule.StartTime}
+    $MaintainedApp = $MaintainedApps | where { $_.Name -eq $App }
+    $ExistingDeployments = Get-CMPackageDeployment -CollectionName "$($MaintainedApp.ProductionAppCollection)" | Sort-Object -property { $_.AssignedSchedule.StartTime }
 
     Write-Output "Expiring Old Deployments to $($MaintainedApp.ProductionAppCollection)"
-    foreach ($Deployment in $ExistingDeployments){
-        if ($Deployment.ExpirationTimeEnabled -ne $true){
+    foreach ($Deployment in $ExistingDeployments) {
+        if ($Deployment.ExpirationTimeEnabled -ne $true) {
             Write-Output "Expiring Deployment from $($Deployment.PresentTime)"
             Set-CMPackageDeployment -EnableExpireSchedule $true -DeploymentExpireDateTime (Get-Date) -StandardProgramName "$($Deployment.ProgramName)" -CollectionId $Deployment.CollectionID -PackageId $Deployment.PackageID
         }
@@ -44,21 +44,21 @@ function Deploy-AppToProduction {
 
 
     $NumberOfDeploymentsToKeep = 2 # Number of Previous Deployments to the Prod collection to keep.
-    while ($ExistingDeployments.Count -gt $NumberOfDeploymentsToKeep){
+    while ($ExistingDeployments.Count -gt $NumberOfDeploymentsToKeep) {
         Write-Output "There were more than $NumberOfDeploymentsToKeep old deployments to $($MaintainedApp.ProductionAppCollection). Removing oldest deployment."
         $ExistingDeployments[0] | Remove-CMPackageDeployment -Force
-        $ExistingDeployments = $ExistingDeployments[1..($ExistingDeployments.length-1)]
+        $ExistingDeployments = $ExistingDeployments[1..($ExistingDeployments.length - 1)]
     }
 
     # $NumberOfPackagesToKeep is in GlobalVaribles.ps1
-    $ExistingPackages = Get-CMPackage -Name "*$App*" | Where-Object {$_.Name -imatch "$app $VersionRegex \(R\d+\)"} | Sort-Object -Property Name
-    while ($ExistingPackages.Count -gt $NumberOfPackagesToKeep){
+    $ExistingPackages = Get-CMPackage -Name "*$App*" | Where-Object { $_.Name -imatch "$app $VersionRegex \(R\d+\)" } | Sort-Object -Property Name
+    while ($ExistingPackages.Count -gt $NumberOfPackagesToKeep) {
         Write-Output "There were more than $NumberOfPackagesToKeep old packages of $($MaintainedApp.DisplayName). Removing old package $($ExistingPackages[0].Name)"
         $ExistingPackages[0] | Remove-CMPackage -Force
-        $ExistingPackages = $ExistingDeployments[1..($ExistingDeployments.length-1)]
+        $ExistingPackages = $ExistingDeployments[1..($ExistingDeployments.length - 1)]
     }
 
-    if (!($NoCleanUp)){
+    if (!($NoCleanUp)) {
         Write-Output "Moving old packages of $($MaintainedApp.DisplayName) to previous versions folder"
         switch ($MaintainedApp.SCCMFolder) {
             "HomeOffice" {
@@ -71,12 +71,11 @@ function Deploy-AppToProduction {
                 $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.Misc.PreviousVersion)"
             }
         }
-        For ($i=0; $i -le $ExistingPackages.count-2; $i++) {
+        For ($i = 0; $i -le $ExistingPackages.count - 2; $i++) {
             Try {
                 Move-CMObject -FolderPath "$SCCMFolderPath" -ObjectId $ExistingPackages[$i].PackageID
             }
-            catch
-            {
+            catch {
                 Write-Host "Failed" -ForegroundColor Red
                 Write-Host "$_"
             }
@@ -89,7 +88,7 @@ function Deploy-AppToProduction {
 
     Deploy-PackageToSCCMCollection -PackageName "$($newestExistingPackage.Name)" -Collection "$($MaintainedApp.ProductionAppCollection)"
 
-    try{
+    try {
         switch ($MaintainedApp.SCCMFolder) {
             "HomeOffice" {
                 $SCCMFolderPath = "$($SCCM_Site):\$($SCCMFolders.HomeOffice.Prod)"
@@ -104,8 +103,7 @@ function Deploy-AppToProduction {
         Move-CMObject -FolderPath "$SCCMFolderPath" -ObjectId $newestExistingPackage.PackageID
         Write-Output "Moved $($newestExistingPackage.Name) to $SCCMFolderPath"
     }
-    catch
-    {
+    catch {
         Write-Host "Moving of Package Failed" -ForegroundColor Red
         Write-Host "$_"
     }

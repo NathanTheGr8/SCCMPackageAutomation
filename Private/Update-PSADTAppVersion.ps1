@@ -1,5 +1,5 @@
 function Update-PSADTAppVersion {
-<#
+    <#
 .SYNOPSIS
 
 This function updates the version number of a Powershell App Deployment Toolkit install file
@@ -28,15 +28,15 @@ Update-PSADTAppVersion -PackageRootFolder \\servername\path\to\firefox\package -
     (
         [Parameter(Mandatory = $true)]
         [string]
-        [ValidateScript({
-            if(-Not (Test-Path -Path "$_") ){
-                throw "Folder does not exist"
-            }
-            if(-Not (Test-Path -Path "$_" -PathType Container) ){
-                throw "The PackageRootFolder argument must be a folder. Files are not allowed."
-            }
-            return $true
-        })]
+        [ValidateScript( {
+                if (-Not (Test-Path -Path "$_") ) {
+                    throw "Folder does not exist"
+                }
+                if (-Not (Test-Path -Path "$_" -PathType Container) ) {
+                    throw "The PackageRootFolder argument must be a folder. Files are not allowed."
+                }
+                return $true
+            })]
         $PackageRootFolder,
         [Parameter(Mandatory = $true)]
         [string]
@@ -49,18 +49,18 @@ Update-PSADTAppVersion -PackageRootFolder \\servername\path\to\firefox\package -
         #basically can be up #.#.#.#.# or just one #
         $NewVersion,
         [string]
-        [ValidateScript({
-            if(-Not (Test-Path -Path "$PackageRootFolder\$InstallScript") ){
-                throw "The PackageRootFolder argument path does not exist"
-            }
-            if(-Not (Test-Path -Path "$PackageRootFolder\$InstallScript" -PathType Leaf) ){
-                throw "The InstallScript argument must be a file."
-            }
-            return $true
-        })]
+        [ValidateScript( {
+                if (-Not (Test-Path -Path "$PackageRootFolder\$InstallScript") ) {
+                    throw "The PackageRootFolder argument path does not exist"
+                }
+                if (-Not (Test-Path -Path "$PackageRootFolder\$InstallScript" -PathType Leaf) ) {
+                    throw "The InstallScript argument must be a file."
+                }
+                return $true
+            })]
         $InstallScript = "Deploy-Application.ps1" #defaults to this
 
     )
 
-    (Get-Content "$PackageRootFolder\$InstallScript").Replace("`$appVersion = '$CurrentVersion'","`$appVersion = '$NewVersion'") | Set-Content  -Path "$PackageRootFolder\$InstallScript"
+    (Get-Content "$PackageRootFolder\$InstallScript").Replace("`$appVersion = '$CurrentVersion'", "`$appVersion = '$NewVersion'") | Set-Content  -Path "$PackageRootFolder\$InstallScript"
 }

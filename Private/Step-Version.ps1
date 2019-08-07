@@ -35,22 +35,21 @@ function Step-Version {
     [OutputType([String])]
     param(
         # Version as string to increment
-        [Parameter(Mandatory=$true,
-                   ValueFromPipeline=$true,
-                   Position=0)]
+        [Parameter(Mandatory = $true,
+            ValueFromPipeline = $true,
+            Position = 0)]
         [String]
         $Version,
 
         # Version section to step
-        [Parameter(Position=1)]
-        [ValidateSet("Major", "Minor", "Build","Patch")]
+        [Parameter(Position = 1)]
+        [ValidateSet("Major", "Minor", "Build", "Patch")]
         [Alias("Type")]
         [string]
         $By = "Patch"
     )
 
-    Process
-    {
+    Process {
         $currentVersion = [version]$Version
 
         $major = $currentVersion.Major
@@ -58,15 +57,21 @@ function Step-Version {
         $build = $currentVersion.Build
 
         switch ($By) {
-            "Major" { $major++
-                    $minor = 0
-                    $build = 0
-                    break }
-            "Minor" { $minor++
-                    $build = 0
-                    break }
-            Default { $build++
-                    break }
+            "Major" {
+                $major++
+                $minor = 0
+                $build = 0
+                break 
+            }
+            "Minor" {
+                $minor++
+                $build = 0
+                break 
+            }
+            Default {
+                $build++
+                break 
+            }
         }
 
         $newVersion = New-Object Version -ArgumentList $major, $minor, $build

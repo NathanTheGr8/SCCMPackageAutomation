@@ -1,5 +1,5 @@
 function Download-LatestAppVersion {
-<#
+    <#
 .SYNOPSIS
 
 Downloads the latest app version of a current app and returns the install files path.
@@ -17,9 +17,9 @@ Download-LatestAppVersion -App Chrome
     param
     (
         [Parameter(Mandatory = $true,
-        HelpMessage = 'What standard app are you trying to get the version of?')]
+            HelpMessage = 'What standard app are you trying to get the version of?')]
         [string]
-        [ValidateSet('7zip','BigFix','Chrome','CutePDF','Etcher','Firefox','Flash','GIMP','Git','Insync','Notepad++','OpenJDK','Putty','Reader','Receiver','Slack','SoapUI','VLC','VSCode','WinSCP','WireShark', IgnoreCase = $true)]
+        [ValidateSet('7zip', 'BigFix', 'Chrome', 'CutePDF', 'Etcher', 'Firefox', 'Flash', 'GIMP', 'Git', 'Insync', 'Notepad++', 'OpenJDK', 'Putty', 'Reader', 'Receiver', 'Slack', 'SoapUI', 'VLC', 'VSCode', 'WinSCP', 'WireShark', IgnoreCase = $true)]
         $App
     )
 
@@ -57,7 +57,7 @@ Download-LatestAppVersion -App Chrome
         switch ($App) {
             '7zip' {
                 $LatestAppVersion = Get-LatestAppVersion -App 7zip -AsString
-                $LatestAppVersion = $LatestAppVersion.replace(".","")
+                $LatestAppVersion = $LatestAppVersion.replace(".", "")
                 $Domain = "http://www.7-zip.org"
                 $DownloadPage = "https://www.7-zip.org/download.html"
                 $html = Invoke-WebRequest -Uri "$DownloadPage"
@@ -117,7 +117,7 @@ Download-LatestAppVersion -App Chrome
                 #32bit
                 $dl = Invoke-WebRequest -Uri $32bitdownload -PassThru -OutFile "$DownloadDir\ff32.tmp"
                 $newAppVersion = Get-LatestAppVersion -App $App
-                $InstallFileName = ($dl.BaseResponse.ResponseUri -split '/'| Select-Object -Last 1).split(" ") | Select-Object -First 2
+                $InstallFileName = ($dl.BaseResponse.ResponseUri -split '/' | Select-Object -Last 1).split(" ") | Select-Object -First 2
                 $InstallFileName = "$InstallFileName $newAppVersion"
                 Move-Item "$DownloadDir\ff32.tmp" "$DownloadDir\$InstallFileName-32bit.exe" -Force
 
@@ -131,7 +131,7 @@ Download-LatestAppVersion -App Chrome
                 $FlashActiveX = "https://www.adobe.com/etc/adc/token/generation.installerlink.json?href=https%3A%2F%2Ffpdownload.macromedia.com%2Fget%2Fflashplayer%2Fdistyfp%2Fcurrent%2Fwin%2Finstall_flash_player_$($MajorVersion)_active_x.msi"
                 $FlashPlugin = "https://www.adobe.com/etc/adc/token/generation.installerlink.json?href=https%3A%2F%2Ffpdownload.macromedia.com%2Fget%2Fflashplayer%2Fdistyfp%2Fcurrent%2Fwin%2Finstall_flash_player_$($MajorVersion)_plugin.msi"
                 $FlashPpapi = "https://www.adobe.com/etc/adc/token/generation.installerlink.json?href=https%3A%2F%2Ffpdownload.macromedia.com%2Fget%2Fflashplayer%2Fdistyfp%2Fcurrent%2Fwin%2Finstall_flash_player_$($MajorVersion)_ppapi.msi"
-                $FlashUrls = @($FlashActiveX,$FlashPlugin,$FlashPpapi)
+                $FlashUrls = @($FlashActiveX, $FlashPlugin, $FlashPpapi)
 
                 $FlashUrls | ForEach-Object {
                     Write-Verbose -Message "Getting download token from Adobe"
@@ -145,12 +145,12 @@ Download-LatestAppVersion -App Chrome
                     $FilePath = Join-Path -Path $DownloadDir -ChildPath $FileName
 
                     Write-Verbose -Message "Downloading $FileName"
-                    (New-Object System.Net.WebClient).DownloadFile("$Url","$FilePath")
+                    (New-Object System.Net.WebClient).DownloadFile("$Url", "$FilePath")
                 }
 
                 $InstallFileName = "install_flash_player_$MajorVersion"
             }
-            'gimp'{
+            'gimp' {
                 $url = "https://download.gimp.org/mirror/pub/gimp/"
                 $html = Invoke-WebRequest -Uri "$url"
 
@@ -165,7 +165,7 @@ Download-LatestAppVersion -App Chrome
 
                 $Gimp_MinorVersions = Sort-Object -InputObject $Gimp_MinorVersions -Property innerHTML
 
-                if((($Gimp_MinorVersions[-1].innerHTML) -split "tor" | Select-Object -Last 1) -eq "rent"){
+                if ((($Gimp_MinorVersions[-1].innerHTML) -split "tor" | Select-Object -Last 1) -eq "rent") {
                     $InstallFileName = $Gimp_MinorVersions[-2].href
                 }
                 else {
@@ -176,7 +176,7 @@ Download-LatestAppVersion -App Chrome
                 $WebRequestOutput = Invoke-WebRequest -Uri $DownloadURL -OutFile "$DownloadDir\$InstallFileName"
 
             }
-            'git'{
+            'git' {
                 $url = "https://git-scm.com/download/win"
                 $html = Invoke-WebRequest -Uri $url
 
@@ -231,11 +231,11 @@ Download-LatestAppVersion -App Chrome
                     "&type=jdk"
                     "&release=latest"
                 )
-                foreach ($query in $queries){
+                foreach ($query in $queries) {
                     $url = $url + $query
                 }
 
-                $json = (Invoke-WebRequest -Uri "$url"  | ConvertFrom-Json)
+                $json = (Invoke-WebRequest -Uri "$url" | ConvertFrom-Json)
                 $DownloadURL = $json[0].binaries[0].installer_link
                 $LatestAppVersion = Get-LatestAppVersion -App $App
 
@@ -273,7 +273,7 @@ Download-LatestAppVersion -App Chrome
                 $DirList = $FTPReader.ReadToEnd()
 
                 #from Directory Listing get last entry in list, but skip one to avoid the 'misc' dir
-                $LatestUpdate = $DirList -split '[\r\n]' | Where-Object {$_} | Select-Object -Last 1 -Skip 1
+                $LatestUpdate = $DirList -split '[\r\n]' | Where-Object { $_ } | Select-Object -Last 1 -Skip 1
 
                 #build file name
                 $InstallFileName = "AcroRdrDCUpd" + $LatestUpdate + ".msp"
@@ -317,7 +317,7 @@ Download-LatestAppVersion -App Chrome
             }
             'vlc' {
                 $url = "http://download.videolan.org/pub/videolan/vlc/"
-                $LatestAppVersion =  Get-LatestAppVersion -App $app
+                $LatestAppVersion = Get-LatestAppVersion -App $app
 
                 $32bitDownload = $url + "$($LatestAppVersion)/win32/vlc-$($LatestAppVersion)-win32.msi"
                 $64bitdownload = $url + "$($LatestAppVersion)/win64/vlc-$($LatestAppVersion)-win64.msi"
@@ -360,7 +360,7 @@ Download-LatestAppVersion -App Chrome
                 $WebRequestOutput = Invoke-WebRequest -Uri "$64bitdownload" -OutFile "$DownloadDir\Wireshark-win64-$LatestAppVersion.msi"
 
             }
-            'zoom'{
+            'zoom' {
                 $url = "http://zoom.us/client/latest/ZoomInstallerFull.msi"
                 $InstallFileName = "ZoomInstallerFull.msi"
                 $WebRequestOutput = Invoke-WebRequest -Uri "$url" -OutFile "$DownloadDir\$($InstallFileName)"
