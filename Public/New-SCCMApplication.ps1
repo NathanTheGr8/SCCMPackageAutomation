@@ -1,4 +1,4 @@
-function New-StandardChangeSCCMApplication {
+function New-ChangeSCCMApplication {
 <#
 .SYNOPSIS
 
@@ -15,7 +15,7 @@ Moves the application to a given folder
 The app you are trying to application in SCCM. Valid options have tab completion.
 .EXAMPLE
 
-New-StandardChangeSCCMApplication -App Firefox
+New-ChangeSCCMApplication -App Firefox
 #>
     [CmdletBinding()]
     param

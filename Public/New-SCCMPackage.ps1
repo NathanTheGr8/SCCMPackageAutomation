@@ -1,4 +1,4 @@
-function New-StandardChangeSCCMPackage {
+function New-SCCMPackage {
 <#
 .SYNOPSIS
 
@@ -16,7 +16,7 @@ Updates "not current version" collections to the new version
 The app you are trying to package in SCCM. Valid options have tab completion.
 .EXAMPLE
 
-New-StandardChangeSCCMPackage -App Firefox
+New-SCCMPackage -App Firefox
 #>
     [CmdletBinding()]
     param
