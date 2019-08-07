@@ -6,6 +6,7 @@ $global:SCCM_Share_Test_Folder = "SomeFolderThatExists"
 $global:SCCM_Share_Letter = "P"
 $global:IconsFolder = "$PSScriptRoot\bin\icons"
 $global:SCCM_ALL_DP_Group = "All Distribution Points"
+$global:SCCM_SourceFolderRegex = "[a-zA-Z0-9_.+-]+ [a-zA-Z0-9_.]+ \(R[0-9]\)"
 
 $VersionRegex = "\d+(\.\d+)+"
 

@@ -42,7 +42,7 @@ function New-ApplicationHelper {
     # Get-ChildItem has trouble working with UNC paths from the $SCCM_Site: drive. That is why I map a $SCCM_Share_Letter drive
     $count = (Measure-Object -InputObject $SCCM_Share -Character).Characters + 1
     # Gets the most recent folder for a given app
-    $AppPath = "$($SCCM_Share_Letter):\" + $rootApplicationPath.Substring($count) | Get-ChildItem | Sort-Object -Property CreationTime -Descending | Select-Object -First 1
+    $AppPath = "$($SCCM_Share_Letter):\" + $rootApplicationPath.Substring($count) | Get-ChildItem | Where-Object {$_.Name -match $SCCM_SourceFolderRegex} | Sort-Object -Property CreationTime -Descending | Select-Object -First 1
     # Each app folder is named like 'AppName Version (R#). So this line just selects Version R#
     $AppVersion = $AppPath.Name -split ' ' | Select-Object -Last 2
     # Transform the app path back to a full unc path withouth a drive letter

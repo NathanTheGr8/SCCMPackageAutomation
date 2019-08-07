@@ -59,7 +59,7 @@ Update-AppPackageSource -App Firefox
             $InstallFiles = Download-LatestAppVersion -App $App
             $count = (Measure-Object -InputObject $SCCM_Share -Character).Characters + 1
             # Gets the most recent folder for a given app
-            $AllAppVersions = "$($SCCM_Share_Letter):\" + $RootApplicationPathTemp.Substring($count) | Get-ChildItem | Sort-Object CreationTime -Descending
+            $AllAppVersions = "$($SCCM_Share_Letter):\" + $RootApplicationPathTemp.Substring($count) | Get-ChildItem | Where-Object {$_.Name -match $SCCM_SourceFolderRegex} | Sort-Object CreationTime -Descending
             $CurrentApp =  $AllAppVersions | Select-Object -f 1
 
             $RevNumber = 1

@@ -36,7 +36,7 @@ Get-CurrentAppVersion -App Firefox
         # Gets the most recent folder for a given app, split it up into multiple lines to make it easier to read and debug
         $RootAppPath = $($MaintainedApps | Where-Object {$_.Name -eq $App}).RootApplicationPath
         $LatestApplicationPath =  "$($SCCM_Share_Letter):\" + $RootAppPath.Substring($count) | Get-ChildItem
-        $LatestApplicationPath = $LatestApplicationPath | Where-Object {$_.Name -match "[a-zA-Z0-9_.+-]+ [a-zA-Z0-9_.]+ \(R[0-9]\)"}
+        $LatestApplicationPath = $LatestApplicationPath | Where-Object {$_.Name -match $SCCM_SourceFolderRegex}
         $LatestApplicationPath = $LatestApplicationPath | Sort-Object -Property CreationTime -Descending | Select-Object -First 1
         $CurrentAppVersion = Get-PSADTAppVersion -PackageRootFolder "$($LatestApplicationPath.Fullname)"
         if ($app -eq "reader"){
