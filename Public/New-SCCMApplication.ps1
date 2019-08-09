@@ -23,7 +23,7 @@ New-ChangeSCCMApplication -App Firefox
         [Parameter(Mandatory = $true,
             HelpMessage = 'What standard app are you trying to get the version of?')]
         [string]
-        [ValidateSet('7zip', 'BigFix', 'Chrome', 'CutePDF', 'Etcher', 'Firefox', 'Flash', 'GIMP', 'Git', 'Insync', 'Notepad++', 'OpenJDK', 'Putty', 'Reader', 'Receiver', 'SoapUI', 'VLC', 'VSCode', 'WinSCP', 'WireShark', IgnoreCase = $true)]
+        [ValidateSet('7zip', 'BigFix', 'Chrome', 'CutePDF', 'Etcher', 'Firefox', 'Flash', 'GIMP', 'Git', 'Insync', 'Java', 'Notepad++', 'OpenJDK', 'Putty', 'Reader', 'Receiver', 'SoapUI', 'VLC', 'VSCode', 'WinSCP', 'WireShark', IgnoreCase = $true)]
         $App
     )
 
