@@ -152,7 +152,7 @@ Get-LatestAppVersion -App Firefox
             }
             'notepad++' {
                 $url = "https://notepad-plus-plus.org/download"
-                $html = Invoke-WebRequest -uri $url
+                $html = Invoke-WebRequest -uri $url -UseBasicParsing
                 $Versions = $html.Links | Where-Object outerHTML -Match "$VersionRegex"
 
                 $versionArray = @()
