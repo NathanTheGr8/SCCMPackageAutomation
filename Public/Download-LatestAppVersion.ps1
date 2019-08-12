@@ -40,7 +40,8 @@ Download-LatestAppVersion -App Chrome
         # TLS
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-        Write-Output "Downloading latest version of $app, this may take a few minutes"
+        Write-Verbose "Downloading latest version of $app, this may take a few minutes"
+
         try {
             switch ($App) {
                 '7zip' {
