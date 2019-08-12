@@ -26,7 +26,11 @@ function Deploy-ApplicationToSCCMCollection {
         [Parameter(Mandatory = $false)]
         [string]
         [ValidateSet('Available', 'Required', IgnoreCase = $true)]
-        $DeployPurpose = "available"
+        $DeployPurpose = "available",
+        [Parameter(Mandatory = $false)]
+        [string]
+        [ValidateSet('Install', 'Uninstall', IgnoreCase = $true)]
+        $DeployAction = "Install"
     )
 
     Write-Output "Deploying $ApplicaitonName to $Collection"
@@ -34,16 +38,13 @@ function Deploy-ApplicationToSCCMCollection {
        
     try {
 
-        # $NewDeployment = Start-CMApplicationDeployment -CollectionName $Collection -Name $ApplicationName -DeployPurpose $DeployPurpose `
-        # -Comment "Deployed by PS module SCCMPackageAutomation" -DeployAction Install -UserNotification DisplayAll -AvailableDateTime $date.ToString() `
-        # -DeadlineDateTime $date.ToString() -TimeBaseOn LocalTime -OverrideServiceWindow $true -PassThru
         $newDeployment = New-CMApplicationDeployment -CollectionName $Collection -Name $ApplicationName -DeployPurpose $DeployPurpose `
-            -Comment "Deployed by PS module SCCMPackageAutomation" -DeployAction Install -UserNotification DisplayAll -AvailableDateTime $date.ToString() `
-            -ApprovalRequired $false -TimeBaseOn LocalTime
+            -Comment "Deployed by PS module SCCMPackageAutomation" -DeployAction $DeployAction -UserNotification DisplayAll `
+            -ApprovalRequired $false
         Write-Output "Deployment of $ApplicationName to $Collection Successful"
     }
     catch {
-        Write-Host "Deployment of $ApplicationName to $Collection Failed" -ForegroundColor Red
-        Write-Host "$_"
+        Write-Error "Deployment of $ApplicationName to $Collection Failed"
+        Write-Error "$_"
     }
 }

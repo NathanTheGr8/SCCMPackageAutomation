@@ -74,7 +74,6 @@ Update-AppPackageSource -App Firefox
                 $alreadyExists = Test-Path -Path "$newAppPath"
             }
             Write-Output "rootapppath is: $($MaintainedApp.RootApplicationPath)"
-            $newAppPath
 
             #Copies the Current Package to the new. Replaces install files and increments version.
             Write-Output "Creating folder '$App $LatestAppVersion (R$RevNumber)'"

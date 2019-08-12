@@ -9,7 +9,7 @@ The app to promote to prod
 Deploy-AppToProduction -App Firefox
 #>
 
-function Deploy-AppToProduction {
+function Deploy-PackageToProduction {
     [CmdletBinding()]
     param
     (
