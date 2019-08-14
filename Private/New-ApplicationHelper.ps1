@@ -85,7 +85,7 @@ function New-ApplicationHelper {
         switch ($DetectionMethod) {
             "PowershellScript" { 
                 $parameters += @{
-                    ScriptLanguage = PowerShell
+                    ScriptLanguage = "PowerShell"
                     ScriptFile = "$appPath\SupportFiles\SCCMApplicationDetection.ps1"
                 }
 
