@@ -7,6 +7,7 @@
             "ProductionAppCollection": "7Zip - Prod",
             "Manufacturer": "Igor Pavlov",
             "IconName": "7zip.ico",
+            "DetectionMethod": "PowershellScript",
             "BlackList": false,
             "SCCMApplicationFolder": {
                 "Prod": "Application\\Prod",
@@ -26,7 +27,8 @@
             "ProductionAppCollection": "BigFix Client - Prod",
             "Manufacturer": "IBM",
             "IconName": "BigFix.png",
-            "BlackList": false,
+            "DetectionMethod": "PowershellScript",
+            "BlackList": true,
             "SCCMApplicationFolder": {
                 "Prod": "Application\\Prod",
                 "QA": "Application\\QA",
@@ -45,6 +47,7 @@
             "ProductionAppCollection": "Chrome - Prod",
             "Manufacturer": "Google",
             "IconName": "Chrome.ico",
+            "DetectionMethod": "WindowsInstaller",
             "BlackList": false,
             "SCCMApplicationFolder": {
                 "Prod": "Application\\Prod",
@@ -64,6 +67,7 @@
             "ProductionAppCollection": "CutePDF - Prod",
             "Manufacturer": "Acro",
             "IconName": "CutePDF.jpeg",
+            "DetectionMethod": "PowershellScript",
             "BlackList": true,
             "SCCMApplicationFolder": {
                 "Prod": "Application\\Prod",
@@ -79,11 +83,12 @@
         {
             "Name": "etcher",
             "DisplayName": "Etcher",
-            "RootApplicationPath": "Path\\To\\Etcher",
+            "RootApplicationPath": "Etcher",
             "ProductionAppCollection": "Balena Etcher - Prod",
             "Manufacturer": "Balena",
+            "DetectionMethod": "PowershellScript",
             "IconName": "Etcher.png",
-            "BlackList": true,
+            "BlackList": false,
             "SCCMApplicationFolder": {
                 "Prod": "Application\\Prod",
                 "QA": "Application\\QA",
@@ -98,9 +103,10 @@
         {
             "Name": "firefox",
             "DisplayName": "Firefox",
-            "RootApplicationPath": "Path\\To\\Mozilla FireFox",
+            "RootApplicationPath": "Mozilla FireFox",
             "ProductionAppCollection": "Firefox - Prod",
             "Manufacturer": "Mozilla",
+            "DetectionMethod": "PowershellScript",
             "IconName": "Firefox.ico",
             "BlackList": false,
             "SCCMApplicationFolder": {
@@ -117,9 +123,10 @@
         {
             "Name": "flash",
             "DisplayName": "Flash",
-            "RootApplicationPath": "Path\\To\\AdobeFlash",
+            "RootApplicationPath": "AdobeFlash",
             "ProductionAppCollection": "Adobe Flash - Prod",
             "Manufacturer": "Adobe",
+            "DetectionMethod": "PowershellScript",
             "IconName": "Flash.ico",
             "BlackList": false,
             "SCCMApplicationFolder": {
@@ -139,8 +146,9 @@
             "RootApplicationPath": "Path\\To\\GIMP",
             "ProductionAppCollection": "GIMP - Prod",
             "Manufacturer": "GIMP Development Team",
+            "DetectionMethod": "PowershellScript",
             "IconName": "Gimp.png",
-            "BlackList": false,
+            "BlackList": true,
             "SCCMApplicationFolder": {
                 "Prod": "Application\\Prod",
                 "QA": "Application\\QA",
@@ -158,8 +166,9 @@
             "RootApplicationPath": "Path\\To\\Git",
             "ProductionAppCollection": "Git - Prod",
             "Manufacturer": "Software Freedom Conservancy",
+            "DetectionMethod": "PowershellScript",
             "IconName": "Git.ico",
-            "BlackList": false,
+            "BlackList": true,
             "SCCMApplicationFolder": {
                 "Prod": "Application\\Prod",
                 "QA": "Application\\QA",
@@ -177,8 +186,9 @@
             "RootApplicationPath": "Path\\To\\DruvaCloud",
             "ProductionAppCollection": "Druva inSync - Prod",
             "Manufacturer": "Druva",
+            "DetectionMethod": "PowershellScript",
             "IconName": "insync.jpg",
-            "BlackList": false,
+            "BlackList": true,
             "SCCMApplicationFolder": {
                 "Prod": "Application\\Prod",
                 "QA": "Application\\QA",
@@ -196,6 +206,7 @@
             "RootApplicationPath": "Path\\To\\java",
             "ProductionAppCollection": "Java - Prod",
             "Manufacturer": "Oracle",
+            "DetectionMethod": "PowershellScript",
             "IconName": "Java.png",
             "BlackList": "true",
             "SCCMApplicationFolder": {
@@ -212,9 +223,10 @@
         {
             "Name": "notepad++",
             "DisplayName": "Notepad++",
-            "RootApplicationPath": "Path\\To\\Notepad++",
+            "RootApplicationPath": "Notepad++",
             "ProductionAppCollection": "Notepad++ - Prod",
             "Manufacturer": "Notepad++ Team",
+            "DetectionMethod": "PowershellScript",
             "IconName": "notepad++.ico",
             "BlackList": false,
             "SCCMApplicationFolder": {
@@ -231,9 +243,10 @@
         {
             "Name": "openjdk",
             "DisplayName": "OpenJDK",
-            "RootApplicationPath": "Path\\To\\OpenJDK",
+            "RootApplicationPath": "OpenJDK",
             "ProductionAppCollection": "OpenJDK - Prod",
             "Manufacturer": "HotSpot",
+            "DetectionMethod": "PowershellScript",
             "IconName": "Java.ico",
             "BlackList": false,
             "SCCMApplicationFolder": {
@@ -250,9 +263,10 @@
         {
             "Name": "putty",
             "DisplayName": "Putty",
-            "RootApplicationPath": "Path\\To\\Putty",
+            "RootApplicationPath": "Putty",
             "ProductionAppCollection": "Putty - Prod",
             "Manufacturer": "Simon Tatham",
+            "DetectionMethod": "PowershellScript",
             "IconName": "Putty.ico",
             "BlackList": false,
             "SCCMApplicationFolder": {
@@ -272,6 +286,7 @@
             "RootApplicationPath": "AdobeReader",
             "ProductionAppCollection": "Adobe Reader - Prod",
             "Manufacturer": "Adobe",
+            "DetectionMethod": "PowershellScript",
             "IconName": "AcrobatReader.ico",
             "BlackList": false,
             "SCCMApplicationFolder": {
@@ -291,8 +306,9 @@
             "RootApplicationPath": "Path\\To\\Citrix Receiver",
             "ProductionAppCollection": "Citrix Receiver IE - Prod",
             "Manufacturer": "Citrix",
+            "DetectionMethod": "PowershellScript",
             "IconName": "Receiver.ico",
-            "BlackList": false,
+            "BlackList": true,
             "SCCMApplicationFolder": {
                 "Prod": "Application\\Prod",
                 "QA": "Application\\QA",
@@ -310,7 +326,8 @@
             "RootApplicationPath": "Path\\To\\Slack",
             "Manufacturer": "Slack",
             "IconName": "Slack.ico",
-            "BlackList": false,
+            "DetectionMethod": "PowershellScript",
+            "BlackList": true,
             "SCCMApplicationFolder": {
                 "Prod": "Application\\Prod",
                 "QA": "Application\\QA",
@@ -325,9 +342,10 @@
         {
             "Name": "vlc",
             "DisplayName": "VLC",
-            "RootApplicationPath": "Path\\To\\VLC",
+            "RootApplicationPath": "VLC",
             "ProductionAppCollection": "VLC - Prod",
             "Manufacturer": "VideoLAN",
+            "DetectionMethod": "PowershellScript",
             "IconName": "VLC.ico",
             "BlackList": false,
             "SCCMApplicationFolder": {
@@ -344,9 +362,10 @@
         {
             "Name": "vscode",
             "DisplayName": "VSCode",
-            "RootApplicationPath": "Path\\To\\VSCode",
+            "RootApplicationPath": "VSCode",
             "ProductionAppCollection": "VSCode - Prod",
             "Manufacturer": "Microsoft",
+            "DetectionMethod": "PowershellScript",
             "IconName": "VScode.ico",
             "BlackList": false,
             "SCCMApplicationFolder": {
@@ -366,8 +385,9 @@
             "RootApplicationPath": "Path\\To\\WinSCP",
             "ProductionAppCollection": "WinSCP - Prod",
             "Manufacturer": "Martin Prikryl",
+            "DetectionMethod": "PowershellScript",
             "IconName": "WinSCP.ico",
-            "BlackList": false,
+            "BlackList": true,
             "SCCMApplicationFolder": {
                 "Prod": "Application\\Prod",
                 "QA": "Application\\QA",
@@ -382,9 +402,10 @@
         {
             "Name": "wireshark",
             "DisplayName": "wireshark",
-            "RootApplicationPath": "Path\\To\\WireShark",
+            "RootApplicationPath": "WireShark",
             "ProductionAppCollection": "WireShark - Testing",
             "Manufacturer": "The WireShark Team",
+            "DetectionMethod": "PowershellScript",
             "IconName": "Wireshark.ico",
             "BlackList": false,
             "SCCMApplicationFolder": {
@@ -404,8 +425,9 @@
             "RootApplicationPath": "Path\\To\\Zoom",
             "ProductionAppCollection": "Zoom - Prod",
             "Manufacturer": "Zoom Video Communications",
+            "DetectionMethod": "PowershellScript",
             "IconName": "Zoom.ico",
-            "BlackList": false,
+            "BlackList": true,
             "SCCMApplicationFolder": {
                 "Prod": "Application\\Prod",
                 "QA": "Application\\QA",
