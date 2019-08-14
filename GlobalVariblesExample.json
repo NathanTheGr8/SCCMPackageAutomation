@@ -196,7 +196,7 @@
             "RootApplicationPath": "Path\\To\\java",
             "ProductionAppCollection": "Java - Prod",
             "Manufacturer": "Oracle",
-            "IconName": "Java.ico",
+            "IconName": "Java.png",
             "BlackList": "true",
             "SCCMApplicationFolder": {
                 "Prod": "Application\\Prod",

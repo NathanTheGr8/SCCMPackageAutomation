@@ -39,7 +39,8 @@ New-ChangeSCCMApplication -App Firefox
 
         $MaintainedApp = $MaintainedApps | Where-Object { $_.Name -eq $App }
         New-ApplicationHelper -AppName "$($MaintainedApp.DisplayName)" -rootApplicationPath "$($MaintainedApp.RootApplicationPath)" `
-        -SCCMFolderPath "$($MaintainedApp.SCCMApplicationFolder.QA)" -Publisher "$($MaintainedApp.Manufacturer)" -Icon "$IconsFolder\$($MaintainedApp.IconName)"
+        -SCCMFolderPath "$($MaintainedApp.SCCMApplicationFolder.QA)" -Publisher "$($MaintainedApp.Manufacturer)" -Icon "$IconsFolder\$($MaintainedApp.IconName)" `
+        -DetectionMethod "$($MaintainedApp.DetectionMethod)"
 
         Pop-Location -StackName ModuleStack
     }
