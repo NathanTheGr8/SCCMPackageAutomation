@@ -100,19 +100,19 @@ Download-LatestAppVersion -App Chrome
                     $WebRequestOutput = Invoke-WebRequest -Uri "$DownloadURL" -OutFile "$DownloadDir\$($InstallFileName)"
                 }
                 'firefox' {
-                    $64bitdownload = "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US"
-                    $32bitDownload = "https://download.mozilla.org/?product=firefox-latest-ssl&os=win&lang=en-US"
+                    $64bitdownload = "https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US"
+                    $32bitDownload = "https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win&lang=en-US"
 
                     #32bit
                     $dl = Invoke-WebRequest -Uri $32bitdownload -PassThru -OutFile "$DownloadDir\ff32.tmp"
                     $newAppVersion = Get-LatestAppVersion -App $App
                     $InstallFileName = ($dl.BaseResponse.ResponseUri -split '/' | Select-Object -Last 1).split(" ") | Select-Object -First 2
                     $InstallFileName = "$InstallFileName $newAppVersion"
-                    Move-Item "$DownloadDir\ff32.tmp" "$DownloadDir\$InstallFileName-32bit.exe" -Force
+                    Move-Item "$DownloadDir\ff32.tmp" "$DownloadDir\$InstallFileName-32bit.msi" -Force
 
                     #64bit
                     $dl = Invoke-WebRequest -Uri $64bitdownload -PassThru -OutFile "$DownloadDir\ff64.tmp"
-                    Move-Item "$DownloadDir\ff64.tmp" "$DownloadDir\$InstallFileName-64bit.exe" -Force
+                    Move-Item "$DownloadDir\ff64.tmp" "$DownloadDir\$InstallFileName-64bit.msi" -Force
                 }
                 'flash' {
                     # https://gist.github.com/jasonadsit/c77340fe385fe953f9c54436b926cf83
