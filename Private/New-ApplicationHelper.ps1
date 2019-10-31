@@ -28,6 +28,9 @@ function New-ApplicationHelper {
         $Language = "English",
         [Parameter(Mandatory = $true)]
         [string]
+        $DP_Group,
+        [Parameter(Mandatory = $true)]
+        [string]
         [ValidateSet('FileSystem', 'Registry', 'WindowsInstaller', 'PowershellScript', IgnoreCase = $true)]
         $DetectionMethod
 
@@ -138,11 +141,11 @@ function New-ApplicationHelper {
     }
 
     try {
-        Start-CMContentDistribution -ApplicationName  "$AppNameFull" -DistributionPointGroupName "$SCCM_ALL_DP_Group"
-        Write-Output "Application Distribution to $SCCM_ALL_DP_Group started"
+        Start-CMContentDistribution -ApplicationName  "$AppNameFull" -DistributionPointGroupName "$DistributionPointGroupName"
+        Write-Output "Application Distribution to $DistributionPointGroupName started"
     }
     catch [exception] {
-        Write-Output "Failed to Distribute $AppNameFull to $SCCM_ALL_DP_Group"
+        Write-Output "Failed to Distribute $AppNameFull to $DistributionPointGroupName"
         Write-Output "$_"
         Set-Location "c:"
         break

@@ -40,7 +40,7 @@ New-SCCMPackage -App Firefox
 
         $MaintainedApp = $MaintainedApps | Where-Object { $_.Name -eq $App }
         New-PackageHelper -AppName "$($MaintainedApp.DisplayName)" -rootApplicationPath "$($MaintainedApp.RootApplicationPath)" `
-        -SCCMFolder "$($MaintainedApp.SCCMPackageFolder.QA)" -Manufacturer "$($MaintainedApp.Manufacturer)"
+        -SCCMFolder "$($MaintainedApp.SCCMPackageFolder.QA)" -Manufacturer "$($MaintainedApp.Manufacturer)" -DistributionPointGroupName "$($MaintainedApp.SCCMDistributionGroup)"
 
         Pop-Location -StackName ModuleStack
     }

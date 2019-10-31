@@ -19,7 +19,10 @@ function New-PackageHelper {
         $Duration = 20,
         [Parameter(Mandatory = $false)]
         [string]
-        $Language = "English"
+        $Language = "English",
+        [Parameter(Mandatory = $false)]
+        [string]
+        $DistributionPointGroupName
     )
 
     # Get-ChildItem has trouble working with UNC paths from the $SCCM_Site: drive. That is why I map a $SCCM_Share_Letter drive
@@ -60,15 +63,8 @@ function New-PackageHelper {
     }
 
     try {
-        if ($MaintainedApp.AWSDistributionApp) {
-            Start-CMContentDistribution -PackageName "$AppNameFull" -DistributionPointGroupName "All Distribution Points"
-            Start-CMContentDistribution -PackageName "$AppNameFull" -DistributionPointGroupName "AWS"
-            Write-Output "Package Distribution to all DP and AWS started"
-        }
-        else {
-            Start-CMContentDistribution -PackageName "$AppNameFull" -DistributionPointGroupName "All Distribution Points"
-            Write-Output "Package Distribution to all DP started"
-        }
+        Start-CMContentDistribution -PackageName "$AppNameFull" -DistributionPointGroupName "$DistributionPointGroupName"
+        Write-Output "Package Distribution to $DistributionPointGroupName started"
     }
     catch [exception] {
         Write-Output "$_"
