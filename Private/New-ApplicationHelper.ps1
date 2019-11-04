@@ -28,7 +28,7 @@ function New-ApplicationHelper {
         $Language = "English",
         [Parameter(Mandatory = $true)]
         [string]
-        $DP_Group,
+        $DistributionPointGroupName,
         [Parameter(Mandatory = $true)]
         [string]
         [ValidateSet('FileSystem', 'Registry', 'WindowsInstaller', 'PowershellScript', IgnoreCase = $true)]
@@ -84,6 +84,7 @@ function New-ApplicationHelper {
             CacheContent = $true
             ContentFallback = $true
             UninstallCommand = "Deploy-Application.exe -DeploymentType Uninstall"
+            SlowNetworkDeploymentMode = "Download"
         }
         switch ($DetectionMethod) {
             "PowershellScript" { 
